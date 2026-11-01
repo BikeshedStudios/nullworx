@@ -1,0 +1,30 @@
+name: Verify canonical UI Forge
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.15.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm validate:effects
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm check:secrets
+      - run: git diff --check
+      - run: pnpm exec playwright install chromium --with-deps
+      - run: pnpm exec playwright test --reporter=line
+        env:
+          CLEAN_CLONE: '1'

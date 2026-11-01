@@ -1,0 +1,6 @@
+export const FORGE_STUDIES = [
+  { id: "magnetic", slug: "magnetic-focus", name: "Magnetic Focus", component: "MagneticFocus", family: "INTERACTION", description: "A button with a little gravity. Bounded pointer movement, a soft pool of light, and reliable keyboard and touch behavior.", files: ["magnetic-focus.tsx", "magnetic-focus.module.css", "use-reduced-motion.ts"], usage: '<MagneticFocus label="Explore the field" intensity={0.6} onClick={() => console.log("Activated")} />' },
+  { id: "glyph", slug: "glyph-morph", name: "Glyph Morph", component: "GlyphMorph", family: "TYPOGRAPHY", description: "A moment of beautiful disorder. Characters rearrange into real, accessible text, with deterministic timing and a motion preference fallback.", files: ["glyph-morph.tsx", "glyph-morph.module.css", "use-reduced-motion.ts"], usage: '<GlyphMorph text="MAKE YOUR MARK" durationMs={840} seed={17} />' },
+  { id: "prism", slug: "prism-text", name: "Prism Text", component: "PrismText", family: "MATERIAL", description: "A spectrum that moves with purpose. Slow color shifts inside selectable text, with adjustable speed and saturation. Pure CSS, no canvas.", files: ["prism-text.tsx", "prism-text.module.css"], usage: '<PrismText text="Somewhere else." speed={1} intensity={0.75} />' },
+] as const;
+export type ForgeStudy = (typeof FORGE_STUDIES)[number];
