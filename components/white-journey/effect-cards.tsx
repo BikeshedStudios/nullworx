@@ -14,6 +14,9 @@ export function EffectCards() {
       {effect.id === "magnetic" && <MagneticFocus label="COME CLOSER" className={styles.previewButton} />}
       {effect.id === "glyph" && <GlyphMorph text="MAKE / MARK" className={styles.previewType} />}
       {effect.id === "prism" && <PrismText text="Prismatic." className={styles.previewType} />}
+      {effect.id === "ashfall" && <span className={styles.previewType} aria-hidden="true">Nothing<br /><i>stays.</i></span>}
+      {effect.id === "seam" && <span className={styles.previewType} aria-hidden="true">Come<br /><i>apart.</i></span>}
+      {effect.id === "sediment" && <span style={{ position: "absolute", inset: 0, background: "url('/material-wave-a/mineral-study.webp') center / cover" }} aria-hidden="true" />}
     </div>
     <div className={styles.effectBody}><h3><Link href={`/effects/${effect.slug}`}>{effect.name}</Link></h3><p>{effect.description}</p><Link href={`/effects/${effect.slug}`}>Open playground <span aria-hidden="true">↗</span></Link></div>
   </article>)}</div>;

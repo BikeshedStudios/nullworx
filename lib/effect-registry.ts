@@ -1,4 +1,5 @@
 import { FORGE_STUDIES } from "./forge-studies";
+import { MATERIAL_STUDIES } from "./material-studies";
 export const EFFECTS = [
   ...FORGE_STUDIES.map((effect) => ({
     ...effect,
@@ -25,6 +26,11 @@ export const EFFECTS = [
     description:
       "A delicate fish-bound wake. Manual caudal-fin regions, measured relative motion, and two expressive presets.",
   },
+  ...MATERIAL_STUDIES.map((effect) => ({
+    ...effect,
+    status: "Preview",
+    technology: "REACT + CANVAS2D",
+  })),
 ] as const;
 export function findEffect(slug: string) {
   return EFFECTS.find((effect) => effect.slug === slug);
