@@ -35,6 +35,10 @@ pnpm media:provision --experiments ~/DevHub/experiments
 
 See [MEDIA_PROVISIONING.md](MEDIA_PROVISIONING.md) for hashes, rights findings, stable hosting paths and manual fin correction.
 
+## Discovery & distribution roadmap
+
+See [Discovery Engine V1 — Comprehensive Engineering Plan](docs/DISCOVERY_ENGINE_V1_PLAN.md) for the proposed SEO / AI-discovery, GitHub distribution, release gates, costs, evaluation and bounded sprint sequence. **Planning only; no production authorization.**
+
 ## Develop
 
 `pnpm verify` runs lint, typecheck, registry validation, unit tests, build and secret scanning. `pnpm test:e2e` runs browser checks. Provisioned-data tests skip explicitly on clean clones.
