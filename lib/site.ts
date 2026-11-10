@@ -1,10 +1,13 @@
-export const SITE_NAME = "UI Forge";
-export const SITE_TAGLINE = "An experimental effect library for the web";
+export const SITE_NAME = "Nullworx";
+export const SITE_COLLECTION_NAME = "UI Forge";
+export const SITE_TAGLINE = "Procedural visual effects for the web";
 export const SITE_DESCRIPTION =
-  "UI Forge is an experimental library of procedural visual effects for developers and creative coders. Strange, reusable fields of characters, masks and matter.";
+  "Nullworx is an experimental studio library of procedural React effects: ASCII, typography, interaction and material studies for the web.";
+export const SITE_LANGUAGE = "en";
 export const SOURCE_REPOSITORY = "https://github.com/BikeshedStudios/nullworx";
 export const OWNER_PROFILE = "https://github.com/CipherCuttle";
-export const DEFAULT_SITE_ORIGIN = "https://nulllworx.site";
+export const DEFAULT_SITE_ORIGIN = "https://nullworx.space";
+export const CANONICAL_HOST = "nullworx.space";
 
 export function normaliseSiteOrigin(input: string | undefined): string {
   const raw = input?.trim() || DEFAULT_SITE_ORIGIN;
@@ -17,13 +20,24 @@ export function normaliseSiteOrigin(input: string | undefined): string {
   if (url.protocol !== "https:" && !(url.protocol === "http:" && ["localhost", "127.0.0.1"].includes(url.hostname))) {
     throw new Error("NEXT_PUBLIC_SITE_URL must use HTTPS (local HTTP is allowed for development).");
   }
+  if (url.username || url.password || url.pathname !== "/" || url.search || url.hash) {
+    throw new Error("NEXT_PUBLIC_SITE_URL must be a bare origin without a path, query or fragment.");
+  }
   return url.origin;
 }
 
 export const siteOrigin = normaliseSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL);
 
+/** Canonical URLs use the verified deployment origin, never a request host. */
 export function absoluteUrl(path = "/"): string {
+  if (!path.startsWith("/")) throw new Error(`Canonical path must start with "/": ${path}`);
+  // Match Next.js metadata output: the root canonical is the bare origin.
+  if (path === "/") return siteOrigin;
   return new URL(path, `${siteOrigin}/`).toString();
+}
+
+export function canonicalUrl(path = "/"): string {
+  return absoluteUrl(path);
 }
 
 export function isBuyMeACoffeeUrl(value: string | undefined): value is string {
@@ -46,13 +60,11 @@ export const supportUrl = isBuyMeACoffeeUrl(process.env.NEXT_PUBLIC_SUPPORT_URL)
 
 export const primaryNav = [
   { href: "/effects", label: "Effects" },
-  { href: "/drops", label: "Drops" },
   { href: "/about", label: "About" },
 ] as const;
 
 export const footerNav = [
   { href: "/effects", label: "Effects" },
-  { href: "/drops", label: "Drops" },
   { href: "/about", label: "About" },
   { href: "/privacy", label: "Privacy" },
   { href: "/licenses", label: "Licenses" },

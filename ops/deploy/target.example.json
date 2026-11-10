@@ -1,0 +1,15 @@
+{
+  "hostname": "REPLACE_WITH_INVENTORIED_HOSTNAME_FQDN",
+  "publicIPv4": "REPLACE_WITH_OWNER_VERIFIED_VPS_IPV4",
+  "publicIPv6": null,
+  "sshTarget": "REPLACE_WITH_USER_AT_HOST",
+  "sshPort": null,
+  "sshHostKeySha256": "REPLACE_WITH_EXISTING_TRUSTED_ED25519_FINGERPRINT",
+  "productionPort": null,
+  "stagingPort": null,
+  "node": "/opt/nullworx/node/bin/node",
+  "memoryBudgetMiBPerInstance": null,
+  "cpuQuotaPercentPerInstance": null,
+  "diskBudgetGiB": null,
+  "otherAppsHealthEvidence": "REPLACE_WITH_APPROVED_INVENTORY_RECEIPT"
+}

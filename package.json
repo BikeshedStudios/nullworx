@@ -18,8 +18,12 @@
     "check:secrets": "tsx scripts/check-secrets.ts",
     "build": "next build",
     "validate:effects": "tsx scripts/validate-effects.ts",
+    "validate:registry": "node scripts/validate-registry.mjs",
     "media:provision": "node scripts/provision-media.mjs",
-    "verify": "pnpm lint && pnpm typecheck && pnpm validate:effects && pnpm test && pnpm build && pnpm check:secrets"
+    "verify": "pnpm lint && pnpm typecheck && pnpm validate:effects && pnpm validate:registry && pnpm test && pnpm build && pnpm check:secrets",
+    "test:distribution": "node --test tests/distribution/registry.test.mjs && node tests/distribution/consumers.mjs",
+    "test:distribution:site": "node tests/distribution/site.mjs",
+    "test:launch": "bash tests/launch/check.sh"
   },
   "dependencies": {
     "@fontsource-variable/space-grotesk": "5.3.0",

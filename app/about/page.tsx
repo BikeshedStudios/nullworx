@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { createPageMetadata } from "@/lib/discovery/metadata";
 import styles from "@/app/white-home.module.css";
 
-export const metadata: Metadata = { title: "About UI Forge", description: "A small collection of expressive React components, built from a trail of original visual experiments.", robots: { index: false, follow: false } };
+export const metadata: Metadata = createPageMetadata({
+  title: "About Nullworx — experimental effect studio",
+  description:
+    "Nullworx is an experimental studio collection of original React effects, ASCII studies and material research. Source, limits and release state are documented honestly.",
+  path: "/about",
+  noIndex: true,
+});
 export default function AboutPage() {
   return <main id="main" tabIndex={-1} className={styles.page}><div className={`${styles.wrap} ${styles.hero}`}>
     <p className="eyebrow">UI FORGE / A POINT OF VIEW</p>

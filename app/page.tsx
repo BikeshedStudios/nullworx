@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { HomeKoiField } from "@/components/white-journey/home-koi-field";
 import { EffectCards } from "@/components/white-journey/effect-cards";
+import { JsonLd } from "@/components/discovery/json-ld";
+import { homeMetadata } from "@/lib/discovery/metadata";
+import { homeStructuredData } from "@/lib/discovery/structured-data";
 import styles from "./white-home.module.css";
 
-export const metadata: Metadata = {
-  title: "UI Forge — React effects with character",
-  description: "Distinctive React components for expressive interfaces. Explore live effects, tune the details, and make the code your own.",
-  robots: { index: false, follow: false },
-};
+export const metadata: Metadata = homeMetadata();
 
 export default function HomePage() {
   return <main id="main" className={styles.page} tabIndex={-1}>
+    <JsonLd data={homeStructuredData()} />
     <section className={`${styles.wrap} ${styles.hero}`} aria-labelledby="home-title">
       <div className={styles.eyebrow}><span className={styles.pulse} /> A SMALL LIBRARY. A DISTINCT POINT OF VIEW.<span>UI FORGE / VOL. 01</span></div>
       <div className={styles.introGrid}>

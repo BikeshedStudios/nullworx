@@ -7,32 +7,40 @@ import "@fontsource/space-mono/latin-700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
-import { SITE_DESCRIPTION, SITE_NAME, siteOrigin } from "@/lib/site";
+import { OWNER_PROFILE, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteOrigin } from "@/lib/site";
+
+const DEFAULT_TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteOrigin),
   applicationName: SITE_NAME,
   title: {
-    default: "UI Forge — React effects with character",
-    template: "%s — UI Forge",
+    default: DEFAULT_TITLE,
+    template: `%s — ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   category: "technology",
-  authors: [{ name: "CipherCuttle", url: "https://github.com/CipherCuttle" }],
+  authors: [{ name: "CipherCuttle", url: OWNER_PROFILE }],
   creator: "CipherCuttle",
   publisher: SITE_NAME,
   formatDetection: { telephone: false, address: false, email: false },
+  // Fail closed: routes must opt in through the reviewed discovery metadata.
+  robots: {
+    index: false,
+    follow: true,
+    googleBot: { index: false, follow: true, noimageindex: true },
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: SITE_NAME,
     url: siteOrigin,
-    title: "UI Forge — React effects with character",
+    title: DEFAULT_TITLE,
     description: SITE_DESCRIPTION,
   },
   twitter: {
-    card: "summary_large_image",
-    title: "UI Forge — React effects with character",
+    card: "summary",
+    title: DEFAULT_TITLE,
     description: SITE_DESCRIPTION,
   },
 };
