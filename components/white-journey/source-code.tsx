@@ -17,6 +17,6 @@ export function SourceCode({ sources, usage, directory = "components/forge-facto
     <div className={styles.tabs} role="tablist" aria-label="Component source files">{names.map((name, index) => <button type="button" role="tab" key={name} id={`code-tab-${index}`} aria-controls="source-panel" aria-selected={selected === name} onClick={() => { setSelected(name); setFeedback(""); }}>{name}</button>)}</div>
     <div className={styles.toolbar}><span>{selected === "Usage" ? "In your React component" : `${directory}/${selected}`}</span><button type="button" onClick={copy}>Copy {selected === "Usage" ? "example" : "file"} ↗</button></div>
     <pre id="source-panel" role="tabpanel" aria-labelledby={`code-tab-${names.indexOf(selected)}`} tabIndex={0}><code>{code}</code></pre>
-    <p className={styles.feedback} role="status">{feedback || "The source above powers this preview. Local review build; no published package required."}</p>
+    <p className={styles.feedback} role="status">{feedback || "Source and usage example included. No published package required."}</p>
   </section>;
 }

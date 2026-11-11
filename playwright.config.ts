@@ -9,9 +9,10 @@ export default defineConfig({
   workers: 1,
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  reporter: [["list"], ["json", { outputFile: "evidence/tests/playwright-results.json" }]],
+  reporter: [["list"], ["json", { outputFile: process.env.E2E_REPORT ?? "evidence/tests/playwright-results.json" }]],
   use: {
     baseURL,
+    browserName: process.env.E2E_BROWSER === "webkit" ? "webkit" : "chromium",
     channel: process.env.PLAYWRIGHT_CHANNEL || undefined,
     headless: true,
     viewport: { width: 1440, height: 900 },
@@ -20,7 +21,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
     video: "off",
     launchOptions: {
-      args: [
+      args: process.env.E2E_BROWSER === "webkit" ? [] : [
         "--enable-unsafe-swiftshader",
         "--use-gl=angle",
         "--use-angle=swiftshader",

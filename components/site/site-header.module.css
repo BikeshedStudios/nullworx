@@ -244,3 +244,9 @@
     font-size: 18px;
   }
 }
+
+.word { font-size:clamp(23px, 2.2vw, 30px); font-weight:700; letter-spacing:-.065em; white-space:nowrap; }
+.word > span { color:var(--purple-deep); font-weight:500; }
+.brandMeta { font-size:9px; }
+@media(max-width:880px) { .inner { min-width:0; gap:16px; }.brand { min-height:56px; }.mobile summary { min-height:48px; font-size:11px; }.mobilePanel > a:nth-last-child(-n + 2) { font-family:var(--font-sans); font-size:16px; letter-spacing:0; text-transform:none; color:var(--paper); } }
+@media(max-width:460px) { .word { font-size:26px; } }

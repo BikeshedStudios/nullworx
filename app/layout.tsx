@@ -7,7 +7,7 @@ import "@fontsource/space-mono/latin-700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
-import { OWNER_PROFILE, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, siteOrigin } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_PUBLISHER, SITE_TAGLINE, siteOrigin } from "@/lib/site";
 
 const DEFAULT_TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
 
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   category: "technology",
-  authors: [{ name: "CipherCuttle", url: OWNER_PROFILE }],
-  creator: "CipherCuttle",
-  publisher: SITE_NAME,
+  authors: [{ name: SITE_PUBLISHER }],
+  creator: SITE_PUBLISHER,
+  publisher: SITE_PUBLISHER,
   formatDetection: { telephone: false, address: false, email: false },
   // Fail closed: routes must opt in through the reviewed discovery metadata.
   robots: {

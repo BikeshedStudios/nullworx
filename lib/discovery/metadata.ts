@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_DESCRIPTION, SITE_NAME, absoluteUrl } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_PUBLISHER, absoluteUrl } from "@/lib/site";
 import { assertDiscoveryManifest } from "./eligibility";
 import { getDiscoveryEffect, getDiscoveryPage } from "./manifest";
 
@@ -55,6 +55,7 @@ export function createPageMetadata({
   return {
     title: { absolute: title },
     description,
+    publisher: SITE_PUBLISHER,
     alternates: {
       canonical,
     },
@@ -104,7 +105,7 @@ export function effectMetadata(slug: string): Metadata {
   const effect = getDiscoveryEffect(slug);
   if (!effect) {
     return {
-      title: "Effect not found — Nullworx",
+      title: `Effect not found — ${SITE_NAME}`,
       robots: robotsFor(true, true),
     };
   }
@@ -120,8 +121,8 @@ export function effectMetadata(slug: string): Metadata {
 /** 404s must never claim a canonical URL for content that does not exist. */
 export function notFoundMetadata(): Metadata {
   return {
-    title: "Page not found — Nullworx",
-    description: "This Nullworx route does not exist. Explore the effect gallery or return to the homepage.",
+    title: `Page not found — ${SITE_NAME}`,
+    description: "This nullworx.space route does not exist. Explore the effect gallery or return to the homepage.",
     robots: robotsFor(true, true),
   };
 }

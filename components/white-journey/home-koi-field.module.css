@@ -21,3 +21,10 @@
 }
 
 .filePicker{display:flex;flex-wrap:wrap;gap:12px;padding:14px 20px;color:var(--secondary);font-size:12px}.filePicker label{display:flex;flex-wrap:wrap;gap:8px}.filePicker input{max-width:100%}
+
+.proceduralStage { height:clamp(300px, 48vw, 560px); }
+.filePicker { align-items:center; font-size:13px; line-height:1.6; border-top:1px solid var(--border); }
+.filePicker label { align-items:center; min-width:0; }
+.filePicker input { width:min(100%, 275px); min-height:44px; font-size:12px; }
+.filePicker input::file-selector-button, .filePicker button { min-height:44px; padding:8px 12px; margin-right:8px; color:var(--purple-deep); background:var(--elevated); border:1px solid var(--line-strong); }
+@media(max-width:690px) { .source > span, .detail, .play, .expand, .top, .notice p { font-size:11px; }.source { flex-wrap:wrap; }.filePicker { padding:14px 12px; }.filePicker label { width:100%; }.top { font-size:10px; } }

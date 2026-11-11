@@ -13,20 +13,24 @@ describe("structured data", () => {
     const graph = data["@graph"] as Array<Record<string, unknown>>;
     expect(graph.map((node) => node["@type"])).toEqual(["Organization", "WebSite"]);
     const website = graph.find((node) => node["@type"] === "WebSite")!;
-    expect(website.name).toBe("Nullworx");
+    expect(website.name).toBe("nullworx.space");
+    expect(graph.find(node => node["@type"] === "Organization")?.name).toBe("Bikeshed Studios");
+    expect(website.alternateName).toBeUndefined();
     expect(website.url).toBe("https://nullworx.space");
     expect(website.potentialAction).toBeUndefined();
     expect(JSON.stringify(data)).not.toContain("SearchAction");
   });
 
-  it("lists the complete visible collection on the gallery page", () => {
+  it("lists only the approved visible collection on the gallery page", () => {
     const data = galleryStructuredData();
     expect(data["@type"]).toBe("CollectionPage");
     const list = data.mainEntity as Record<string, unknown>;
     expect(list["@type"]).toBe("ItemList");
-    expect(list.numberOfItems).toBe(8);
+    expect(list.numberOfItems).toBe(7);
     const items = list.itemListElement as Array<Record<string, unknown>>;
-    expect(items).toHaveLength(8);
+    expect(items).toHaveLength(7);
+    expect(data.name).toBe("UI Forge");
+    expect(items.some(item => String(item.url).includes("digital-wake"))).toBe(false);
     expect(items.every((item) => String(item.url).startsWith("https://nullworx.space/effects/"))).toBe(true);
   });
 

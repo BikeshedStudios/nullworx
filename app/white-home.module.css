@@ -29,3 +29,36 @@
 @media (max-width: 720px) { .eyebrow { font-size: 8px; }.eyebrow > span:last-child { display: none; }.introGrid { padding: 36px 0 32px; gap: 24px; }.title { font-size: clamp(55px, 12vw, 86px); }.heroAside { display: block; }.lede { font-size: 15px; max-width: 420px; margin-bottom: 20px; }.smallNote { margin-top: 18px; }.actions { gap: 12px 20px; }.fieldHead { font-size: 8px; }.fieldHead > div { gap: 7px; }.fieldHead strong { font-size: 13px; }.fieldHead > span { display: none; }.fieldFoot { font-size: 8px; }.fieldFoot > span:last-child { display: none; }.sectionTop { font-size: 8px; }.sectionIntro { grid-template-columns: 1fr; gap: 22px; margin: 30px 0; }.sectionIntro p { max-width: 460px; font-size: 14px; }.effectGrid { grid-template-columns: 1fr; gap: 20px; }.preview { min-height: 245px; }.preview .previewType { font-size: 56px; }.steps { grid-template-columns: 1fr; gap: 20px; }.steps > div { padding-top: 20px; border-bottom: 1px solid var(--border); padding-bottom: 22px; gap: 10px; }.steps p { max-width: 100%; }.endGrid { grid-template-columns: 1fr; gap: 28px; }.end { padding-bottom: 54px; }.install { padding: 22px; } }
 @media (max-width: 360px) { .title { font-size: 53px; }.sectionIntro h2, .how h2, .end h2 { font-size: 44px; }.sectionTop { align-items: flex-start; }.sectionTop > span:last-child { max-width: 110px; text-align: right; }.preview .previewType { font-size: 45px; }.primary { font-size: 10px; } }
 @media (prefers-reduced-motion: reduce) { .page * { transition: none; } }
+
+/* Live previews keep the collection's original paper, violet and teal palette. */
+.preview { height:260px; min-height:0; container-type:inline-size; }
+.preview > [data-procedural-ascii], .materialPreview { position:absolute; inset:0; width:100%; height:100%; }
+.preview:has(.materialPreview), .preview:has([data-procedural-ascii]) { padding:0; }
+.materialPreview [data-material-surface] { height:100%; width:100%; }
+.materialPreview h2 { font-size:clamp(46px, 19cqw, 76px); }
+.materialPreview [data-material-surface="seam"] h2 { font-size:clamp(35px, 13cqw, 54px); }
+.materialPreview [data-material-surface="seam"] h3 { font-size:24px; }
+.preview .materialPreview a, .materialPreview [class*="sideNote"], .materialPreview [class*="coordinates"], .materialPreview [class*="ashNote"], .materialPreview [class*="revealMark"] { display:none; }
+.preview [data-effect="prism-text"] { background-image:linear-gradient(115deg,#244c50,#6e4596,#24545c,#815181,#384d7d); }
+.previewControls { display:flex; align-items:center; gap:8px; min-height:54px; padding:4px 14px; border-bottom:1px solid var(--border); font:11px/1.5 var(--font-mono); color:var(--secondary); }
+.previewControls > span { margin-right:auto; }
+.previewControls button { min-width:44px; min-height:44px; padding:8px; color:var(--purple-deep); background:transparent; border:0; font:inherit; touch-action:manipulation; }
+.previewControls button:disabled { color:var(--secondary); cursor:default; }
+.effectBody > a { min-height:48px; align-items:center; padding-block:12px; }
+@media(min-width:721px) and (max-width:1050px) { .effectGrid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:720px) {
+  .eyebrow, .sectionTop, .fieldHead, .fieldFoot, .effectMeta, .smallNote, .steps > div > span { font-size:10px; line-height:1.65; letter-spacing:.035em; }
+  .title { font-size:clamp(49px, 13.4vw, 72px); letter-spacing:-.065em; line-height:1; }
+  .lede, .sectionIntro p, .steps p { font-size:16px; line-height:1.7; }
+  .sectionIntro { gap:20px; }
+  .effectMeta { padding:14px 18px; flex-wrap:wrap; }
+  .effectBody { padding:22px; }
+  .effectBody h3 { font-size:28px; }
+  .effectBody p { font-size:15px; line-height:1.7; margin-bottom:18px; }
+  .effectBody > a { font-size:14px; }
+  .preview .previewType { font-size:clamp(38px, 11.5vw, 52px); }
+  .preview .previewButton { min-height:60px; }
+  .install h2 { font-size:28px; line-height:1.2; }
+  .install p { font-size:15px; overflow-wrap:anywhere; }
+  .sectionTop a { min-height:44px; display:inline-flex; align-items:center; }
+}

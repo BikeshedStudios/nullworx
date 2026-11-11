@@ -65,7 +65,7 @@ export const DiscoveryEffectSchema = z.object({
 export const DiscoveryManifestSchema = z
   .object({
     site: z.object({
-      name: z.literal("Nullworx"),
+      name: z.literal("nullworx.space"),
       collectionName: z.literal("UI Forge"),
       origin: z.string().url(),
       language: z.literal("en"),

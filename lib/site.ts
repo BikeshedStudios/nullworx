@@ -1,8 +1,9 @@
-export const SITE_NAME = "Nullworx";
+export const SITE_NAME = "nullworx.space";
 export const SITE_COLLECTION_NAME = "UI Forge";
-export const SITE_TAGLINE = "Procedural visual effects for the web";
+export const SITE_PUBLISHER = "Bikeshed Studios";
+export const SITE_TAGLINE = "UI Forge React effects";
 export const SITE_DESCRIPTION =
-  "Nullworx is an experimental studio library of procedural React effects: ASCII, typography, interaction and material studies for the web.";
+  "Explore UI Forge at nullworx.space: an expressive React effects kit by Bikeshed Studios, with live typography, interaction, ASCII and material studies.";
 export const SITE_LANGUAGE = "en";
 export const SOURCE_REPOSITORY = "https://github.com/BikeshedStudios/nullworx";
 export const OWNER_PROFILE = "https://github.com/CipherCuttle";

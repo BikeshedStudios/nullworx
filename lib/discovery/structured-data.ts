@@ -1,4 +1,4 @@
-import { SITE_COLLECTION_NAME, SITE_DESCRIPTION, SITE_LANGUAGE, SITE_NAME, SOURCE_REPOSITORY, absoluteUrl } from "@/lib/site";
+import { SITE_COLLECTION_NAME, SITE_DESCRIPTION, SITE_LANGUAGE, SITE_NAME, SITE_PUBLISHER, SOURCE_REPOSITORY, absoluteUrl } from "@/lib/site";
 import { DISCOVERY_MANIFEST, getDiscoveryEffect } from "./manifest";
 
 type JsonLd = Record<string, unknown>;
@@ -12,7 +12,7 @@ export function organizationStructuredData(): JsonLd {
   return {
     "@type": "Organization",
     "@id": ORGANIZATION_ID,
-    name: SITE_NAME,
+    name: SITE_PUBLISHER,
     url: absoluteUrl("/"),
     description: SITE_DESCRIPTION,
     sameAs: [SOURCE_REPOSITORY],
@@ -24,7 +24,6 @@ export function websiteStructuredData(): JsonLd {
     "@type": "WebSite",
     "@id": WEBSITE_ID,
     name: SITE_NAME,
-    alternateName: SITE_COLLECTION_NAME,
     url: absoluteUrl("/"),
     description: SITE_DESCRIPTION,
     inLanguage: SITE_LANGUAGE,
@@ -40,18 +39,20 @@ export function homeStructuredData(): JsonLd {
 }
 
 export function galleryStructuredData(): JsonLd {
+  const approved = DISCOVERY_MANIFEST.effects.filter(effect => effect.releaseState === "approved");
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     "@id": COLLECTION_ID,
-    name: "React effect gallery",
-    description: "Eight live procedural React effect studies from Nullworx.",
+    name: SITE_COLLECTION_NAME,
+    description: "UI Forge, the React effects kit by Bikeshed Studios at nullworx.space.",
+    publisher: { "@id": ORGANIZATION_ID },
     url: absoluteUrl("/effects"),
     isPartOf: { "@id": WEBSITE_ID },
     mainEntity: {
       "@type": "ItemList",
-      numberOfItems: DISCOVERY_MANIFEST.effects.length,
-      itemListElement: DISCOVERY_MANIFEST.effects.map((effect, index) => ({
+      numberOfItems: approved.length,
+      itemListElement: approved.map((effect, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: effect.name,
@@ -77,6 +78,7 @@ export function effectStructuredData(slug: string): JsonLd | null {
         description: effect.search.description,
         url,
         codeRepository: SOURCE_REPOSITORY,
+        publisher: { "@id": ORGANIZATION_ID },
         programmingLanguage: "TypeScript",
         runtimePlatform: "Web browser",
         license: MIT_LICENSE_URL,

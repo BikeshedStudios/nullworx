@@ -1,4 +1,4 @@
-import { SOURCE_REPOSITORY, siteOrigin } from "@/lib/site";
+import { SITE_NAME, SITE_COLLECTION_NAME, SITE_DESCRIPTION, SOURCE_REPOSITORY, siteOrigin } from "@/lib/site";
 import { DiscoveryManifestSchema, type DiscoveryEffect, type DiscoveryManifest } from "./schema";
 
 /**
@@ -11,8 +11,8 @@ import { DiscoveryManifestSchema, type DiscoveryEffect, type DiscoveryManifest }
  */
 const rawManifest = {
   site: {
-    name: "Nullworx",
-    collectionName: "UI Forge",
+    name: SITE_NAME,
+    collectionName: SITE_COLLECTION_NAME,
     origin: siteOrigin,
     language: "en",
     repository: SOURCE_REPOSITORY,
@@ -30,9 +30,9 @@ const rawManifest = {
           "webgl ascii effect",
           "react animation components",
         ],
-        title: "Nullworx — Procedural visual effects for the web",
+        title: "nullworx.space — UI Forge React effects",
         description:
-          "Nullworx is an experimental studio library of procedural React effects: ASCII, typography, interaction and material studies for the web.",
+          SITE_DESCRIPTION,
       },
       indexStatus: "index",
       evidence: {
@@ -55,9 +55,9 @@ const rawManifest = {
           "react text animation effects",
           "webgl react components",
         ],
-        title: "React effect gallery — Nullworx",
+        title: "UI Forge effect gallery — nullworx.space",
         description:
-          "Browse eight live React effect studies: magnetic buttons, glyph morphs, prism text, video ASCII, material dissolves and the experimental Digital Wake.",
+          "Explore seven approved UI Forge React effects by Bikeshed Studios at nullworx.space: magnetic buttons, morphing type, procedural ASCII and material studies.",
       },
       indexStatus: "index",
       evidence: {
@@ -231,11 +231,11 @@ const rawManifest = {
         ],
         title: "ASCII Waves: WebGL video-to-ASCII renderer",
         description:
-          "A WebGL2 renderer that turns source-colored video into a live ASCII character field with density, pointer and playback controls.",
+          "Original procedural ASCII waves, plus a WebGL2 renderer for your browser-local video with density, pointer and playback controls.",
       },
       content: {
         summary:
-          "ASCII Waves is the original Nullworx character renderer: a WebGL2 canvas samples source-colored video, maps it to a glyph atlas and exposes density and pointer controls.",
+          "ASCII Waves is the UI Forge character renderer at nullworx.space: a WebGL2 canvas samples source-colored video, maps it to a glyph atlas and exposes density and pointer controls.",
         useCases: [
           "Creative coding studies that need a source-colored ASCII treatment in the browser.",
           "Audio-visual or editorial pages that can provide a rights-cleared video source.",
@@ -264,7 +264,7 @@ const rawManifest = {
         status: "local-only",
         hostingRights: "unverified",
         indexingImpact: "fallback-only",
-        note: "The page is useful without the video: the renderer source and explicit unavailable-media state are server-rendered. No media rights are claimed.",
+        note: "Original procedural waves run without video. Browser-local video uses the original renderer; no hosted footage or source-media rights are claimed.",
       },
       lastModified: "2026-11-09",
     },

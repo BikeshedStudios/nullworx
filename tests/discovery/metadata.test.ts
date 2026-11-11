@@ -44,8 +44,8 @@ describe("discovery metadata", () => {
     expect(canonical(gallery)).toBe("https://nullworx.space/effects");
     expect(robotsContent(home)).toBe("index, follow");
     expect(robotsContent(gallery)).toBe("index, follow");
-    expect(home.title).toEqual({ absolute: "Nullworx — Procedural visual effects for the web" });
-    expect(gallery.title).toEqual({ absolute: "React effect gallery — Nullworx" });
+    expect(home.title).toEqual({ absolute: "nullworx.space — UI Forge React effects" });
+    expect(gallery.title).toEqual({ absolute: "UI Forge effect gallery — nullworx.space" });
   });
 
   it("sets unique, page-specific titles and descriptions", () => {
@@ -95,7 +95,7 @@ describe("discovery metadata", () => {
 
   it("strips query strings from explicit route canonicals by construction", () => {
     const metadata = createPageMetadata({
-      title: "React effect gallery — Nullworx",
+      title: "UI Forge effect gallery — nullworx.space",
       description:
         "Browse eight live React effect studies: magnetic buttons, glyph morphs, prism text, video ASCII, material dissolves and the experimental Digital Wake.",
       path: "/effects",

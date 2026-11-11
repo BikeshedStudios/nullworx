@@ -75,11 +75,11 @@ for (const page of getIndexablePages()) {
   check(robots.includes("index") && robots.includes("follow"), `${page.path}: indexable robots`);
   check(canonical === absoluteUrl(page.path), `${page.path}: canonical ${absoluteUrl(page.path)}`);
   check(metaProperty(html, "og:url") === absoluteUrl(page.path), `${page.path}: og:url matches canonical`);
-  check(metaName(html, "application-name") === "Nullworx", `${page.path}: application-name Nullworx`);
+  check(metaName(html, "application-name") === "nullworx.space", `${page.path}: application-name nullworx.space`);
   check(!head.includes("nulllworx.site"), `${page.path}: no legacy canonical host in head`);
   check(!head.includes("opengraph-image") && !head.includes("twitter-image"), `${page.path}: no unpublished OG image references`);
   check(jsonLdOf(html).length >= 1, `${page.path}: JSON-LD present`);
-  const bodyMarker = page.path === "/" ? "Good effects." : "A small collection of expressive components";
+  const bodyMarker = page.path === "/" ? "Good effects." : "The React effects kit by Bikeshed Studios";
   check(html.includes(bodyMarker), `${page.path}: server-rendered content marker`);
   titles.add(title);
   descriptions.add(description);
