@@ -1,51 +1,70 @@
-# UI Forge / Nullworx
+# nullworx.space — UI Forge
 
-A React/TypeScript effects gallery in the Nullworx project. The off-white, purple and teal site, ASCII renderer, and material effects live in one Next.js application. **A registered preview is not a released or independently installable component.**
+[nullworx.space](https://nullworx.space) is the brand. **UI Forge** is the React effects kit, published by **Bikeshed Studios**.
 
-## Run locally
+Explore live typography, pointer interactions, procedural ASCII and material studies. The gallery runs as one Next.js application. Magnetic Focus is also independently installable into React apps through the shadcn GitHub registry.
 
-Requires Node 24 and pnpm 12.15.0.
+![UI Forge at nullworx.space: typography and original procedural ASCII waves](docs/images/ui-forge-home.png)
+
+[Live gallery](https://nullworx.space/effects) · [Magnetic Focus](https://nullworx.space/effects/magnetic-focus) · [Installation](docs/MAGNETIC_FOCUS_INSTALL.md) · [Release checks and remaining steps](docs/releases/PUBLIC_DISTRIBUTION_01.md)
+
+## Run the site
+
+Tested with Node **24.20.0** and pnpm **12.15.0**. Dependencies and consumer fixtures have committed lockfiles.
 
 ```sh
+git clone https://github.com/BikeshedStudios/nullworx.git
+cd nullworx
 pnpm install --frozen-lockfile
 pnpm dev --port 3350
 ```
 
-Open http://127.0.0.1:3350. Production preview: `pnpm build && pnpm start --port 3350`.
+Open http://127.0.0.1:3350. For a production build, run `pnpm build` then `pnpm start --port 3350`.
 
-## Gallery — eight registered effects
+This source includes the deployed polish (`697468992c453c9ca9ed93862f35b3089dc67acb`). The component installation below pins the earlier public registry commit; its three Magnetic Focus files are identical to the deployed polish.
 
-| Effect | Current catalog status |
-| --- | --- |
-| Magnetic Focus | Preview; candidate for first independent installation proof |
-| Glyph Morph | Preview |
-| Prism Text | Preview; distinct from rejected PrismLens experiment |
-| ASCII Waves | Preview; media provisioned separately |
-| Digital Wake | Experimental/Beta; fin-bound motion requires evidence and separate media |
-| Ashfall Type | Preview |
-| Seam Erosion | Preview |
-| Sediment Reveal | Preview; local licensed image included |
+## Install Magnetic Focus
 
-Navigate Home → Effects → playground → controls → installation. The three small React studies expose source and usage examples; material effects expose their shared source closure. Video effects have separate media notes.
-
-## Component installation
-
-The [Magnetic Focus source registry](registry.json) includes the component, CSS Module, and reduced-motion hook. Real shadcn 4.23.0 local installs pass in independent Next.js and Vite consumers. Run `pnpm test:distribution` to reproduce. [Install instructions](docs/MAGNETIC_FOCUS_INSTALL.md) distinguish tested local commands from the GitHub command that requires an authorized public ref. No npm package is published.
-
-## Media
-
-No third-party media is bundled. A clean clone builds with explicit unavailable-media states and browser-local selectors. Fish-bound Digital Wake requires the accepted 30-second loop and matching masks/motion. Locally selected files are not uploaded. Public playback requires separate rights and deployment approval.
-
-For this workspace:
+From an initialized React/TypeScript shadcn app with a `components` alias:
 
 ```sh
-pnpm media:provision --experiments ~/DevHub/experiments
+pnpm dlx shadcn@4.23.0 add BikeshedStudios/nullworx/magnetic-focus#4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e --yes
+curl -fsS https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/LICENSE -o NULLWORX-LICENSE
 ```
 
-See [MEDIA_PROVISIONING.md](MEDIA_PROVISIONING.md) for hashes, rights findings, hosting paths and manual fin correction.
+```tsx
+"use client";
+import { MagneticFocus } from "@/components/nullworx/magnetic-focus";
 
-## Develop
+export function Action() {
+  return <MagneticFocus label="Open field" intensity={0.6} />;
+}
+```
 
-`pnpm verify` runs lint, typecheck, effect/registry validation, unit tests, build and secret scanning. `pnpm test:e2e` runs browser checks. Provisioned-data tests explicitly skip on clean clones.
+Requires React and CSS Modules. The registry installs the component, stylesheet and reduced-motion hook together; it needs no Tailwind styles, site fonts or Next.js runtime. Keep the MIT notice with reused source. No npm package is published.
 
-Use [EFFECT_REGISTRY.md](EFFECT_REGISTRY.md) and [ADDING_AN_EFFECT.md](ADDING_AN_EFFECT.md) for effects, and [CONSOLIDATION_REPORT.md](CONSOLIDATION_REPORT.md) for source authority. Indexing and deployment are separate integration responsibilities. No deployment or publication is implied by this changeset.
+**Public GitHub installation passes in clean Next.js 16.4.3 and Vite 8.3.7 consumers**, using React 19.3.1 and shadcn 4.23.0. Tests cover builds, keyboard/touch/pointer behavior, disabled and paused states, reduced motion and automated accessibility. [Exact commands and limits](docs/MAGNETIC_FOCUS_INSTALL.md).
+
+## Effects and media
+
+The public gallery contains Magnetic Focus, Glyph Morph, Prism Text, ASCII Waves, Ashfall Type, Seam Erosion and Sediment Reveal. Magnetic Focus is the only independently verified registry item. The other effects remain gallery/source studies. Digital Wake remains an experimental beta outside the public gallery; its source is retained for local review.
+
+The homepage and ASCII preview use original procedural waves. You can select your own video in the browser; selected files are not uploaded. Restricted footage, masks, motion sidecars and extracted frames are excluded. Video redistribution rights remain unverified, and a clean clone requires no private media to build or display the procedural previews.
+
+Code is [MIT](LICENSE), retaining the original CipherCuttle copyright. Font and dependency notices are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). The included generated Sediment raster has [documented reuse permission and provenance](docs/material-suite/SOURCE_RIGHTS.md). The screenshot above shows only the clean site's original procedural content. See [MEDIA_PROVISIONING.md](MEDIA_PROVISIONING.md) for the separate local-media contract.
+
+## Verify and contribute
+
+```sh
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium --with-deps
+pnpm verify
+pnpm test:distribution
+CLEAN_CLONE=1 pnpm test:e2e
+pnpm test:launch
+pnpm test:distribution:site
+```
+
+`test:distribution` installs only from the pinned public GitHub commit, with no local-source fallback. Restricted-media tests explicitly skip in a clean clone. [Release evidence](docs/releases/PUBLIC_DISTRIBUTION_01.md) separates technical readiness from search indexing and lists the final publication steps.
+
+Use [EFFECT_REGISTRY.md](EFFECT_REGISTRY.md) and [ADDING_AN_EFFECT.md](ADDING_AN_EFFECT.md) when contributing.

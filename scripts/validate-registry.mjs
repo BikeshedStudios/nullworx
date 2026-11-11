@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 // Fast closure gate. The distribution suite also runs the official shadcn schema
-// validator, builds the registry, and installs with the real pinned CLI.
+// validator against public GitHub and installs with the real pinned CLI.
 export function validateRegistry(root = process.cwd()) {
   const registry = JSON.parse(readFileSync(resolve(root, 'registry.json'), 'utf8'));
   assert.equal(registry.$schema, 'https://ui.shadcn.com/schema/registry.json');

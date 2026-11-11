@@ -15,4 +15,4 @@
 
 One site header/footer surrounds the playgrounds. `/lab/forge-factory-01` preserves the original three-effect lab. Other experiments and rejected concepts remain outside this canonical list.
 
-The root `registry.json` contains **Magnetic Focus only**. Its real shadcn local installs, Next.js/Vite builds and browser interactions pass. GitHub-remote installation requires a published, authorized ref and remains blocked. The other seven effects are site/source previews, without independent public-install proof. See [installation](docs/MAGNETIC_FOCUS_INSTALL.md).
+The root `registry.json` contains **Magnetic Focus only**. Real shadcn 4.23.0 installs from public GitHub commit `4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e`, Next.js/Vite builds and browser interactions pass with no local-source fallback. Its source closure is identical to the deployed polish. Catalog maturity and installation proof remain separate; the other seven effects have no independent public-install proof. See [installation](docs/MAGNETIC_FOCUS_INSTALL.md).

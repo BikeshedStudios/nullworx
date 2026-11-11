@@ -44,8 +44,12 @@ try {
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
         await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
         if (route === '/' || route === '/effects/ascii-waves') {
-          await expect(page.locator('[data-ascii-field]')).toHaveAttribute('data-phase', 'error');
-          await expect(page.getByText('Video unavailable', { exact: true })).toBeVisible();
+          const field = page.locator('[data-procedural-ascii]').first();
+          await field.scrollIntoViewIfNeeded();
+          await expect(field).toHaveAttribute('data-reduced', String(reducedMotion === 'reduce'));
+          await expect(field).toHaveAttribute('data-playing', String(reducedMotion !== 'reduce'));
+          await expect(page.locator('video')).toHaveCount(0);
+          await expect(page.getByLabel('ASCII local video')).toBeVisible();
           await expect(page.getByText('● LIVE', { exact: true })).toHaveCount(0);
         }
         if (route === '/effects/digital-wake') {

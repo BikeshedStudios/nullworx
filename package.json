@@ -2,7 +2,12 @@
   "name": "nullworx",
   "version": "0.1.0",
   "private": true,
-  "description": "An experimental library of procedural visual effects for the web.",
+  "description": "UI Forge, the React effects kit by Bikeshed Studios at nullworx.space.",
+  "homepage": "https://nullworx.space",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BikeshedStudios/nullworx.git"
+  },
   "license": "MIT",
   "packageManager": "pnpm@12.15.0",
   "engines": {

@@ -1,14 +1,14 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "nullworx",
-  "homepage": "https://github.com/BikeshedStudios/nullworx",
+  "homepage": "https://nullworx.space",
   "items": [
     {
       "name": "magnetic-focus",
       "type": "registry:component",
       "title": "Magnetic Focus",
       "description": "Accessible pointer-responsive button with CSS Modules and reduced-motion support.",
-      "docs": "Retain the repository MIT notice. Imports require React and CSS Modules; no Tailwind or Next runtime dependency. See docs/MAGNETIC_FOCUS_INSTALL.md for pinned CLI verification and remote release gates.",
+      "docs": "UI Forge by Bikeshed Studios at nullworx.space. Retain the repository MIT notice. Requires React and CSS Modules; no Tailwind or Next runtime dependency. See docs/MAGNETIC_FOCUS_INSTALL.md for the verified public GitHub commit and usage.",
       "files": [
         {
           "path": "components/forge-factory-01/magnetic-focus.tsx",

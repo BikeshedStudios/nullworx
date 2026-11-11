@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
-import { createServer } from 'node:http';
 import { mkdtemp, mkdir, readFile, writeFile, cp, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
@@ -27,11 +26,25 @@ async function fixtureManifest(cwd) {
   return files;
 }
 const cli = ['dlx', 'shadcn@4.23.0'];
-const githubRef = process.env.NULLWORX_PUBLIC_REGISTRY_SHA;
-if (githubRef) assert.match(githubRef, /^[a-f0-9]{40}$/, 'Use a full public commit SHA');
-const githubRegistry = githubRef ? `BikeshedStudios/nullworx#${githubRef}` : null;
+// This already-public commit contains the exact deployed Magnetic Focus closure.
+// Remote failure must fail the test; there is no local-source install path.
+const githubRef = process.env.NULLWORX_PUBLIC_REGISTRY_SHA ?? '4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e';
+assert.match(githubRef, /^[a-f0-9]{40}$/, 'Use a full public commit SHA');
+const githubRegistry = `BikeshedStudios/nullworx#${githubRef}`;
+const rawBase = `https://raw.githubusercontent.com/BikeshedStudios/nullworx/${githubRef}/`;
+const remoteFiles = [];
+async function remoteFile(path) {
+  const response = await fetch(rawBase + path, { signal: AbortSignal.timeout(30_000) });
+  assert.equal(response.status, 200, `Public GitHub file unavailable: ${path}`);
+  const content = await response.text();
+  remoteFiles.push({ path, url: response.url, sha256: createHash('sha256').update(content).digest('hex') });
+  return content;
+}
 async function run(cwd, name, command, args) {
-  const child = spawn(command, args, { cwd, env: { ...process.env, CI: '1', NEXT_TELEMETRY_DISABLED: '1' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const env = { ...process.env, CI: '1', NEXT_TELEMETRY_DISABLED: '1' };
+  delete env.GITHUB_TOKEN;
+  delete env.GH_TOKEN;
+  const child = spawn(command, args, { cwd, env, stdio: ['ignore', 'pipe', 'pipe'] });
   let log = `$ ${command} ${args.join(' ')}\n`;
   child.stdout.on('data', data => { log += data; });
   child.stderr.on('data', data => { log += data; });
@@ -56,22 +69,19 @@ async function start(cwd, kind, port) {
   }
   throw new Error(`${kind} startup timed out: ${log}`);
 }
-const server = createServer(async (req, res) => {
-  if (req.url !== '/magnetic-focus.json') { res.writeHead(404).end(); return; }
-  res.setHeader('Content-Type', 'application/json');
-  res.end(await readFile(join(output, 'registry/magnetic-focus.json')));
-});
 let browser;
-const results = { output, node: process.version, shadcn: '4.23.0', installMode: githubRef ? `GitHub source registry at ${githubRef}; both clean consumers; no local install fallback` : 'local HTTP (Vite) and local JSON (Next) registry with real shadcn CLI; GitHub remote NOT proven', consumers: [] };
+const results = { output, node: process.version, shadcn: '4.23.0', githubRef, installMode: 'Public GitHub source registry; both clean consumers; no local install fallback', remoteFiles, consumers: [] };
 try {
-  await run(root, 'schema', 'pnpm', [...cli, 'registry', 'validate', githubRegistry ?? './registry.json']);
-  await run(root, 'registry-build', 'pnpm', [...cli, 'build', '--output', join(output, 'registry')]);
-  const built = JSON.parse(await readFile(join(output, 'registry/magnetic-focus.json'), 'utf8'));
+  await run(output, 'schema', 'pnpm', [...cli, 'registry', 'validate', githubRegistry]);
   const source = JSON.parse(await readFile(join(root, 'registry.json'), 'utf8')).items[0];
-  assert.equal(built.files.length, source.files.length);
-  for (const file of built.files) assert.equal(file.content, await readFile(join(root, file.path), 'utf8'));
-  await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-  const address = `http://127.0.0.1:${server.address().port}/magnetic-focus.json`;
+  const remoteRegistry = JSON.parse(await remoteFile('registry.json'));
+  assert.equal(remoteRegistry.items.length, 1);
+  assert.deepEqual(remoteRegistry.items[0].files, source.files, 'Public registry must declare the reviewed file closure');
+  for (const file of source.files) {
+    assert.equal(await remoteFile(file.path), await readFile(join(root, file.path), 'utf8'), 'Public source must match this checkout');
+  }
+  const license = await remoteFile('LICENSE');
+  assert.equal(license, await readFile(join(root, 'LICENSE'), 'utf8'), 'Public MIT notice must match this checkout');
   browser = await chromium.launch({ headless: true });
   for (const [i, kind] of ['vite', 'next'].entries()) {
     const cwd = join(output, kind);
@@ -84,10 +94,9 @@ try {
     }
     await put(join(cwd, 'Demo.tsx'), await template('shared', 'Demo.tsx'));
     await put(join(cwd, kind === 'next' ? 'app/globals.css' : 'globals.css'), await template('shared', 'globals.css'));
-    await cp(join(root, 'LICENSE'), join(cwd, 'NULLWORX-LICENSE'));
+    await put(join(cwd, 'NULLWORX-LICENSE'), license);
     await run(cwd, `${kind}-install`, 'pnpm', ['install', '--frozen-lockfile']);
-    // Exercise both supported local address forms with actual installs.
-    const itemAddress = githubRef ? `BikeshedStudios/nullworx/magnetic-focus#${githubRef}` : kind === 'vite' ? address : join(output, 'registry/magnetic-focus.json');
+    const itemAddress = `BikeshedStudios/nullworx/magnetic-focus#${githubRef}`;
     const beforeInstall = await fixtureManifest(cwd);
     await run(cwd, `${kind}-dry-run`, 'pnpm', [...cli, 'add', itemAddress, '--dry-run']);
     assert.deepEqual(await fixtureManifest(cwd), beforeInstall, 'Dry-run must not write files');
@@ -118,6 +127,5 @@ try {
 } finally {
   await writeFile(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
   await browser?.close();
-  await new Promise(ok => server.close(ok));
   for (const child of children) { try { process.kill(-child.pid, 'SIGTERM'); } catch { /* Already stopped. */ } }
 }
