@@ -162,6 +162,19 @@ class ControllerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "empty"):
                 ctl.validate_report(path, "browser", self.config, self.auth, {})
 
+    def test_browser_report_requires_current_routes_and_actual_fallback_names(self):
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names]}
+        path = self.root / "report.json"
+        with patch.object(ctl, "secure_file", side_effect=lambda p: p):
+            path.write_text(json.dumps(report))
+            self.assertEqual(ctl.validate_report(path, "browser", self.config, self.auth, {}), ctl.digest(path))
+            report["checks"] = [check for check in report["checks"] if check["name"] != "published Bento Duo checkout"]
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "Incomplete"):
+                ctl.validate_report(path, "browser", self.config, self.auth, {})
+
     def test_failed_edge_verification_restores_previous_state(self):
         ctl.link_to("production", self.new)
         old_state = {"production": {"commit": self.old.name, "verifiedEdge": True}, "previous": None}

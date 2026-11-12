@@ -34,18 +34,19 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
     if (!known && path !== "/lab/forge-factory-01") res.statusCode = 404;
     if (path.startsWith("/lab/")) res.setHeader("X-Robots-Tag", "noindex, nofollow");
     const canonical = faulty ? "https://wrong.invalid" : canonicalOrigin + path;
-    const robots = known && !faulty && !noindex && (path !== '/effects/digital-wake' || betaIndexed) ? "index, follow" : "noindex, follow";
+    const robots = known && !faulty && !noindex && (indexablePaths.includes(path) || (path === '/effects/digital-wake' && betaIndexed)) ? "index, follow" : "noindex, follow";
     const visibleLinks = path === "/effects"
       ? galleryEffects.filter(slug => slug !== missingGallerySlug).map(slug => `/effects/${slug}`)
       : publicPaths;
-    res.end(`<h1>Fixture Beta</h1><link rel="canonical" href="${canonical}"><meta name="robots" content="${robots}">` + visibleLinks.map(p => `<a href="${p}">link</a>`).join(""));
+    const product = path === "/kits/bento-duo" ? 'Orbit Bento 02 Foil Reactor <a href="https://bikeshedstudios.gumroad.com/l/dordxw">€39</a>' : "";
+    res.end(`<h1>Fixture Beta</h1><link rel="canonical" href="${canonical}"><meta name="robots" content="${robots}">` + product + visibleLinks.map(p => `<a href="${p}">link</a>`).join(""));
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   try {
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
     const passing = await smoke({ baseUrl });
     assert.equal(passing.passed, true, JSON.stringify(passing.checks));
-    assert.equal(passing.checks.length, 15);
+    assert.equal(passing.checks.length, 20);
     missingGallerySlug = "magnetic-focus";
     const missingCard = await smoke({ baseUrl });
     assert.match(missingCard.checks.find(c => c.name === "page /effects").error, /Gallery lacks magnetic-focus/);

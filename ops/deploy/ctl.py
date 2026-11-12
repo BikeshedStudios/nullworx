@@ -285,10 +285,18 @@ def validate_report(path, suite, config, auth, data, edge=False):
         require(report.get(key) == expected, f"Smoke report mismatch: {key}")
     require(report.get("checks") and all(c.get("passed") is True for c in report["checks"]), "Report has failed/empty checks")
     # Require the entire current suite, not just a caller-supplied passed flag.
+    legacy = auth["commit"] == "697468992c453c9ca9ed93862f35b3089dc67acb"
     pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]]
+    if not legacy:
+        pages += ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
     names = {c["name"] for c in report["checks"]}
     if suite == "browser":
-        expected = {"mobile " + path for path in pages} | {"navigation home to gallery to effect"} | {"missing media " + path for path in ["/", "/effects/ascii-waves", "/effects/digital-wake", "/effects/sediment-reveal"]}
+        expected = {"mobile " + path for path in pages} | {"navigation home to gallery to effect"}
+        if not legacy:
+            expected |= {"published Bento Duo checkout", "support destinations", "disabled Drops"}
+        expected |= {"procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves", "missing media /effects/sediment-reveal"}
+        if not edge:
+            expected.add("missing media /effects/digital-wake")
     else:
         expected = {"page " + path for path in pages} | {"sitemap", "robots", "release asset"} | {"noindex " + path for path in ["/lab/forge-factory-01", "/effects/nullworx-missing-effect", "/nullworx-smoke-missing-page"]}
         require(report.get("asset") == data["asset"], "Report not bound to release asset")
