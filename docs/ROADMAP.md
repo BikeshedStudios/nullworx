@@ -1,14 +1,15 @@
 # Nullworx Creative Effects Roadmap
 
 **Owner direction recorded:** 2026-10-29  
+**Business-model decision updated:** 2026-11-12  
 **Status:** Roadmap / product hypotheses. Not a release authorization or implementation approval.  
-**Product:** Nullworx (https://nulllworx.site)  
+**Product:** nullworx.space (https://nullworx.space); UI Forge is the component/effects kit; Bikeshed Studios is the publisher  
 **Primary platform:** Preserve the current Next.js / React / shadcn UI Forge foundation.  
 **Working lineage:** G2 draft PR #1; G3-A stacked draft PR #3 (base: feat/forge-foundation-g2). Both remain unmerged.
 
 ## North star
 
-Nullworx is a reuse-first procedural effects foundry: combine maintained open-source rendering libraries with original materials and carefully designed interactions, then deliver portable, production-verifiable compositions. Free individual effects drive discovery; paid curated packs, customer personalization, and commercial exports are commercial hypotheses to test, **not proven demand**.
+Nullworx is a reuse-first procedural effects foundry: combine maintained open-source rendering libraries with original materials and carefully designed interactions, then deliver portable, production-verifiable compositions. Free individual effects drive discovery; paid self-serve components, finished compositions, presets, and templates are commercial hypotheses to test, **not proven demand**. No bespoke commission business is planned.
 
 **Owner creative priorities:**
 1. **P0-A: Living Typography** — highest creative and commercial focus.
@@ -16,6 +17,34 @@ Nullworx is a reuse-first procedural effects foundry: combine maintained open-so
 3. **P2: Procedural Brand Objects** — appealing, but explicitly deferred behind the 2D work.
 
 P0-A and P0-B may run independent *research* in parallel, but implementation must use isolated branches/proofs and not obstruct the existing G3-A acceptance gate.
+
+## Business model — Free → Starter → Pro → Ultimate (owner decision, 2026-11-12)
+
+**Decision:** Follow the **free library + paid self-serve tiers** architecture used by React Bits, not its catalog size, claims, or prices. Build once, distribute repeatedly. This is a product strategy, **not authorization to launch checkout or advertise unavailable products**.
+
+| Tier | Intended offering | Release state |
+| --- | --- | --- |
+| **UI Forge Free** | Original individually released React effects, working demos, documented props, public source and reproducible GitHub/shadcn install where verified. Existing MIT source stays MIT. | Maintain and improve; release status is effect-specific. |
+| **UI Forge Starter** | Additional premium-ready effects, useful presets, coherent visual compositions and copy-paste/CLI-ready implementation instructions. | Proposed; no sellable product yet. |
+| **UI Forge Pro** | Coordinated hero/section systems, living typography and richer reusable material/interaction families with source, presets and documentation. | Proposed; no sellable product yet. |
+| **UI Forge Ultimate** | Finished, customizable page templates and complete visual systems, with the full verified premium catalog when it exists. | Proposed; no sellable product yet. |
+
+**Pricing and licensing principles**
+- Prefer **one-time purchases** and automated digital delivery. Lifetime or perpetual terms must specify exactly which versions, updates and rights are included; do not promise perpetual maintenance, unlimited support, or future deliverables without a sustainable policy.
+- Tier names and price structure are modeled on React Bits; **do not copy its dollar amounts as validated Nullworx prices**. Set prices only after the scope, packaging, licensing, checkout costs and actual customer value are verified. Annual licensing is optional later, not a launch prerequisite.
+- **Free remains useful and honest.** Never revoke existing MIT grants or sell free MIT source as if it were exclusive. Paid value must consist of genuinely additional products, composition quality, assets with distribution rights, presets, integration convenience or finished templates.
+- Keep the sales flow **self-serve**: preview → clear contents/license → checkout → automatic delivery → independent installation. Avoid creating a bespoke support or fulfillment workload.
+- No advertised commissions, consulting packages, custom-job rates, response times or delivery promises. A neutral **inquiries** contact route may exist, but does not constitute an offer to accept work.
+- Do not add newsletter capture, analytics cookies, checkout or paid infrastructure before a working product and the necessary consent, refund/tax, privacy, consumer-law and license disclosures are reviewed. Statutory obligations still apply to digital sales.
+
+**Release and business gates (in order)**
+1. **D0 — Public distribution:** finish review of the sanitized public source and PR #13; independently verify a public GitHub installation into clean Next.js and Vite consumers; keep deployed production and unrelated WIP safe. PR #13 is pending at the time of this decision, not assumed merged.
+2. **P0 — One finished premium specimen:** use **Living Typography** as the first candidate; make one distinct reusable hero/wordmark composition with editable text, presets, true code portability, accessibility, reduced motion, and documented rights. One high-quality deliverable is worth more than many unfinished previews.
+3. **P1 — Prove paid differentiation:** compare the premium specimen against the free implementation. Reject the paid-pack concept if it is merely free code repackaged. Validate usefulness through bounded, non-binding interest tests; do not claim purchases or demand without evidence.
+4. **P2 — Productize once:** rights-checked ZIP/registry assets, exact dependencies, clean-consumer install and lifecycle tests, truthful demo, installation docs, versioned license/terms, and automatic delivery fixture.
+5. **P3 — Enable checkout only with owner approval:** choose a low-overhead payment/merchant-of-record route after verifying fees, Sweden/EU digital-goods requirements, tax handling and customer obligations. Launch one finished paid product before adding Starter/Pro/Ultimate breadth.
+
+**Success measure:** a verified, independently usable paid digital product and evidence of real self-serve willingness to pay—not page views, speculative tier revenue, commission inquiries, or a prematurely built storefront.
 
 ## Foundation gate F0 — before either priority enters the public catalog
 
@@ -34,7 +63,7 @@ P0-A and P0-B may run independent *research* in parallel, but implementation mus
 - An editable wordmark/heading that applies at least two materials without stale masks or per-phrase source forks.
 - A transformation composition: e.g. chrome wordmark → ASCII/glyph breakup → reform (only if the source material is cleared and the effect can be composed honestly).
 - A polished interactive React hero/brand element, with static/reduced-motion representation and documented browser support.
-- First commercial hypothesis: customizable motion wordmark or hero composition, supplied as a tested React package; offer bespoke personalization without promising automated video output.
+- First self-serve premium candidate: a polished editable motion wordmark or hero composition, packaged as a reusable React product with presets and documented limits. No bespoke personalization service or promised video output.
 
 **Reuse-first stack:**
 - Existing HoloType, Paper Shaders MeshGradient, G3-A mask/recipe contracts, Motion.
@@ -95,20 +124,23 @@ P0-A and P0-B may run independent *research* in parallel, but implementation mus
 - Keep effect metadata, renderer adapters, composition recipes, the studio preview, and distribution/export as separate boundaries.
 - Mark experimental/review-pending items truthfully. A working preview does not imply release approval.
 - No client-only preview should claim a working standalone source export until a real consumer test proves it.
-- Keep open-source/free individual primitives available; validate paid value through cohesive preset packs, personalization and saved implementation time, not through artificial paywalls.
-- A customer export must include source, dependencies, usage documentation, notices, versioned recipe and a tested reduced-motion/static path.
+- Keep open-source/free individual primitives available; validate paid value through genuinely new or substantially richer compositions, curated presets, finished templates and saved implementation time, not artificial paywalls or repackaged MIT code.
+- Every self-serve premium export must include source, dependencies, usage documentation, notices, versioned recipe, clear license terms and a tested reduced-motion/static path.
 - Browser/GPU evidence must identify the actual renderer, not conflate SwiftShader with hardware results.
 
 ## Portfolio sequence and gates
 
 | Sequence | Gate | Outcome |
 | --- | --- | --- |
-| 0 | F0 — G3-A.1 acceptance + security/license review | Verified foundation; no release assumed |
+| 0 | F0 — G3-A.1 acceptance + security/license review | Verified creative foundation; no new effect release assumed |
+| 0a | D0 — Public sanitized source + GitHub registry release | First reproducible free component installation; PR #13 requires review/merge approval |
 | 1 | T1 — Living Typography editable text, dual materials | Proof of reusable personalized wordmarks |
 | 2 | S1 — Reactive Signal UI on three true interactive surfaces | Proof of legible meaningful UI behavior |
 | 3 | T2 / S2 — one distinctive transition and one feedback experiment | Creative differentiation; compare external libraries against native control |
-| 4 | T3 — first portable React wordmark composition | First potential paid deliverable |
-| 5 | S3 — first portable Signal UI composition | Second potential paid deliverable |
+| 4 | T3 — first portable React wordmark composition | Candidate for first finished self-serve premium product |
+| 4a | P0/P1/P2 — premium specimen, differentiation and packaging | Prove added value, rights and independent installation before checkout |
+| 5 | S3 — first portable Signal UI composition | Second potential self-serve product family |
+| 5a | P3 — one-product checkout and automatic delivery | Only after owner approval and payment/legal readiness; tier expansion later |
 | 6 | P2 object-scene feasibility only if demand warrants | Decide R3F vs Threlte; no migration |
 
 Advance one gate at a time with PLAN → CHANGESET → VERIFY → HOSTILE REVIEW → VERDICT. Record reproducible fixtures, screenshots/clips, exact dependencies/licenses, clean-consumer results, performance and rollback. Treat owner aesthetics as a separate gate. Experimental branches can be pushed as draft PRs; **no merge or deployment is authorized by this roadmap**.
@@ -126,5 +158,5 @@ Advance one gate at a time with PLAN → CHANGESET → VERIFY → HOSTILE REVIEW
 
 - Does Living Typography look distinctive enough to headline Nullworx?
 - Does Reactive Signal UI preserve readability and convey useful interaction states?
-- Which single finished composition would a buyer actually use or pay to personalize?
+- Which finished, self-serve composition saves enough implementation time to justify a paid product beyond the existing free MIT effects?
 - Does any newly researched library offer an unmistakable advantage over the verified native/Paper/Motion baseline?
