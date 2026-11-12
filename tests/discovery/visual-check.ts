@@ -59,6 +59,25 @@ async function main() {
     check(wakeMain === 1, `/effects/digital-wake @${width}: exactly one main landmark`);
     check(wakeOverflow, `/effects/digital-wake @${width}: no horizontal overflow`);
 
+    await page.goto(`${baseUrl}/kits/bento-duo`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator('main[data-bento-duo-product]')).toHaveCount(1);
+    await expect(page.locator("#kits-title")).toBeVisible();
+    await expect(page.locator('[data-bento-checkout]').first()).toHaveAttribute(
+      "href",
+      "https://bikeshedstudios.gumroad.com/l/dordxw",
+    );
+    const checkout = page.locator("[data-bento-checkout]").first();
+    check(await checkout.getAttribute("target") === "_blank", `Bento Duo @${width}: checkout opens safely`);
+    check(await checkout.getAttribute("rel") === "noopener noreferrer", `Bento Duo @${width}: checkout rel safe`);
+    check((await page.locator("#kits article").count()) === 2, `Bento Duo @${width}: two actual kits`);
+    const bentoOverflow = await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1);
+    check(bentoOverflow, `Bento Duo @${width}: no horizontal overflow`);
+    check((await page.locator('script[type="application/ld+json"]').count()) >= 1, `Bento Duo @${width}: product JSON-LD`);
+    await page.locator("#kits-title").screenshot({
+      path: `test-results/discovery/bento-duo-${width}.png`,
+      animations: "disabled",
+    });
+
     check(errors.length === 0, `${width}px: no page errors (${errors.join(" | ") || "none"})`);
     await page.close();
   }
