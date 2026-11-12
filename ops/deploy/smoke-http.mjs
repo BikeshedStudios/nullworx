@@ -11,6 +11,7 @@ export const effects = ["magnetic-focus", "glyph-morph", "prism-text", "ascii-wa
 export const publicPaths = ["/", "/effects", ...effects.map(slug => `/effects/${slug}`)];
 // Beta remains publicly usable, but only the nine approved URLs may be indexed.
 export const indexablePaths = publicPaths.filter(path => path !== "/effects/digital-wake");
+export const galleryEffects = effects.filter(slug => slug !== "digital-wake");
 const decode = text => text.replaceAll("&amp;", "&").replaceAll("&quot;", '"');
 function attributes(tag) {
   return Object.fromEntries([...tag.matchAll(/([\w-]+)\s*=\s*["']([^"']*)["']/g)].map(m => [m[1].toLowerCase(), decode(m[2])]));
@@ -65,7 +66,7 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
       invariant(!html.includes('type="application/ld+json"'), "Beta must not have structured-data promotion");
     }
     invariant(/<h1\b/i.test(html), "Missing H1");
-    if (path === "/effects") for (const slug of effects) invariant(html.includes(`/effects/${slug}`), `Gallery lacks ${slug}`);
+    if (path === "/effects") for (const slug of galleryEffects) invariant(html.includes(`/effects/${slug}`), `Gallery lacks ${slug}`);
   });
   if (asset) await check("release asset", async () => {
     invariant(asset.path.startsWith("/_next/static/") && !asset.path.includes(".."), "Invalid immutable asset path");
