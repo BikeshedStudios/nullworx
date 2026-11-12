@@ -74,10 +74,10 @@
   .kicker { font-size: 10px; }
   .kicker span:last-child { display: none; }
   .kit { padding-bottom: 47px; }
-  .previews { grid-template-columns: minmax(0,1fr) minmax(95px,.32fr); gap: 8px; }
-  .frameBar { font-size: 8px; padding: 9px 7px; }
+  .previews { grid-template-columns: 1fr; gap: 12px; }
+  .frameBar { font-size: 10px; padding: 12px; }
   .frameBar span:last-child { display: none; }
-  .mobileFrame { max-height: 530px; }
+  .mobileFrame { max-width: 265px; max-height: 565px; }
   .includedGrid { grid-template-columns: 1fr; }
   .finalInner { grid-template-columns: 1fr; }
   .finalAction { justify-self: start; }
