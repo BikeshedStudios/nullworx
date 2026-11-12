@@ -24,7 +24,7 @@ describe("discovery manifest", () => {
     expect(indexable).toHaveLength(7);
     expect(indexable.map((effect) => effect.slug)).not.toContain("digital-wake");
     expect(indexable.every((effect) => effect.releaseState === "approved")).toBe(true);
-    expect(getIndexablePages().map((page) => page.path)).toEqual(["/", "/effects"]);
+    expect(getIndexablePages().map((page) => page.path)).toEqual(["/", "/effects", "/kits/bento-duo"]);
   });
 
   it("retains Digital Wake as Beta and outside indexing", () => {

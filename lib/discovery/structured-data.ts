@@ -1,5 +1,6 @@
 import { SITE_COLLECTION_NAME, SITE_DESCRIPTION, SITE_LANGUAGE, SITE_NAME, SITE_PUBLISHER, SOURCE_REPOSITORY, absoluteUrl } from "@/lib/site";
 import { DISCOVERY_MANIFEST, getDiscoveryEffect } from "./manifest";
+import { BENTO_DUO } from "@/lib/bento-duo";
 
 type JsonLd = Record<string, unknown>;
 
@@ -92,6 +93,39 @@ export function effectStructuredData(slug: string): JsonLd | null {
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
           { "@type": "ListItem", position: 2, name: "Effects", item: absoluteUrl("/effects") },
           { "@type": "ListItem", position: 3, name: effect.name, item: url },
+        ],
+      },
+    ],
+  };
+}
+
+export function bentoDuoStructuredData(): JsonLd {
+  const url = absoluteUrl(BENTO_DUO.path);
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": url + "#product",
+        name: "Nullworx Bento Duo 01 — Orbit Bento 02 + Foil Reactor",
+        description: "Two independently installable React and TypeScript bento compositions, with MIT-licensed source and Next.js/Vite examples.",
+        url,
+        image: BENTO_DUO.kits.map(kit => kit.desktop.src),
+        brand: { "@type": "Brand", name: "Nullworx" },
+        seller: { "@type": "Organization", name: SITE_PUBLISHER },
+        offers: {
+          "@type": "Offer",
+          url: BENTO_DUO.checkoutUrl,
+          price: BENTO_DUO.price.toFixed(2),
+          priceCurrency: BENTO_DUO.priceCurrency,
+          availability: "https://schema.org/InStock",
+        },
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "Bento Duo 01", item: url },
         ],
       },
     ],

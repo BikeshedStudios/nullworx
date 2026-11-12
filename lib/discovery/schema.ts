@@ -41,8 +41,8 @@ export const DiscoveryContentSchema = z.object({
 });
 
 export const DiscoveryPageSchema = z.object({
-  kind: z.enum(["home", "gallery"]),
-  path: z.enum(["/", "/effects"]),
+  kind: z.enum(["home", "gallery", "product"]),
+  path: z.enum(["/", "/effects", "/kits/bento-duo"]),
   search: DiscoverySearchSchema,
   indexStatus: z.enum(["index", "noindex"]),
   evidence: DiscoveryEvidenceSchema,
@@ -71,7 +71,7 @@ export const DiscoveryManifestSchema = z
       language: z.literal("en"),
       repository: z.string().url(),
     }),
-    pages: z.array(DiscoveryPageSchema).min(2).max(2),
+    pages: z.array(DiscoveryPageSchema).min(2).max(3),
     effects: z.array(DiscoveryEffectSchema).min(1).max(32),
   })
   .superRefine((manifest, ctx) => {
