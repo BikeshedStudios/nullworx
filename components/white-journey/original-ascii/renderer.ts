@@ -299,9 +299,12 @@ export class AsciiWavesRenderer {
   private readonly uniforms: Record<string, WebGLUniformLocation | null>;
   private readonly atlasUniform: WebGLUniformLocation | null;
   private readonly videoUniform: WebGLUniformLocation | null;
+  private readonly calibratedRamp: boolean;
+  private readonly stopWhenFrozen: boolean;
   private glyphAtlas: GlyphAtlas;
   private videoTexture: WebGLTexture;
   private atlasCharacters = '';
+  private atlasCalibrated = false;
   private video: HTMLVideoElement | null = null;
   private settings: WavesSettings = { ...DEFAULT_SETTINGS };
   private width = 1;
@@ -325,13 +328,14 @@ export class AsciiWavesRenderer {
   private lastTimestamps: number[] = [];
   private frameDurations: number[] = [];
   private disposed = false;
-  private readonly handleResize = () => this.resize();
+  private readonly handleResize = () => { this.resize(); this.invalidate(); };
   private readonly handleVisibility = () => {
-    if (!document.hidden) this.lastFrame = performance.now();
+    if (!document.hidden) { this.lastFrame = performance.now(); this.invalidate(); }
   };
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, private readonly onFrame?: (now: number) => void) {
     this.canvas = canvas;
+    canvas.dataset.asciiRamp = new URLSearchParams(window.location.search).get('asciiRamp') === 'original' ? 'original' : 'calibrated';
     const gl = canvas.getContext('webgl2', {
       alpha: false,
       antialias: false,
@@ -344,6 +348,9 @@ export class AsciiWavesRenderer {
     if (!gl) throw new Error('WebGL 2 is unavailable in this browser.');
     this.gl = gl;
     const params = new URLSearchParams(window.location.search);
+    this.calibratedRamp = params.get('asciiRamp') !== 'original';
+    // Lifecycle gate is independent of the chosen glyph mapping.
+    this.stopWhenFrozen = true;
     this.maxDpr = params.has('dpr') ? Math.min(2, effectiveDpr()) : 2;
     this.dpr = Math.min(2, effectiveDpr());
     this.program = buildProgram(gl);
@@ -387,12 +394,15 @@ export class AsciiWavesRenderer {
   }
 
   private ensureAtlas() {
-    if (this.settings.characters === this.atlasCharacters
+    const calibrated = this.calibratedRamp && Boolean(this.video);
+    if (calibrated === this.atlasCalibrated
+      && this.settings.characters === this.atlasCharacters
       && this.glyphAtlas.cellCssPx === this.settings.cellSize
       && Math.abs(this.glyphAtlas.dpr - this.dpr) < 0.01) return;
-    const next = createGlyphAtlas(this.gl, this.settings.characters, this.settings.cellSize, this.dpr);
+    const next = createGlyphAtlas(this.gl, this.settings.characters, this.settings.cellSize, this.dpr, calibrated);
     this.gl.deleteTexture(this.glyphAtlas.texture);
     this.glyphAtlas = next;
+    this.atlasCalibrated = calibrated;
     this.atlasCharacters = this.settings.characters;
   }
 
@@ -401,6 +411,7 @@ export class AsciiWavesRenderer {
     const dpr = Math.min(2, effectiveDpr());
     if (dpr > this.maxDpr) this.maxDpr = dpr;
     if (dpr !== this.dpr) this.resize();
+    this.invalidate();
   }
 
   setVideo(video: HTMLVideoElement | null, enabled: boolean) {
@@ -414,6 +425,7 @@ export class AsciiWavesRenderer {
     this.uploadedVideoTime = Number.NaN;
     this.uploadedVideoSource = '';
     this.resize();
+    this.invalidate();
   }
 
   private cancelVideoFrameCallback() {
@@ -433,6 +445,7 @@ export class AsciiWavesRenderer {
     if (!video || typeof video.requestVideoFrameCallback !== 'function') return;
     this.videoFrameHandle = video.requestVideoFrameCallback(() => {
       this.videoFrameDirty = true;
+      this.invalidate();
       this.videoFrameHandle = null;
       this.queueVideoFrameCallback();
     });
@@ -442,16 +455,19 @@ export class AsciiWavesRenderer {
     this.videoFrameDirty = true;
     this.uploadedVideoTime = Number.NaN;
     this.uploadedVideoSource = '';
+    this.invalidate();
   }
 
   setPointer(x: number, y: number, active = true) {
     this.pointerTarget.x = Math.min(1, Math.max(0, x));
     this.pointerTarget.y = Math.min(1, Math.max(0, y));
     this.pointerStrengthTarget = active && this.settings.cursorInteraction ? 1 : 0;
+    this.invalidate();
   }
 
   setPointerActive(active: boolean) {
     this.pointerStrengthTarget = active && this.settings.cursorInteraction ? 1 : 0;
+    this.invalidate();
   }
 
   resize() {
@@ -461,12 +477,14 @@ export class AsciiWavesRenderer {
     this.dpr = Math.min(this.maxDpr, effectiveDpr());
     const width = Math.max(1, Math.round(cssWidth * this.dpr));
     const height = Math.max(1, Math.round(cssHeight * this.dpr));
-    if (this.canvas.width !== width || this.canvas.height !== height) {
+    const changed = this.canvas.width !== width || this.canvas.height !== height;
+    if (changed) {
       this.canvas.width = width;
       this.canvas.height = height;
     }
     this.width = width;
     this.height = height;
+    if (changed && this.frameCount > 0) this.invalidate();
   }
 
   private updatePointer(dt: number) {
@@ -506,9 +524,16 @@ export class AsciiWavesRenderer {
     gl.bindTexture(gl.TEXTURE_2D, null);
   }
 
+  private invalidate() {
+    if (!this.stopWhenFrozen || this.disposed || this.raf) return;
+    this.lastFrame = performance.now();
+    this.raf = requestAnimationFrame(this.render);
+  }
+
   private render(now: number) {
     if (this.disposed) return;
-    this.raf = requestAnimationFrame(this.render);
+    if (this.stopWhenFrozen) this.raf = 0;
+    else this.raf = requestAnimationFrame(this.render);
     const rawDt = (now - this.lastFrame) / 1000;
     const dt = Math.min(0.08, Math.max(0, rawDt));
     this.lastFrame = now;
@@ -562,6 +587,16 @@ export class AsciiWavesRenderer {
 
     this.frameCount += 1;
     this.recordPerformance(now, rawDt);
+    this.onFrame?.(now);
+    // A frozen field needs one redraw on invalidation, then no GPU draws.
+    // Let any existing pointer eddy settle before sleeping. The video-frame
+    // callback wakes a paused seek; settings, resize and resume also wake it.
+    if (this.stopWhenFrozen && !this.raf) {
+      const desired = this.settings.cursorInteraction ? this.pointerStrengthTarget : 0;
+      if (this.frozenTime === null || Math.abs(this.pointerStrength - desired) > 0.0001) {
+        this.raf = requestAnimationFrame(this.render);
+      }
+    }
   }
 
   private recordPerformance(now: number, rawDt: number) {
@@ -616,6 +651,7 @@ export class AsciiWavesRenderer {
 
   setFrozenTime(value: number | null) {
     this.frozenTime = value;
+    this.invalidate();
   }
 
   getWaveClock(): number {

@@ -1,5 +1,16 @@
 # Media provisioning and rights
 
+## ASCII release update — 2026-11-12
+
+The owner has approved calibrated ASCII B, Fine and continuation into Digital
+Wake. The owner states the fish source is Creative Commons. Public hosting
+still requires the exact version and a receipt linking LOOP30 to that source.
+The current source inspection and separate activation/rollback contract are in
+[ASCII Quality 02](docs/releases/ASCII_QUALITY_02.md). Its dedicated
+`NEXT_PUBLIC_ASCII_FEATURED_MEDIA` setting affects only ASCII; do not activate
+the fish-specific Digital Wake media setting as part of this release.
+The historical investigation below is retained as dated evidence.
+
 ## Accepted source
 
 `loop30-v2.mp4` is the owner-approved 30-second fish video. Do not substitute it. SHA-256:
