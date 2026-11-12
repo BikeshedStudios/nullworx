@@ -30,5 +30,20 @@ jobs:
         env:
           CLEAN_CLONE: '1'
       - run: pnpm test:launch
+      - name: Exercise production browser smoke against local build
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/nullworx-browser-smoke-server.log"
+          pnpm start --port 3371 >"$log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3371/ >/dev/null 2>&1; then ready=1; break; fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then cat "$log"; exit 1; fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then cat "$log"; exit 1; fi
+          node ops/deploy/smoke-browser.mjs --base-url http://127.0.0.1:3371 --report "$RUNNER_TEMP/nullworx-browser-smoke.json"
       - run: pnpm test:distribution
       - run: pnpm test:distribution:site
