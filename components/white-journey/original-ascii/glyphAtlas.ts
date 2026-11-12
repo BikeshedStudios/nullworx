@@ -27,6 +27,7 @@ export function createGlyphAtlas(
   characters: string,
   cellCssPx: number,
   dpr: number,
+  calibrated = false,
 ): GlyphAtlas {
   const glyphs = Array.from(characters).slice(0, 48);
   const columns = Math.max(1, glyphs.length);
@@ -52,6 +53,24 @@ export function createGlyphAtlas(
     const centerY = PAD + cellPx / 2;
     ctx.fillText(char, centerX, centerY + fontPx * 0.015);
   });
+
+  // Calibrated mapping: reorder the actual rasterized slots, never the font recipe.
+  // Measure the content box sampled by the shader, independently at each DPR
+  // and cell size. Stable sorting preserves ties and supports custom ramps.
+  if (calibrated) {
+    const slots = glyphs.map((_, index) => {
+      const pixels = ctx.getImageData(index * slotPx, 0, slotPx, slotPx);
+      let ink = 0;
+      for (let y = PAD; y < PAD + cellPx; y++) {
+        for (let x = PAD; x < PAD + cellPx; x++) {
+          ink += pixels.data[(y * slotPx + x) * 4 + 3];
+        }
+      }
+      return { pixels, ink };
+    });
+    slots.sort((a, b) => a.ink - b.ink);
+    slots.forEach(({ pixels }, index) => ctx.putImageData(pixels, index * slotPx, 0));
+  }
 
   const texture = gl.createTexture();
   if (!texture) throw new Error('Could not allocate the glyph atlas texture.');
