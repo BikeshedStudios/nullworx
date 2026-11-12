@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { BENTO_DUO } from "@/lib/bento-duo";
 import Link from "next/link";
 import { HomeKoiField } from "@/components/white-journey/home-koi-field";
 import { EffectCards } from "@/components/white-journey/effect-cards";
@@ -29,6 +31,21 @@ export default function HomePage() {
       <div className={styles.sectionTop}><span>01 / THE COLLECTION</span><Link href="/effects">EXPLORE ALL EFFECTS ↗</Link></div>
       <div className={styles.sectionIntro}><h2 id="effects-heading">Small details.<br /><em>Lasting impressions.</em></h2><p>Type that transforms. Color that drifts. An interaction that pulls you closer. Pick a study and find your own expression.</p></div>
       <EffectCards />
+    </section>
+    <section id="bento-duo" className={`${styles.wrap} ${styles.premiumTeaser}`} aria-labelledby="bento-home-title">
+      <div className={styles.premiumMeta}><span>NEW / UI FORGE PAID KIT 001</span><span>TWO KITS · ONE COLLECTION</span></div>
+      <div className={styles.premiumIntro}>
+        <div><h2 id="bento-home-title">Not your usual<br/><em>bento grid.</em></h2><p>Meet Orbit Bento 02 and Foil Reactor: two original, interactive React compositions with editable source. The free effects are still free.</p></div>
+        <div className={styles.premiumAction}><strong>€39 <span>ONE TIME</span></strong><Link href={BENTO_DUO.path}>Explore Bento Duo <span aria-hidden="true">↗</span></Link></div>
+      </div>
+      <div className={styles.premiumPreviews}>
+        {BENTO_DUO.kits.map(kit => (
+          <Link key={kit.slug} href={BENTO_DUO.path + "#" + kit.slug} aria-label={"Explore " + kit.name + " in Bento Duo"}>
+            <Image unoptimized src={kit.desktop.src} width={kit.desktop.width} height={kit.desktop.height} alt={kit.name + " approved desktop preview"} loading="lazy"/>
+            <span>{kit.name} <i aria-hidden="true">↗</i></span>
+          </Link>
+        ))}
+      </div>
     </section>
     <section id="how" className={`${styles.wrap} ${styles.how}`} aria-labelledby="how-heading">
       <div className={styles.sectionTop}><span>02 / FROM PLAYGROUND TO PROJECT</span><span>YOUR CODE. YOUR CALL.</span></div>
