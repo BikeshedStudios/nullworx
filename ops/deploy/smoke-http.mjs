@@ -8,9 +8,8 @@ import { get as httpsGet } from "node:https";
 
 export const canonicalOrigin = "https://nullworx.space";
 export const effects = ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"];
-export const publicPaths = ["/", "/effects", ...effects.map(slug => `/effects/${slug}`)];
-// Beta remains publicly usable, but only the nine approved URLs may be indexed.
-export const indexablePaths = publicPaths.filter(path => path !== "/effects/digital-wake");
+export const publicPaths = ["/", "/effects", ...effects.map(slug => `/effects/${slug}`), "/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"];
+export const indexablePaths = ["/", "/effects", ...effects.filter(slug => slug !== "digital-wake").map(slug => `/effects/${slug}`), "/kits/bento-duo"];
 export const galleryEffects = effects.filter(slug => slug !== "digital-wake");
 const decode = text => text.replaceAll("&amp;", "&").replaceAll("&quot;", '"');
 function attributes(tag) {
@@ -50,6 +49,11 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
   }
   for (const path of publicPaths) await check(`page ${path}`, async () => {
     const response = await request(path);
+    if (profile === "edge" && path === "/effects/digital-wake") {
+      invariant(response.status === 404, "Experimental route must stay blocked at the public edge");
+      invariant(/noindex/.test(response.headers.get("x-robots-tag") || ""), "Blocked experimental route needs noindex");
+      return;
+    }
     invariant(response.status === 200, `HTTP ${response.status}`);
     invariant(response.headers.get("content-type")?.includes("text/html"), "Not HTML");
     security(response);
@@ -62,11 +66,18 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
       invariant(!/noindex|nofollow|none/i.test(response.headers.get("x-robots-tag") || ""), "Public page X-Robots-Tag blocks indexing");
     } else {
       invariant(/\bnoindex\b/.test(meta.robots), "Beta must remain noindex");
-      invariant(/EXPERIMENTAL \/ BETA|Beta/.test(html), "Beta label missing");
-      invariant(!html.includes('type="application/ld+json"'), "Beta must not have structured-data promotion");
+      if (path === "/effects/digital-wake") {
+        invariant(/EXPERIMENTAL \/ BETA|Beta/.test(html), "Beta label missing");
+        invariant(!html.includes('type="application/ld+json"'), "Beta must not have structured-data promotion");
+      }
     }
     invariant(/<h1\b/i.test(html), "Missing H1");
     if (path === "/effects") for (const slug of galleryEffects) invariant(html.includes(`/effects/${slug}`), `Gallery lacks ${slug}`);
+    if (path === "/kits/bento-duo") {
+      invariant(html.includes("Orbit Bento 02") && html.includes("Foil Reactor"), "Both approved kits required");
+      invariant(html.includes('href="https://bikeshedstudios.gumroad.com/l/dordxw"'), "Verified checkout missing");
+      invariant(!/href=["'][^"']*\.(zip|tgz)(?:[?"'])/i.test(html), "Private delivery archive linked publicly");
+    }
   });
   if (asset) await check("release asset", async () => {
     invariant(asset.path.startsWith("/_next/static/") && !asset.path.includes(".."), "Invalid immutable asset path");
@@ -84,7 +95,7 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
     invariant(/<urlset\b/.test(xml), "Expected urlset sitemap");
     const locations = [...xml.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(m => new URL(decode(m[1].trim())));
     for (const path of indexablePaths) invariant(locations.some(url => url.pathname === path && url.origin === canonicalOrigin), `Sitemap lacks ${path}`);
-    invariant(locations.length === indexablePaths.length && locations.every(url => indexablePaths.includes(url.pathname)), "Sitemap must contain exactly the nine approved URLs; Beta/private routes excluded");
+    invariant(locations.length === indexablePaths.length && locations.every(url => indexablePaths.includes(url.pathname)), "Sitemap must contain exactly the ten approved URLs, including Bento Duo; Beta/private routes excluded");
     invariant(locations.length === new Set(locations.map(url => url.href)).size, "Duplicate sitemap locations");
     invariant(locations.every(url => url.origin === canonicalOrigin && !url.search && !/^\/(lab|tools|downloads)(\/|$)/.test(url.pathname)), "Sitemap includes noncanonical/private URL");
   });

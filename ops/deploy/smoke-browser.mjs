@@ -30,6 +30,11 @@ async function check(name, fn) {
 try {
   for (const path of publicPaths) await check(`mobile ${path}`, async page => {
     const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    if (base.origin === canonicalOrigin && path === "/effects/digital-wake") {
+      expect(response.status()).toBe(404);
+      expect(response.headers()["x-robots-tag"]).toContain("noindex");
+      return;
+    }
     expect(response.status()).toBe(200);
     await expect(page.locator("h1").first()).toBeVisible();
     await expect(page.locator('meta[name="viewport"]')).toHaveAttribute("content", /width=device-width/);
@@ -67,7 +72,7 @@ try {
     await expect(page.locator("[data-ascii-field]")).toHaveCount(0);
     expect(mediaRequests).toBe(0);
   });
-  await check("missing media /effects/digital-wake", async page => {
+  if (base.origin !== canonicalOrigin) await check("missing media /effects/digital-wake", async page => {
     // Digital Wake remains a separate Beta page with an explicit media-unavailable state.
     await page.route(isVideoResource, route => route.fulfill({ status: 404, body: "Smoke: unavailable media" }));
     await page.goto("/effects/digital-wake");
@@ -86,6 +91,31 @@ try {
     await expect(page.getByTestId("play")).toBeDisabled();
     await expect(page.getByRole("status", { name: "Material status" })).toContainText(/image|decode/i);
     await expect(page.locator("img[data-source]")).toHaveAttribute("alt", /Original generated raster/);
+  });
+  await check("published Bento Duo checkout", async page => {
+    await page.goto("/kits/bento-duo");
+    await expect(page.getByRole("heading", { name: "Orbit Bento 02", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Foil Reactor", exact: true })).toBeVisible();
+    await expect(page.locator("[data-bento-checkout]")).toHaveCount(2);
+    for (const link of await page.locator("[data-bento-checkout]").all()) {
+      await expect(link).toHaveAttribute("href", "https://bikeshedstudios.gumroad.com/l/dordxw");
+      await expect(link).toHaveAttribute("target", "_blank");
+      await expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+    expect(await page.locator("main a[href]").evaluateAll(links => links.some(a => /\.(zip|tgz)(?:\?|$)/i.test(a.getAttribute("href"))))).toBe(false);
+  });
+  await check("support destinations", async page => {
+    for (const path of ["/", "/about"]) {
+      await page.goto(path);
+      const links = page.locator('a[href="https://buymeacoffee.com/bikeshedstudios"]');
+      expect(await links.count()).toBeGreaterThan(0);
+      for (const link of await links.all()) await expect(link).toHaveAttribute("rel", /noopener/);
+    }
+  });
+  await check("disabled Drops", async page => {
+    await page.goto("/drops");
+    await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
+    await expect(page.getByText("Signups are not active yet.", { exact: false })).toBeVisible();
   });
 } finally { await browser.close(); }
 const report = { schema: 1, suite: "browser", baseUrl: base.origin, commit: values.commit, digest: values.digest, checkedAt: new Date().toISOString(), passed: checks.every(c => c.passed), checks };
