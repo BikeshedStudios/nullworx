@@ -34,6 +34,8 @@ try {
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content",/noindex/);
       await page.goto(base+"/privacy");
       await expect(page.locator('a[href="mailto:privacy@example.invalid"]')).toHaveCount(enabled?1:0);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://nullworx.space/privacy");
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
       await page.goto(base);
       await expect(page.getByRole("link",{name:"Get free Drops",exact:false})).toHaveCount(enabled?1:0);
       await page.getByLabel("Open navigation",{exact:true}).click();
