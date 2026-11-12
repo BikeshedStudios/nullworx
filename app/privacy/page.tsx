@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createPageMetadata } from "@/lib/discovery/metadata";
 import styles from "@/app/white-home.module.css";
 import { getBrevoConfig } from "@/lib/distribution/config";
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy and local media — Nullworx",
   description:

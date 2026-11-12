@@ -128,7 +128,6 @@ check(canonicals.size === expectedIndexable.length, "indexable canonicals are un
 for (const [route, artifact, robotsNeedle] of [
   ["/effects/digital-wake", "effects/digital-wake.html", "noindex"],
   ["/about", "about.html", "noindex"],
-  ["/privacy", "privacy.html", "noindex"],
   ["/licenses", "licenses.html", "noindex"],
   ["/lab/forge-factory-01", "lab/forge-factory-01.html", "noindex"],
 ] as const) {
@@ -140,6 +139,9 @@ for (const [route, artifact, robotsNeedle] of [
   check(!expectedUrls.includes(absoluteUrl(route)), `${route}: not submitted in sitemap`);
 }
 
+// /privacy is request-rendered so runtime provider/contact state stays accurate.
+// Its metadata and configured/disabled variants are verified over HTTP and in
+// scripts/verify-drops-runtime.mjs instead of expecting a stale static artifact.
 const digitalWake = readArtifact("effects/digital-wake.html");
 check(metaName(digitalWake, "robots").includes("noindex"), "Digital Wake: Beta noindex");
 check(!digitalWake.includes('id="effect-notes"'), "Digital Wake: no indexable discovery section");

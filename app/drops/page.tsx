@@ -5,6 +5,8 @@ import { isDropsConfigured } from "@/lib/distribution/config";
 import { DropsForm } from "@/components/distribution/drops-form";
 import styles from "@/app/white-home.module.css";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = createPageMetadata({
   title: "Nullworx Drops — Free effects and creative coding",
   description: "Occasional free React effects, presets, integration examples and creative coding experiments.",

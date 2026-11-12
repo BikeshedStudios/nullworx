@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import styles from "./site-header.module.css";
+import { useDropsAvailability } from "@/components/distribution/drops-availability";
 
-export function SiteHeader({ dropsAvailable }: { dropsAvailable: boolean }) {
+export function SiteHeader() {
+  const dropsAvailable = useDropsAvailability();
   return <header className={styles.header}>
     <div className={`container ${styles.inner}`}>
       <Link className={styles.brand} href="/" prefetch={false} aria-label="nullworx.space home">

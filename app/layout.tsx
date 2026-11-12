@@ -7,7 +7,7 @@ import "@fontsource/space-mono/latin-700.css";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
-import { isDropsConfigured } from "@/lib/distribution/config";
+import { DropsAvailabilityProvider } from "@/components/distribution/drops-availability";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_PUBLISHER, SITE_TAGLINE, siteOrigin } from "@/lib/site";
 
 const DEFAULT_TITLE = `${SITE_NAME} — ${SITE_TAGLINE}`;
@@ -55,16 +55,17 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const dropsAvailable = isDropsConfigured();
   return (
     <html lang="en">
       <body>
         <a className="skip-link" href="#main">
           Skip to content
         </a>
-        <SiteHeader dropsAvailable={dropsAvailable} />
+        <DropsAvailabilityProvider>
+        <SiteHeader />
         {children}
-        <SiteFooter dropsAvailable={dropsAvailable} />
+        <SiteFooter />
+        </DropsAvailabilityProvider>
       </body>
     </html>
   );
