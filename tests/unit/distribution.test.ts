@@ -6,7 +6,7 @@ import { isGumroadProductUrl, isBuyMeACoffeeUrl } from "../../lib/site";
 describe("Distribution safety contracts", () => {
   it("accepts the creator's Gumroad product URLs", () => {
     expect(isGumroadProductUrl("https://bikeshedstudios.gumroad.com/l/creator-pack")).toBe(true);
-    expect(isGumroadProductUrl("https://gumroad.com/l/creator-pack")).toBe(true);
+    expect(isGumroadProductUrl("https://gumroad.com/l/another-creators-pack")).toBe(false);
     expect(isGumroadProductUrl("https://other.gumroad.com/l/malicious")).toBe(false);
     expect(isGumroadProductUrl("https://bikeshedstudios.gumroad.com/")).toBe(false);
     expect(isGumroadProductUrl("javascript:alert(1)")).toBe(false);

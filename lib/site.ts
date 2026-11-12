@@ -66,7 +66,7 @@ export function isGumroadProductUrl(value: string | undefined): value is string 
   try {
     const url = new URL(value);
     return url.protocol === "https:" &&
-      ["bikeshedstudios.gumroad.com", "gumroad.com", "www.gumroad.com"].includes(url.hostname) &&
+      url.hostname === "bikeshedstudios.gumroad.com" &&
       url.pathname !== "/" && !url.username && !url.password;
   } catch {
     return false;

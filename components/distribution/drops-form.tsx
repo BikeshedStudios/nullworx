@@ -31,7 +31,7 @@ export function DropsForm() {
         return;
       }
       setSucceeded(true);
-      setMessage("Check your inbox for a confirmation link. You are not subscribed until you confirm.");
+      setMessage("If accepted, check your inbox for a confirmation link. You are not subscribed until you confirm.");
       form.reset();
     } catch {
       setMessage("Could not reach the signup service. Try again later.");
@@ -45,7 +45,7 @@ export function DropsForm() {
     <div className={styles.fields}>
       <input id="drops-email" name="email" type="email" autoComplete="email" required maxLength={254}
         placeholder="you@example.com" disabled={pending || succeeded}/>
-      <button type="submit" disabled={pending || succeeded}>{pending ? "Sending…" : succeeded ? "Confirmation sent" : "Get free Drops"}</button>
+      <button type="submit" disabled={pending || succeeded}>{pending ? "Sending…" : succeeded ? "Request received" : "Get free Drops"}</button>
     </div>
     <div className={styles.trap} aria-hidden="true"><label htmlFor="drops-website">Website</label><input id="drops-website" name="website" autoComplete="off" tabIndex={-1}/></div>
     <p className={styles.fine}>Occasional emails about free effects, presets and experiments. Double opt-in, no spam. <Link href="/privacy">Privacy</Link>.</p>

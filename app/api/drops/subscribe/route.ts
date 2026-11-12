@@ -63,11 +63,11 @@ export async function POST(request: Request): Promise<Response> {
   if (!parsed.success) return reply("Enter a valid email address.", 400);
 
   // Honeypot: pretend success without sending an email.
-  if (parsed.data.website) return reply("Check your inbox for a confirmation link.", 202);
+  if (parsed.data.website) return reply("If accepted, check your inbox for a confirmation link.", 202);
 
   const email = parsed.data.email.trim().toLowerCase();
   const identity = createHash("sha256").update(email).digest("hex");
-  if (!canRequestDoi(identity)) return reply("Check your inbox for a confirmation link.", 202);
+  if (!canRequestDoi(identity)) return reply("If accepted, check your inbox for a confirmation link.", 202);
 
   if (!(await requestDoubleOptIn(email, config))) return reply("Signups are unavailable.", 502);
   return reply("Check your inbox for a confirmation link.", 202);

@@ -15,7 +15,7 @@ export default function DropsConfirmedPage() {
     <section className={[styles.wrap, styles.hero].join(" ")}>
       <p className="eyebrow">NULLWORX / DROPS</p>
       <h1 className={styles.title}>Back to<br/><em>making things.</em></h1>
-      <p className={styles.lede}>If you just confirmed your email through the Brevo confirmation link, you're subscribed. You can unsubscribe using any future newsletter.</p>
+      <p className={styles.lede}>If you just confirmed your email through the Brevo confirmation link, you are subscribed. You can unsubscribe using any future newsletter.</p>
       <Link className={styles.secondary} href="/effects">Explore free effects →</Link>
     </section>
   </main>;
