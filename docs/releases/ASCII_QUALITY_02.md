@@ -105,3 +105,9 @@ Exact commands, exit codes, failures, hashes and screenshots remain under local
 `evidence/ascii-release-02/`. No evidence video, source pixels, sidecars, experimental
 C code or unrelated product changes are included in this commit. Public fish
 hosting remains blocked as described above; code publication does not deploy it.
+
+CI follow-up: the first remote run exposed the launch visual check's fixed 250ms
+streaming race on the first mobile route. The test now waits for the same required
+main landmark and heading before inspecting them, preserving all assertions.
+Lint, typecheck, launch and diff checks were repeated locally with exit 0. The
+application and unrelated effect code were not changed by this test-only fix.

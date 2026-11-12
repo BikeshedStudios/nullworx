@@ -1,5 +1,5 @@
 import { mkdir } from "node:fs/promises";
-import { chromium } from "@playwright/test";
+import { chromium, expect } from "@playwright/test";
 import { getIndexableEffects } from "../../lib/discovery/eligibility";
 
 const baseUrl = process.env.SEO_BASE_URL ?? "http://127.0.0.1:3350";
@@ -27,7 +27,9 @@ async function main() {
 
     for (const effect of getIndexableEffects()) {
       await page.goto(`${baseUrl}${effect.canonicalPath}`, { waitUntil: "domcontentloaded" });
-      await page.waitForTimeout(250);
+      // RSC streaming may still be replacing the initial shell after DOMContentLoaded.
+      await expect(page.locator("main")).toHaveCount(1);
+      await expect(page.locator(`#about-${effect.slug}`)).toBeVisible();
       const mainCount = await page.locator("main").count();
       const docsCount = await page.locator("#effect-notes").count();
       const heading = page.locator(`#about-${effect.slug}`);
@@ -46,7 +48,8 @@ async function main() {
     }
 
     await page.goto(`${baseUrl}/effects/digital-wake`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(250);
+    await expect(page.locator("main")).toHaveCount(1);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     const wakeDocs = await page.locator("#effect-notes").count();
     const wakeRobots = await page.locator('meta[name="robots"]').getAttribute("content");
     const wakeMain = await page.locator("main").count();
