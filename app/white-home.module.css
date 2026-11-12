@@ -62,3 +62,35 @@
   .install p { font-size:15px; overflow-wrap:anywhere; }
   .sectionTop a { min-height:44px; display:inline-flex; align-items:center; }
 }
+
+/* Bento Duo: public approved image previews, never the premium source. */
+.premiumTeaser { padding-block: clamp(50px, 7vw, 105px) clamp(75px, 8vw, 122px); }
+.premiumMeta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; border-top: 1px solid var(--border); padding: 20px 0; font: 11px/1.6 var(--font-mono); color: var(--teal); letter-spacing: .05em; }
+.premiumMeta span:last-child { color: var(--secondary); }
+.premiumIntro { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 34px; margin-block: 32px 42px; }
+.premiumIntro h2 { font-size: clamp(48px, 6vw, 84px); font-weight: 550; line-height: .99; letter-spacing: -.07em; }
+.premiumIntro h2 em { font-family: var(--font-display); color: var(--purple-deep); font-weight: 400; }
+.premiumIntro p { margin-top: 20px; color: var(--paper-soft); max-width: 60ch; line-height: 1.7; font-size: 16px; }
+.premiumAction { display: flex; align-items: flex-end; flex-direction: column; gap: 15px; }
+.premiumAction strong { font-size: clamp(43px, 5vw, 62px); font-weight: 500; line-height: 1; letter-spacing: -.07em; white-space: nowrap; }
+.premiumAction strong span { font: 10px var(--font-mono); letter-spacing: .08em; color: var(--secondary); }
+.premiumAction a { display: flex; justify-content: space-between; align-items: center; min-width: 225px; padding: 15px 18px; min-height: 52px; font-size: 15px; font-weight: 650; background: var(--purple-deep); color: #fff; }
+.premiumAction a:hover { background: #422c73; }
+.premiumPreviews { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; }
+.premiumPreviews a { display: block; min-width: 0; border: 1px solid var(--border); background: #10121a; }
+.premiumPreviews img { display: block; width: 100%; height: 340px; object-fit: cover; object-position: top; }
+.premiumPreviews a > span { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 20px; color: #eae4f3; font-size: 18px; font-weight: 500; }
+.premiumPreviews i { font-style: normal; }
+@media(max-width:720px) {
+  .premiumMeta { font-size: 10px; }
+  .premiumIntro { grid-template-columns: 1fr; gap: 23px; }
+  .premiumIntro h2 { font-size: clamp(45px, 11vw, 68px); }
+  .premiumAction { flex-direction: row; align-items: center; justify-content: space-between; }
+  .premiumAction a { min-width: 0; }
+  .premiumPreviews { grid-template-columns: 1fr; }
+  .premiumPreviews img { height: 265px; }
+}
+@media(max-width:390px) {
+  .premiumAction { align-items: flex-start; flex-direction: column; }
+  .premiumAction a { width: 100%; }
+}
