@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { smoke, metadata, publicPaths, indexablePaths, canonicalOrigin } from "../smoke-http.mjs";
+import { smoke, metadata, publicPaths, indexablePaths, galleryEffects, canonicalOrigin } from "../smoke-http.mjs";
 
 test("metadata parser accepts arbitrary attribute order", () => {
   assert.deepEqual(metadata('<link href="https://nullworx.space/" rel="canonical"><meta content="index, follow" name="robots">'), {
@@ -14,6 +14,7 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
   let noindex = false;
   let betaIndexed = false;
   let extraSitemapPath = null;
+  let missingGallerySlug = null;
   const server = createServer((req, res) => {
     const path = req.url;
     const known = publicPaths.includes(path);
@@ -34,7 +35,10 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
     if (path.startsWith("/lab/")) res.setHeader("X-Robots-Tag", "noindex, nofollow");
     const canonical = faulty ? "https://wrong.invalid" : canonicalOrigin + path;
     const robots = known && !faulty && !noindex && (path !== '/effects/digital-wake' || betaIndexed) ? "index, follow" : "noindex, follow";
-    res.end(`<h1>Fixture Beta</h1><link rel="canonical" href="${canonical}"><meta name="robots" content="${robots}">` + publicPaths.map(p => `<a href="${p}">link</a>`).join(""));
+    const visibleLinks = path === "/effects"
+      ? galleryEffects.filter(slug => slug !== missingGallerySlug).map(slug => `/effects/${slug}`)
+      : publicPaths;
+    res.end(`<h1>Fixture Beta</h1><link rel="canonical" href="${canonical}"><meta name="robots" content="${robots}">` + visibleLinks.map(p => `<a href="${p}">link</a>`).join(""));
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
   try {
@@ -42,6 +46,10 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
     const passing = await smoke({ baseUrl });
     assert.equal(passing.passed, true, JSON.stringify(passing.checks));
     assert.equal(passing.checks.length, 15);
+    missingGallerySlug = "magnetic-focus";
+    const missingCard = await smoke({ baseUrl });
+    assert.match(missingCard.checks.find(c => c.name === "page /effects").error, /Gallery lacks magnetic-focus/);
+    missingGallerySlug = null;
     betaIndexed = true;
     assert.equal((await smoke({ baseUrl })).checks.find(c => c.name === 'page /effects/digital-wake').passed, false);
     betaIndexed = false;
