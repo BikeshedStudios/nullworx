@@ -3,6 +3,7 @@ import { getBrevoConfig } from "@/lib/distribution/config";
 import { requestDoubleOptIn } from "@/lib/distribution/brevo";
 import { dropsSchema } from "@/lib/distribution/schema";
 import { canRequestDoi } from "@/lib/distribution/rate-limit";
+import { siteOrigin } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,7 +45,9 @@ export async function POST(request: Request): Promise<Response> {
   const config = getBrevoConfig();
   if (!config) return reply("Signups are unavailable.", 503);
   const origin = request.headers.get("origin");
-  if (!origin || origin !== new URL(request.url).origin) return reply("Forbidden.", 403);
+  // Next's internal request URL can use localhost behind Caddy. Compare the
+  // browser Origin to our configured public origin, never forwarded input.
+  if (!origin || origin !== siteOrigin) return reply("Forbidden.", 403);
   if (request.headers.get("content-type")?.split(";")[0]?.trim() !== "application/json") {
     return reply("Unsupported content type.", 415);
   }

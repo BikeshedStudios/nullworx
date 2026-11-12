@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import styles from "./site-footer.module.css";
 import { gumroadProductUrl, supportUrl } from "@/lib/site";
+import { useDropsAvailability } from "@/components/distribution/drops-availability";
 
-export function SiteFooter({ dropsAvailable }: { dropsAvailable: boolean }) {
+export function SiteFooter() {
+  const dropsAvailable = useDropsAvailability();
   return <footer className={styles.footer}>
     <div className={`container ${styles.top}`}>
       <div className={styles.statement}>
