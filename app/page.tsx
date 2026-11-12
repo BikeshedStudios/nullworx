@@ -6,6 +6,7 @@ import { JsonLd } from "@/components/discovery/json-ld";
 import { homeMetadata } from "@/lib/discovery/metadata";
 import { homeStructuredData } from "@/lib/discovery/structured-data";
 import styles from "./white-home.module.css";
+import { supportUrl } from "@/lib/site";
 
 export const metadata: Metadata = homeMetadata();
 
@@ -36,6 +37,6 @@ export default function HomePage() {
         <div><span>03 / BUILD</span><strong>Bring the source along</strong><p>Copy the React component and its CSS Module from the playground. Keep the control in your project.</p></div>
       </div><Link className={styles.secondary} href="/effects#install">How to use the components <span aria-hidden="true">→</span></Link>
     </section>
-    <section className={styles.end} aria-labelledby="end-heading"><div className={styles.wrap}><div className={styles.sectionTop}><span>03 / GO MAKE SOMETHING</span><span>LESS ORDINARY. MORE YOU.</span></div><div className={styles.endGrid}><h2 id="end-heading">A starting point.<br /><em>Not a template.</em></h2><div><p>Keep the parts you love. Change everything else. The best thing you build with these effects should look like you.</p><Link className={styles.primary} href="/effects">Find your next detail <span aria-hidden="true">↗</span></Link></div></div></div></section>
+    <section className={styles.end} aria-labelledby="end-heading"><div className={styles.wrap}><div className={styles.sectionTop}><span>03 / GO MAKE SOMETHING</span><span>LESS ORDINARY. MORE YOU.</span></div><div className={styles.endGrid}><h2 id="end-heading">A starting point.<br /><em>Not a template.</em></h2><div><p>Keep the parts you love. Change everything else. The best thing you build with these effects should look like you.</p><Link className={styles.primary} href="/effects">Find your next detail <span aria-hidden="true">↗</span></Link>{supportUrl && <a className={styles.secondary} href={supportUrl} target="_blank" rel="noopener noreferrer">Support the experiments ↗</a>}</div></div></div></section>
   </main>;
 }

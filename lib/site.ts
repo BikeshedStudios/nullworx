@@ -55,8 +55,25 @@ export function isBuyMeACoffeeUrl(value: string | undefined): value is string {
   }
 }
 
+export const DEFAULT_SUPPORT_URL = "https://buymeacoffee.com/bikeshedstudios";
 export const supportUrl = isBuyMeACoffeeUrl(process.env.NEXT_PUBLIC_SUPPORT_URL)
   ? process.env.NEXT_PUBLIC_SUPPORT_URL
+  : DEFAULT_SUPPORT_URL;
+
+// A pack CTA is off by default until its Gumroad URL is verified and published.
+export function isGumroadProductUrl(value: string | undefined): value is string {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" &&
+      ["bikeshedstudios.gumroad.com", "gumroad.com", "www.gumroad.com"].includes(url.hostname) &&
+      url.pathname !== "/" && !url.username && !url.password;
+  } catch {
+    return false;
+  }
+}
+export const gumroadProductUrl = isGumroadProductUrl(process.env.NEXT_PUBLIC_GUMROAD_PRODUCT_URL)
+  ? process.env.NEXT_PUBLIC_GUMROAD_PRODUCT_URL
   : null;
 
 export const primaryNav = [
