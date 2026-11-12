@@ -79,7 +79,11 @@ for (const page of getIndexablePages()) {
   check(!head.includes("nulllworx.site"), `${page.path}: no legacy canonical host in head`);
   check(!head.includes("opengraph-image") && !head.includes("twitter-image"), `${page.path}: no unpublished OG image references`);
   check(jsonLdOf(html).length >= 1, `${page.path}: JSON-LD present`);
-  const bodyMarker = page.path === "/" ? "Good effects." : "The React effects kit by Bikeshed Studios";
+  const bodyMarker = page.path === "/"
+    ? "Good effects."
+    : page.path === "/effects"
+      ? "The React effects kit by Bikeshed Studios"
+      : "Two ways to";
   check(html.includes(bodyMarker), `${page.path}: server-rendered content marker`);
   titles.add(title);
   descriptions.add(description);
@@ -148,9 +152,13 @@ check(canonicalOf(notFound) === "", "404: no invented canonical");
 const sitemap = readArtifact("sitemap.xml.body");
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]!);
 const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]!);
-check(locs.length === 9, "sitemap: exactly 9 approved URLs");
+check(locs.length === 10, "sitemap: exactly 10 approved URLs");
 check(JSON.stringify(locs) === JSON.stringify(expectedUrls), "sitemap: exact parity with approved manifest URLs");
-check(lastmods.length === locs.length && lastmods.every((value) => value.startsWith("2026-11-09T00:00:00.000Z")), "sitemap: fixed content dates");
+const expectedDates = [
+  ...getIndexablePages().map((page) => page.lastModified),
+  ...getIndexableEffects().map((effect) => effect.lastModified),
+].map((date) => date + "T00:00:00.000Z");
+check(JSON.stringify(lastmods) === JSON.stringify(expectedDates), "sitemap: per-route content dates match manifest");
 check(!sitemap.includes("digital-wake"), "sitemap: Digital Wake excluded");
 check(!sitemap.includes("/lab/") && !sitemap.includes("/tools/"), "sitemap: utility routes excluded");
 check(locs.every((loc) => loc === siteOrigin || loc.startsWith(`${siteOrigin}/`)), "sitemap: all URLs on canonical origin");
