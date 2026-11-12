@@ -1,7 +1,7 @@
 # Nullworx Distribution 01 — implementation handoff
 
 Source baseline: public main 2f7ff49bfff893bd5d777e891982b7d82c1d282d.
-This is a review candidate. No production deployment or product publication is authorized.
+Historical review checklist. Bento Duo 01 was subsequently published on Gumroad at EUR 39 by explicit owner approval; this site integration remains separately gated on CI and deployment authorization.
 
 ## Decisions
 - Free effects/source remain available without registration.
@@ -24,12 +24,12 @@ This is a review candidate. No production deployment or product publication is a
 
 - **UI Forge Free:** existing individually released MIT effects stay free. No signup required.
 - **Signature Hero 01:** owner visually approved (Carbon, Porcelain, Cobalt); local release candidate. Inherited-source licensing/customer terms unresolved, so **no sale or public premium source**.
-- **Bento Duo 01:** owner approved Orbit Bento 02 + Foil Reactor; local ZIPs reported reproducible, public screenshots only in draft PR #14. Commercial licensing/fulfillment unresolved, so **no sale or public premium source**. Signal Splice rejected and excluded.
+- **Bento Duo 01:** Orbit Bento 02 + Foil Reactor, now published at EUR 39 on Gumroad: https://bikeshedstudios.gumroad.com/l/dordxw. MIT-licensed customer ZIP is attached for Gumroad delivery (seller reported a successful test download). Public code contains only screenshots/notices, never the paid source. Independent downloaded-ZIP hash and installation remain unverified. Signal Splice is rejected and excluded. Canonical public product page: `/kits/bento-duo`.
 - **UI Forge Creator Pack 01:** Gumroad draft created in EUR, 0 EUR minimum with 7 EUR suggested, **unpublished, no download files**. This is a distinct voluntary-support/free-pack concept; do not give away premium-only Duo or Signature Hero files through it.
 - **Support:** Buy Me a Coffee at https://buymeacoffee.com/bikeshedstudios; no second donation provider.
 - **Newsletter:** Brevo DOI staged but OFF by default. It is not a condition for accessing free effects, kits or purchases.
 
-Product checkout and delivery belong to Gumroad; the Next.js site does not store cards or issue paid download entitlements. Keep commercial product URLs out of NEXT_PUBLIC config until they are published and independently checked. Stable effect pages and any future kit pages should link outward to verified seller checkout only.
+Product checkout and delivery belong to Gumroad; the Next.js site does not store cards or issue paid download entitlements. Keep unpublished Creator Pack URLs out of NEXT_PUBLIC config. Bento Duo uses a separately reviewed published Gumroad URL and a permanent on-site product page; the site never stores card data or paid entitlements. Do not set the Creator Pack publish flag for Bento Duo.
 
 ## Verify
 - pnpm install --frozen-lockfile
