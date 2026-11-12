@@ -47,23 +47,34 @@ try {
     await page.getByRole("button", { name: /^Copy example/ }).focus();
     await expect(page.getByRole("button", { name: /^Copy example/ })).toBeFocused();
   });
-  for (const path of ["/", "/effects/ascii-waves", "/effects/digital-wake"]) await check(`missing media ${path}`, async page => {
-    // Simulate absence even when a future release has owner-cleared media. No uploads or substitutions.
-    await page.route(/\/(media\/|[^/?]+\.(mp4|webm)(\?|$))/, route => route.fulfill({ status: 404, body: "Smoke: unavailable media" }));
+  for (const path of ["/", "/effects/ascii-waves"]) await check(`procedural ASCII fallback ${path}`, async page => {
+    // Unprovisioned media must not be fetched: the default is the original procedural renderer.
+    let mediaRequests = 0;
+    await page.route(/\/(media\/|[^/?]+\.(mp4|webm)(\?|$))/, route => {
+      mediaRequests++;
+      return route.fulfill({ status: 404, body: "Smoke: unavailable media" });
+    });
     await page.goto(path);
-    if (path === "/effects/digital-wake") {
-      await expect(page.getByText("VIDEO UNAVAILABLE", { exact: true })).toBeVisible();
-      await page.locator("summary").filter({ hasText: "Video & source" }).click();
-      await expect(page.getByText("CHOOSE VIDEO", { exact: true })).toBeVisible();
-      await page.waitForFunction(() => !!window.__wake);
-      const wake = await page.evaluate(() => ({ births: window.__wake.births().flat().length, verified: window.__wake.metrics().sourceVerified }));
-      expect(wake).toEqual({ births: 0, verified: false });
-    } else {
-      await expect(page.locator("[data-ascii-field]")).toHaveAttribute("data-phase", "error");
-      await expect(page.getByText("Video unavailable", { exact: true })).toBeVisible();
-      await expect(page.getByLabel("ASCII local video")).toBeVisible();
-      await expect(page.getByText("● LIVE", { exact: true })).toHaveCount(0);
-    }
+    const field = page.locator("[data-procedural-ascii]").first();
+    await expect(field).toBeVisible();
+    await expect(field).toHaveAttribute("data-reduced", "true");
+    await expect(field).toHaveAttribute("data-playing", "false");
+    await expect(field).toHaveAttribute("data-frame", /^\d+$/);
+    await expect(field.locator("canvas")).toBeVisible();
+    await expect(page.getByLabel("ASCII local video")).toBeVisible();
+    await expect(page.locator("[data-ascii-field]")).toHaveCount(0);
+    expect(mediaRequests).toBe(0);
+  });
+  await check("missing media /effects/digital-wake", async page => {
+    // Digital Wake remains a separate Beta page with an explicit media-unavailable state.
+    await page.route(/\/(media\/|[^/?]+\.(mp4|webm)(\?|$))/, route => route.fulfill({ status: 404, body: "Smoke: unavailable media" }));
+    await page.goto("/effects/digital-wake");
+    await expect(page.getByText("VIDEO UNAVAILABLE", { exact: true })).toBeVisible();
+    await page.locator("summary").filter({ hasText: "Video & source" }).click();
+    await expect(page.getByText("CHOOSE VIDEO", { exact: true })).toBeVisible();
+    await page.waitForFunction(() => !!window.__wake);
+    const wake = await page.evaluate(() => ({ births: window.__wake.births().flat().length, verified: window.__wake.metrics().sourceVerified }));
+    expect(wake).toEqual({ births: 0, verified: false });
   });
   await check("missing media /effects/sediment-reveal", async page => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
