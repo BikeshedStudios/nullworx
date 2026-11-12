@@ -68,6 +68,31 @@ const rawManifest = {
       },
       lastModified: "2026-11-09",
     },
+    {
+      kind: "product",
+      path: "/kits/bento-duo",
+      search: {
+        primaryIntent: "integrate",
+        primaryQuery: "React bento grid source kit",
+        relatedQueries: [
+          "premium react bento components",
+          "interactive bento grid source",
+          "foil bento interface",
+          "editorial React component kit",
+        ],
+        title: "Bento Duo 01 — Two interactive React bento kits | Nullworx",
+        description:
+          "Orbit Bento 02 and Foil Reactor: two original, editable React 19 and TypeScript bento kits with working interactions, install examples, MIT source and a one-time price.",
+      },
+      indexStatus: "index",
+      evidence: {
+        ownerApproval: "docs/bento-duo-01/README.md",
+        rights: "docs/bento-duo-01/NOTICE.md",
+        install: "docs/bento-duo-01/README.md",
+        media: null,
+      },
+      lastModified: "2026-11-12",
+    },
   ],
   effects: [
     {
@@ -469,7 +494,7 @@ const rawManifest = {
 
 export const DISCOVERY_MANIFEST: DiscoveryManifest = DiscoveryManifestSchema.parse(rawManifest);
 
-export function getDiscoveryPage(path: "/" | "/effects") {
+export function getDiscoveryPage(path: "/" | "/effects" | "/kits/bento-duo") {
   return DISCOVERY_MANIFEST.pages.find((page) => page.path === path);
 }
 
