@@ -1,0 +1,128 @@
+{
+  "node": "v24.20.0",
+  "shadcn": "4.23.0",
+  "githubRef": "4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e",
+  "installMode": "Public GitHub source registry; both clean consumers; no local install fallback",
+  "remoteFiles": [
+    {
+      "path": "registry.json",
+      "url": "https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/registry.json",
+      "sha256": "fa26a960f58431cbef4a49443aefa5d7e19f5dd87f18feab995033985091b3f0"
+    },
+    {
+      "path": "components/forge-factory-01/magnetic-focus.tsx",
+      "url": "https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/components/forge-factory-01/magnetic-focus.tsx",
+      "sha256": "36b944ecd3b5c87ccbf2bd311e9606b1203d59aed43a907e406859c22b5290e6"
+    },
+    {
+      "path": "components/forge-factory-01/magnetic-focus.module.css",
+      "url": "https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/components/forge-factory-01/magnetic-focus.module.css",
+      "sha256": "e3ddaf6e27bf400dcf65e50f6cf409f0e23b14687de56ce37dc6459e838dee5f"
+    },
+    {
+      "path": "components/forge-factory-01/use-reduced-motion.ts",
+      "url": "https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/components/forge-factory-01/use-reduced-motion.ts",
+      "sha256": "2c3efeff0d7b992b46456e8d215b913df0b090dd6174472d06e9717b7eef7dd5"
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/BikeshedStudios/nullworx/4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e/LICENSE",
+      "sha256": "a9ddb818b6a4261e840bc3d2e7a0f9e1573d44c24e87b1a4fe7a44044642377a"
+    }
+  ],
+  "date": "2026-11-11",
+  "versions": {
+    "react": "19.3.1",
+    "typescript": "5.9.3",
+    "next": "16.4.3",
+    "vite": "8.3.7",
+    "pnpm": "12.15.0"
+  },
+  "command": "pnpm test:distribution",
+  "consumers": [
+    {
+      "kind": "vite",
+      "itemAddress": "BikeshedStudios/nullworx/magnetic-focus#4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e",
+      "manifest": [
+        {
+          "source": "components/forge-factory-01/magnetic-focus.tsx",
+          "target": "components/nullworx/magnetic-focus.tsx",
+          "canonicalSha256": "36b944ecd3b5c87ccbf2bd311e9606b1203d59aed43a907e406859c22b5290e6",
+          "installedSha256": "36b944ecd3b5c87ccbf2bd311e9606b1203d59aed43a907e406859c22b5290e6"
+        },
+        {
+          "source": "components/forge-factory-01/magnetic-focus.module.css",
+          "target": "components/nullworx/magnetic-focus.module.css",
+          "canonicalSha256": "e3ddaf6e27bf400dcf65e50f6cf409f0e23b14687de56ce37dc6459e838dee5f",
+          "installedSha256": "e3ddaf6e27bf400dcf65e50f6cf409f0e23b14687de56ce37dc6459e838dee5f"
+        },
+        {
+          "source": "components/forge-factory-01/use-reduced-motion.ts",
+          "target": "components/nullworx/use-reduced-motion.ts",
+          "canonicalSha256": "2c3efeff0d7b992b46456e8d215b913df0b090dd6174472d06e9717b7eef7dd5",
+          "installedSha256": "2c3efeff0d7b992b46456e8d215b913df0b090dd6174472d06e9717b7eef7dd5"
+        }
+      ],
+      "proof": {
+        "interaction": "PASS",
+        "keyboard": "PASS",
+        "touch": "PASS",
+        "propTransitions": "PASS",
+        "reducedMotion": "PASS",
+        "widths": [
+          1280,
+          390,
+          320
+        ],
+        "axeViolations": 0,
+        "errors": [],
+        "failed": []
+      }
+    },
+    {
+      "kind": "next",
+      "itemAddress": "BikeshedStudios/nullworx/magnetic-focus#4cd0e4b6f8efc95dfd2e4fd2e641c7d194ac378e",
+      "manifest": [
+        {
+          "source": "components/forge-factory-01/magnetic-focus.tsx",
+          "target": "components/nullworx/magnetic-focus.tsx",
+          "canonicalSha256": "36b944ecd3b5c87ccbf2bd311e9606b1203d59aed43a907e406859c22b5290e6",
+          "installedSha256": "36b944ecd3b5c87ccbf2bd311e9606b1203d59aed43a907e406859c22b5290e6"
+        },
+        {
+          "source": "components/forge-factory-01/magnetic-focus.module.css",
+          "target": "components/nullworx/magnetic-focus.module.css",
+          "canonicalSha256": "e3ddaf6e27bf400dcf65e50f6cf409f0e23b14687de56ce37dc6459e838dee5f",
+          "installedSha256": "e3ddaf6e27bf400dcf65e50f6cf409f0e23b14687de56ce37dc6459e838dee5f"
+        },
+        {
+          "source": "components/forge-factory-01/use-reduced-motion.ts",
+          "target": "components/nullworx/use-reduced-motion.ts",
+          "canonicalSha256": "2c3efeff0d7b992b46456e8d215b913df0b090dd6174472d06e9717b7eef7dd5",
+          "installedSha256": "2c3efeff0d7b992b46456e8d215b913df0b090dd6174472d06e9717b7eef7dd5"
+        }
+      ],
+      "proof": {
+        "interaction": "PASS",
+        "keyboard": "PASS",
+        "touch": "PASS",
+        "propTransitions": "PASS",
+        "reducedMotion": "PASS",
+        "widths": [
+          1280,
+          390,
+          320
+        ],
+        "axeViolations": 0,
+        "errors": [],
+        "failed": []
+      }
+    }
+  ],
+  "result": "PASS",
+  "limitations": [
+    "Chromium/Linux consumers only",
+    "No npm publication",
+    "No inference of search indexing or independent external adoption"
+  ]
+}

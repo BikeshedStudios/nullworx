@@ -1,0 +1,4 @@
+body { margin: 0; padding: 24px; color: #20192c; background: #faf7f3; font-family: system-ui; }
+main { max-width: 720px; margin: auto; }
+label { display: block; margin-bottom: 16px; }
+.stage { max-width: 480px; margin: 32px 0; }

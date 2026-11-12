@@ -1,0 +1,18 @@
+{
+  "action": "stage",
+  "hostname": "REPLACE_WITH_INVENTORIED_HOSTNAME_FQDN",
+  "publicIPv4": "REPLACE_WITH_OWNER_VERIFIED_VPS_IPV4",
+  "publicIPv6": null,
+  "sshTarget": "REPLACE_WITH_USER_AT_HOST",
+  "sshPort": null,
+  "sshHostKeySha256": "REPLACE_WITH_VERIFIED_HOST_KEY_FINGERPRINT",
+  "commit": "REPLACE_WITH_40_HEX_COMMIT",
+  "sha256": "REPLACE_WITH_64_HEX_ARTIFACT_DIGEST",
+  "domain": "https://nullworx.space",
+  "productionPort": null,
+  "stagingPort": null,
+  "owner": "REPLACE_WITH_OWNER_IDENTITY",
+  "authorizationRef": "REPLACE_WITH_EXACT_OWNER_APPROVAL_RECEIPT",
+  "expiresAt": "REPLACE_WITH_UTC_ISO_TIMESTAMP",
+  "media": "unavailable"
+}

@@ -1,0 +1,16 @@
+# Import these site blocks into the existing Caddy config only after target approval.
+# Never replace a shared Caddyfile. Do not install Caddy alongside an existing :80/:443 proxy.
+nullworx.space {
+	encode zstd gzip
+	header Strict-Transport-Security "max-age=31536000"
+	reverse_proxy 127.0.0.1:@PRODUCTION_PORT@ {
+		transport http {
+			keepalive 120s
+		}
+	}
+}
+
+www.nullworx.space {
+	header Strict-Transport-Security "max-age=31536000"
+	redir https://nullworx.space{uri} 308
+}

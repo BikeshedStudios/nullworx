@@ -157,3 +157,5 @@
     gap: 16px;
   }
 }
+
+@media(max-width:720px) { .directory nav a { min-height:44px; display:inline-flex; align-items:center; }.label { font-size:11px; }.bottom { font-size:12px; line-height:1.7; gap:12px; }.headline { line-height:.98; } }

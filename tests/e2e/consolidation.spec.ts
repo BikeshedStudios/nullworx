@@ -22,7 +22,6 @@ test("homepage, gallery, routes and installation remain one coherent site", asyn
     "glyph-morph",
     "prism-text",
     "ascii-waves",
-    "digital-wake",
   ])
     await expect(page.locator(`h3 a[href="/effects/${slug}"]`)).toBeVisible();
   for (const [slug, name] of [
@@ -36,7 +35,7 @@ test("homepage, gallery, routes and installation remain one coherent site", asyn
       page.getByRole("button", { name: "Copy example" }),
     ).toBeVisible();
     await expect(
-      page.locator("header").getByRole("link", { name: "UI Forge home" }),
+      page.locator("header").getByRole("link", { name: "nullworx.space home" }),
     ).toHaveCount(1);
   }
   await page.goto("/effects/ascii-waves");
@@ -58,23 +57,15 @@ test("homepage, gallery, routes and installation remain one coherent site", asyn
   expect(errors).toEqual([]);
 });
 
-test("unavailable media is explicit; no fake live label or fallback births", async ({
-  page,
-}) => {
+test("procedural fallback never requests unavailable media; beta stays fail-closed", async ({ page }) => {
   const errors: string[] = [];
-  page.on("pageerror", (error) => errors.push(error.message));
-  await page.route("**/media/local/**", (route) =>
-    route.fulfill({ status: 404, body: "Media not provisioned" }),
-  );
+  const requests: string[] = [];
+  page.on("pageerror", error => errors.push(error.message));
+  page.on("request", request => { if (new URL(request.url()).pathname.startsWith("/media/")) requests.push(request.url()); });
   await page.goto("/");
-  await expect(page.locator("[data-ascii-field]")).toHaveAttribute(
-    "data-phase",
-    "error",
-  );
-  await expect(
-    page.getByText("Video unavailable", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText("● LIVE", { exact: true })).toHaveCount(0);
+  await expect(page.locator("[data-procedural-ascii]").first()).toHaveAttribute("data-playing", "true");
+  await expect(page.getByText("Video unavailable", { exact: true })).toHaveCount(0);
+  expect(requests).toEqual([]);
   await page.goto("/effects/digital-wake");
   await expect(
     page.getByText("VIDEO UNAVAILABLE", { exact: true }),
@@ -112,6 +103,7 @@ test("provisioned ASCII advances, pauses and retains Fine controls", async ({
     "Accepted media intentionally absent from clean clones",
   );
   await page.goto("/effects/ascii-waves");
+  await page.getByLabel("ASCII local video").setInputFiles(media);
   const field = page.locator("[data-ascii-field]");
   await expect(field).toHaveAttribute("data-phase", "live");
   await expect(field).toHaveAttribute("data-detail", "fine");
@@ -119,7 +111,7 @@ test("provisioned ASCII advances, pauses and retains Fine controls", async ({
   await expect
     .poll(async () => Number(await field.getAttribute("data-current-time")))
     .toBeGreaterThan(before + 0.1);
-  await page.getByRole("button", { name: "Pause LOOP30" }).click();
+  await page.getByRole("button", { name: "Pause local video" }).click();
   const held = await page
     .locator("video")
     .evaluate((v) => (v as HTMLVideoElement).currentTime);
@@ -129,9 +121,9 @@ test("provisioned ASCII advances, pauses and retains Fine controls", async ({
       .locator("video")
       .evaluate((v) => (v as HTMLVideoElement).currentTime),
   ).toBe(held);
-  await page.getByLabel("LOOP30 character detail").selectOption("16");
+  await page.getByLabel("local video character detail").selectOption("16");
   await expect(field).toHaveAttribute("data-detail", "original");
-  await page.getByLabel("LOOP30 character detail").selectOption("12");
+  await page.getByLabel("local video character detail").selectOption("12");
   await expect(field).toHaveAttribute("data-detail", "fine");
 });
 

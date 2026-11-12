@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent, PointerEvent } from "react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useReducedMotion } from "./use-reduced-motion";
 import styles from "./magnetic-focus.module.css";
 
@@ -14,6 +14,14 @@ export type MagneticFocusProps = {
   className?: string;
 };
 
+function resetPosition(button: HTMLButtonElement | null) {
+  if (!button) return;
+  button.style.setProperty("--mf-x", "0px");
+  button.style.setProperty("--mf-y", "0px");
+  button.style.setProperty("--mf-px", "50%");
+  button.style.setProperty("--mf-py", "50%");
+}
+
 /** Only pointer input displaces the button. Keyboard focus stays in place. */
 export function MagneticFocus({
   label = "ENTER THE FIELD", intensity = 0.6, paused = false, disabled = false, onClick, className,
@@ -21,12 +29,13 @@ export function MagneticFocus({
   const ref = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
   const canMove = !paused && !reducedMotion && !disabled;
+  // A preference or prop can change without pointerleave/blur. Do not restore
+  // an old displacement when motion is enabled again.
+  useEffect(() => {
+    if (!canMove) resetPosition(ref.current);
+  }, [canMove]);
   function reset() {
-    if (!ref.current) return;
-    ref.current.style.setProperty("--mf-x", "0px");
-    ref.current.style.setProperty("--mf-y", "0px");
-    ref.current.style.setProperty("--mf-px", "50%");
-    ref.current.style.setProperty("--mf-py", "50%");
+    resetPosition(ref.current);
   }
   function move(event: PointerEvent<HTMLButtonElement>) {
     if (!canMove || event.pointerType === "touch") return;

@@ -1,4 +1,4 @@
-name: Verify canonical UI Forge
+name: Verify Nullworx launch
 on:
   pull_request:
   push:
@@ -7,24 +7,43 @@ permissions:
   contents: read
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          node-version: 24
-      - uses: pnpm/action-setup@v4
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.20.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
         with:
           version: 12.15.0
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm validate:effects
-      - run: pnpm test
-      - run: pnpm build
-      - run: pnpm check:secrets
+      - run: pnpm verify
+      - run: node ops/deploy/check-public-assets.mjs
       - run: git diff --check
+      - name: Verify deployment controller and smoke gates
+        run: bash ops/deploy/check.sh
       - run: pnpm exec playwright install chromium --with-deps
       - run: pnpm exec playwright test --reporter=line
         env:
           CLEAN_CLONE: '1'
+      - run: pnpm test:launch
+      - name: Exercise production browser smoke against local build
+        run: |
+          set -euo pipefail
+          log="$RUNNER_TEMP/nullworx-browser-smoke-server.log"
+          pnpm start --port 3371 >"$log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          ready=0
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3371/ >/dev/null 2>&1; then ready=1; break; fi
+            if ! kill -0 "$server_pid" 2>/dev/null; then cat "$log"; exit 1; fi
+            sleep 1
+          done
+          if [ "$ready" != 1 ]; then cat "$log"; exit 1; fi
+          node ops/deploy/smoke-browser.mjs --base-url http://127.0.0.1:3371 --report "$RUNNER_TEMP/nullworx-browser-smoke.json"
+      - run: pnpm test:distribution
+      - run: pnpm test:distribution:site

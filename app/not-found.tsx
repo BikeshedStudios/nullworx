@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFoundMetadata } from "@/lib/discovery/metadata";
 import styles from "./not-found.module.css";
 
-export const metadata: Metadata = {
-  title: "Not found",
-  description: "This UI Forge route does not exist.",
-  robots: { index: false, follow: false },
-};
+export const metadata: Metadata = notFoundMetadata();
 
 export default function NotFound() {
   return (
@@ -26,7 +23,7 @@ export default function NotFound() {
         </p>
         <div className={styles.actions}>
           <Link className="button" href="/">
-            Return to UI Forge <span className="arrow" aria-hidden="true">↗</span>
+            Return to Nullworx <span className="arrow" aria-hidden="true">↗</span>
           </Link>
           <Link className="text-link" href="/effects">Explore effects <span aria-hidden="true">→</span></Link>
         </div>

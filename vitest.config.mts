@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["tests/unit/**/*.test.{ts,tsx}"],
+    include: ["tests/unit/**/*.test.{ts,tsx}", "tests/discovery/**/*.test.{ts,tsx}"],
     environment: "node",
     restoreMocks: true,
     coverage: {

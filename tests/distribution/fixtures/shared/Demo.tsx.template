@@ -1,0 +1,16 @@
+"use client";
+import { useState } from "react";
+import { MagneticFocus } from "@/components/nullworx/magnetic-focus";
+export function Demo() {
+  const [count, setCount] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+  return <main>
+    <h1>Magnetic Focus consumer</h1>
+    <label><input type="checkbox" checked={paused} onChange={e => setPaused(e.target.checked)} /> Pause motion</label>
+    <label><input type="checkbox" checked={disabled} onChange={e => setDisabled(e.target.checked)} /> Disable button</label>
+    <div className="stage"><MagneticFocus label="Open field" intensity={1} paused={paused} disabled={disabled} onClick={() => setCount(n => n + 1)} /></div>
+    <p role="status">Activated {count} times</p>
+    <a href="#after">After button</a>
+  </main>;
+}

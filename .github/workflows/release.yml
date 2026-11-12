@@ -1,0 +1,48 @@
+name: Prepare production release (no deployment)
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Exact reviewed main commit (40 lowercase hex characters)'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: nullworx-release-preparation
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      SELECTED_COMMIT: ${{ inputs.commit }}
+    steps:
+      - name: Validate explicit selection
+        shell: bash
+        run: '[[ "$SELECTED_COMMIT" =~ ^[0-9a-f]{40}$ ]]'
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Require reviewed main history
+        run: |
+          git cat-file -e "$SELECTED_COMMIT^{commit}"
+          git merge-base --is-ancestor "$SELECTED_COMMIT" origin/main
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.20.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        with:
+          version: 12.15.0
+      - name: Build and test the exact snapshot
+        run: bash ops/deploy/build-release.sh "$SELECTED_COMMIT" "$RUNNER_TEMP/nullworx-release"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: nullworx-${{ inputs.commit }}-linux-x64
+          path: ${{ runner.temp }}/nullworx-release/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Owner handoff
+        run: |
+          echo 'Artifact preparation only. VPS inventory, exact-target owner authorization, staging HTTP/browser attestation, production authorization and edge verification remain required.' >> "$GITHUB_STEP_SUMMARY"
