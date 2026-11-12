@@ -1,7 +1,23 @@
 import { describe, expect, it } from "vitest";
+import { BENTO_DUO } from "../../lib/bento-duo";
 import { dropsSchema } from "../../lib/distribution/schema";
 import { createRateLimiter } from "../../lib/distribution/rate-limit";
 import { isGumroadProductUrl, isBuyMeACoffeeUrl, publishedGumroadProductUrl } from "../../lib/site";
+
+describe("Published Bento Duo release identity", () => {
+  it("keeps the approved price, public route and verified Gumroad seller", () => {
+    expect(BENTO_DUO.path).toBe("/kits/bento-duo");
+    expect(BENTO_DUO.checkoutUrl).toBe("https://bikeshedstudios.gumroad.com/l/dordxw");
+    expect(BENTO_DUO.price).toBe(39);
+    expect(BENTO_DUO.priceCurrency).toBe("EUR");
+    expect(BENTO_DUO.license).toBe("MIT");
+    expect(BENTO_DUO.kits.map(kit => kit.name)).toEqual(["Orbit Bento 02", "Foil Reactor"]);
+    for (const kit of BENTO_DUO.kits) {
+      expect(kit.desktop.src).toContain("/docs/bento-duo-01/previews/");
+      expect(kit.mobile.src).toContain("/docs/bento-duo-01/previews/");
+    }
+  });
+});
 
 describe("Distribution safety contracts", () => {
   it("accepts the creator's Gumroad product URLs", () => {
