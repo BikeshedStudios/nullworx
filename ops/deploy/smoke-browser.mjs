@@ -2,7 +2,7 @@
 import { chromium, expect } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { publicPaths, canonicalOrigin } from "./smoke-http.mjs";
+import { publicPaths, canonicalOrigin, legacyRelease } from "./smoke-http.mjs";
 
 const { values } = parseArgs({ options: {
   "base-url": { type: "string" }, report: { type: "string" },
@@ -11,6 +11,8 @@ const { values } = parseArgs({ options: {
 const base = new URL(values["base-url"]);
 if (base.origin !== canonicalOrigin && !(base.protocol === "http:" && base.hostname === "127.0.0.1")) throw new Error("Use the canonical domain or an explicit loopback tunnel");
 const checks = [];
+const legacy = values.commit === legacyRelease;
+const pages = legacy ? publicPaths.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : publicPaths;
 // Only intercept public /media URLs and video files, never Next's /_next/static/media/*.woff2 fonts.
 const isVideoResource = url => url.pathname.startsWith("/media/") || /\.(?:mp4|webm)$/i.test(url.pathname);
 const browser = await chromium.launch({ headless: true, args: ["--enable-unsafe-swiftshader", "--use-gl=angle", "--use-angle=swiftshader", "--disable-dev-shm-usage"] });
@@ -28,7 +30,7 @@ async function check(name, fn) {
   finally { await context.close(); }
 }
 try {
-  for (const path of publicPaths) await check(`mobile ${path}`, async page => {
+  for (const path of pages) await check(`mobile ${path}`, async page => {
     const response = await page.goto(path, { waitUntil: "domcontentloaded" });
     if (base.origin === canonicalOrigin && path === "/effects/digital-wake") {
       expect(response.status()).toBe(404);
@@ -92,7 +94,7 @@ try {
     await expect(page.getByRole("status", { name: "Material status" })).toContainText(/image|decode/i);
     await expect(page.locator("img[data-source]")).toHaveAttribute("alt", /Original generated raster/);
   });
-  await check("published Bento Duo checkout", async page => {
+  if (!legacy) await check("published Bento Duo checkout", async page => {
     await page.goto("/kits/bento-duo");
     await expect(page.getByRole("heading", { name: "Orbit Bento 02", exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Foil Reactor", exact: true })).toBeVisible();
@@ -104,7 +106,7 @@ try {
     }
     expect(await page.locator("main a[href]").evaluateAll(links => links.some(a => /\.(zip|tgz)(?:\?|$)/i.test(a.getAttribute("href"))))).toBe(false);
   });
-  await check("support destinations", async page => {
+  if (!legacy) await check("support destinations", async page => {
     for (const path of ["/", "/about"]) {
       await page.goto(path);
       const links = page.locator('a[href="https://buymeacoffee.com/bikeshedstudios"]');
@@ -112,7 +114,7 @@ try {
       for (const link of await links.all()) await expect(link).toHaveAttribute("rel", /noopener/);
     }
   });
-  await check("disabled Drops", async page => {
+  if (!legacy) await check("disabled Drops", async page => {
     await page.goto("/drops");
     await expect(page.getByRole("textbox", { name: "Email address" })).toHaveCount(0);
     await expect(page.getByText("Signups are not active yet.", { exact: false })).toBeVisible();

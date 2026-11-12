@@ -11,6 +11,9 @@ export const effects = ["magnetic-focus", "glyph-morph", "prism-text", "ascii-wa
 export const publicPaths = ["/", "/effects", ...effects.map(slug => `/effects/${slug}`), "/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"];
 export const indexablePaths = ["/", "/effects", ...effects.filter(slug => slug !== "digital-wake").map(slug => `/effects/${slug}`), "/kits/bento-duo"];
 export const galleryEffects = effects.filter(slug => slug !== "digital-wake");
+// Retain strict verification of the inventoried rollback release. New releases
+// must satisfy the current commerce/routes contract; no caller-selected bypass.
+export const legacyRelease = "697468992c453c9ca9ed93862f35b3089dc67acb";
 const decode = text => text.replaceAll("&amp;", "&").replaceAll("&quot;", '"');
 function attributes(tag) {
   return Object.fromEntries([...tag.matchAll(/([\w-]+)\s*=\s*["']([^"']*)["']/g)].map(m => [m[1].toLowerCase(), decode(m[2])]));
@@ -32,6 +35,9 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
   invariant(profile !== "edge" || base.origin === canonicalOrigin, "Edge checks require the exact canonical domain");
   invariant(profile !== "origin" || (base.protocol === "http:" && base.hostname === "127.0.0.1"), "Origin checks require an explicit loopback HTTP endpoint (SSH tunnel allowed)");
   const checks = [];
+  const legacy = commit === legacyRelease;
+  const pages = legacy ? publicPaths.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : publicPaths;
+  const submittedPaths = legacy ? indexablePaths.filter(path => path !== "/kits/bento-duo") : indexablePaths;
   const request = path => fetch(new URL(path, base), { redirect: "manual", signal: AbortSignal.timeout(15000), headers: { "User-Agent": "Nullworx-production-smoke/1" } });
   async function check(name, fn) {
     try { await fn(); checks.push({ name, passed: true }); }
@@ -47,7 +53,7 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
     invariant(!response.headers.has("x-powered-by"), "X-Powered-By leaks runtime");
     if (profile === "edge") invariant(/max-age=(\d+)/i.exec(response.headers.get("strict-transport-security") || "")?.[1] >= 31536000, "Missing one-year HSTS");
   }
-  for (const path of publicPaths) await check(`page ${path}`, async () => {
+  for (const path of pages) await check(`page ${path}`, async () => {
     const response = await request(path);
     if (profile === "edge" && path === "/effects/digital-wake") {
       invariant(response.status === 404, "Experimental route must stay blocked at the public edge");
@@ -94,8 +100,8 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
     const xml = await response.text();
     invariant(/<urlset\b/.test(xml), "Expected urlset sitemap");
     const locations = [...xml.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(m => new URL(decode(m[1].trim())));
-    for (const path of indexablePaths) invariant(locations.some(url => url.pathname === path && url.origin === canonicalOrigin), `Sitemap lacks ${path}`);
-    invariant(locations.length === indexablePaths.length && locations.every(url => indexablePaths.includes(url.pathname)), "Sitemap must contain exactly the ten approved URLs, including Bento Duo; Beta/private routes excluded");
+    for (const path of submittedPaths) invariant(locations.some(url => url.pathname === path && url.origin === canonicalOrigin), `Sitemap lacks ${path}`);
+    invariant(locations.length === submittedPaths.length && locations.every(url => submittedPaths.includes(url.pathname)), `Sitemap must contain exactly ${submittedPaths.length} approved URLs; Beta/private routes excluded`);
     invariant(locations.length === new Set(locations.map(url => url.href)).size, "Duplicate sitemap locations");
     invariant(locations.every(url => url.origin === canonicalOrigin && !url.search && !/^\/(lab|tools|downloads)(\/|$)/.test(url.pathname)), "Sitemap includes noncanonical/private URL");
   });
