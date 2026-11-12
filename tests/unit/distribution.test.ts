@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { dropsSchema } from "../../lib/distribution/schema";
 import { createRateLimiter } from "../../lib/distribution/rate-limit";
-import { isGumroadProductUrl, isBuyMeACoffeeUrl } from "../../lib/site";
+import { isGumroadProductUrl, isBuyMeACoffeeUrl, publishedGumroadProductUrl } from "../../lib/site";
 
 describe("Distribution safety contracts", () => {
   it("accepts the creator's Gumroad product URLs", () => {
@@ -10,6 +10,11 @@ describe("Distribution safety contracts", () => {
     expect(isGumroadProductUrl("https://other.gumroad.com/l/malicious")).toBe(false);
     expect(isGumroadProductUrl("https://bikeshedstudios.gumroad.com/")).toBe(false);
     expect(isGumroadProductUrl("javascript:alert(1)")).toBe(false);
+    expect(isGumroadProductUrl("https://bikeshedstudios.gumroad.com/any-page")).toBe(false);
+    expect(isGumroadProductUrl("https://bikeshedstudios.gumroad.com/l/creator-pack?foo=bar")).toBe(false);
+    expect(publishedGumroadProductUrl("https://bikeshedstudios.gumroad.com/l/creator-pack", undefined)).toBeNull();
+    expect(publishedGumroadProductUrl("https://bikeshedstudios.gumroad.com/l/creator-pack", "0")).toBeNull();
+    expect(publishedGumroadProductUrl("https://bikeshedstudios.gumroad.com/l/creator-pack", "1")).toBe("https://bikeshedstudios.gumroad.com/l/creator-pack");
   });
   it("validates the support URL origin", () => {
     expect(isBuyMeACoffeeUrl("https://buymeacoffee.com/bikeshedstudios")).toBe(true);
