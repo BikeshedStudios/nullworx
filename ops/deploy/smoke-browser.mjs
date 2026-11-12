@@ -11,6 +11,8 @@ const { values } = parseArgs({ options: {
 const base = new URL(values["base-url"]);
 if (base.origin !== canonicalOrigin && !(base.protocol === "http:" && base.hostname === "127.0.0.1")) throw new Error("Use the canonical domain or an explicit loopback tunnel");
 const checks = [];
+// Only intercept public /media URLs and video files, never Next's /_next/static/media/*.woff2 fonts.
+const isVideoResource = url => url.pathname.startsWith("/media/") || /\.(?:mp4|webm)$/i.test(url.pathname);
 const browser = await chromium.launch({ headless: true, args: ["--enable-unsafe-swiftshader", "--use-gl=angle", "--use-angle=swiftshader", "--disable-dev-shm-usage"] });
 async function check(name, fn) {
   const context = await browser.newContext({ baseURL: base.origin, viewport: { width: 390, height: 844 }, reducedMotion: "reduce" });
@@ -50,7 +52,7 @@ try {
   for (const path of ["/", "/effects/ascii-waves"]) await check(`procedural ASCII fallback ${path}`, async page => {
     // Unprovisioned media must not be fetched: the default is the original procedural renderer.
     let mediaRequests = 0;
-    await page.route(/\/(media\/|[^/?]+\.(mp4|webm)(\?|$))/, route => {
+    await page.route(isVideoResource, route => {
       mediaRequests++;
       return route.fulfill({ status: 404, body: "Smoke: unavailable media" });
     });
@@ -67,7 +69,7 @@ try {
   });
   await check("missing media /effects/digital-wake", async page => {
     // Digital Wake remains a separate Beta page with an explicit media-unavailable state.
-    await page.route(/\/(media\/|[^/?]+\.(mp4|webm)(\?|$))/, route => route.fulfill({ status: 404, body: "Smoke: unavailable media" }));
+    await page.route(isVideoResource, route => route.fulfill({ status: 404, body: "Smoke: unavailable media" }));
     await page.goto("/effects/digital-wake");
     await expect(page.getByText("VIDEO UNAVAILABLE", { exact: true })).toBeVisible();
     await page.locator("summary").filter({ hasText: "Video & source" }).click();
