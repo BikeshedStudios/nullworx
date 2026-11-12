@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./site-header.module.css";
 
-export function SiteHeader() {
+export function SiteHeader({ dropsAvailable }: { dropsAvailable: boolean }) {
   return <header className={styles.header}>
     <div className={`container ${styles.inner}`}>
       <Link className={styles.brand} href="/" prefetch={false} aria-label="nullworx.space home">
@@ -14,6 +14,7 @@ export function SiteHeader() {
         <Link href="/effects" className={styles.navLink}>Effects</Link>
         <Link href="/#how" className={styles.navLink}>How it works</Link>
         <Link href="/effects/magnetic-focus" className={styles.navLink}>Playground</Link>
+        {dropsAvailable && <Link href="/drops" className={styles.navLink}>Drops</Link>}
       </nav>
       <div className={styles.actions}>
         <span className={styles.status}>UI FORGE / VOL. 01</span>
@@ -21,7 +22,7 @@ export function SiteHeader() {
         <details className={styles.mobile}>
           <summary aria-label="Open navigation">Menu <span className={styles.mobileIcon} aria-hidden="true"><i/><i/></span></summary>
           <nav className={styles.mobilePanel} aria-label="Mobile navigation" onClick={event => { if ((event.target as HTMLElement).closest("a")) event.currentTarget.closest("details")?.removeAttribute("open"); }}>
-            <Link href="/effects">Effects</Link><Link href="/#how">How it works</Link><Link href="/effects/magnetic-focus">Live playground</Link><Link href="/effects#install">Installation</Link>
+            <Link href="/effects">Effects</Link><Link href="/#how">How it works</Link><Link href="/effects/magnetic-focus">Live playground</Link><Link href="/effects#install">Installation</Link>{dropsAvailable && <Link href="/drops">Get free Drops</Link>}
           </nav>
         </details>
       </div>

@@ -55,9 +55,31 @@ export function isBuyMeACoffeeUrl(value: string | undefined): value is string {
   }
 }
 
+export const DEFAULT_SUPPORT_URL = "https://buymeacoffee.com/bikeshedstudios";
 export const supportUrl = isBuyMeACoffeeUrl(process.env.NEXT_PUBLIC_SUPPORT_URL)
   ? process.env.NEXT_PUBLIC_SUPPORT_URL
-  : null;
+  : DEFAULT_SUPPORT_URL;
+
+// A pack CTA is off by default until its Gumroad URL is verified and published.
+export function isGumroadProductUrl(value: string | undefined): value is string {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" &&
+      url.hostname === "bikeshedstudios.gumroad.com" &&
+      /^\/l\/[a-zA-Z0-9_-]+\/?$/.test(url.pathname) &&
+      !url.username && !url.password && !url.search && !url.hash;
+  } catch {
+    return false;
+  }
+}
+export function publishedGumroadProductUrl(url: string | undefined, published: string | undefined): string | null {
+  return published === "1" && isGumroadProductUrl(url) ? url : null;
+}
+export const gumroadProductUrl = publishedGumroadProductUrl(
+  process.env.NEXT_PUBLIC_GUMROAD_PRODUCT_URL,
+  process.env.NEXT_PUBLIC_GUMROAD_PRODUCT_PUBLISHED
+);
 
 export const primaryNav = [
   { href: "/effects", label: "Effects" },

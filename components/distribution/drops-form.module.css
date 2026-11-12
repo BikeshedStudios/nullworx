@@ -1,0 +1,12 @@
+.form { display: grid; gap: 12px; max-width: 650px; }
+.form > label { font-size: 16px; font-weight: 650; }
+.fields { display: flex; gap: 12px; flex-wrap: wrap; }
+.fields input { flex: 1 1 260px; min-width: 0; min-height: 52px; padding: 12px 16px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--surface); color: var(--paper); font: inherit; font-size: 17px; }
+.fields button { flex: 0 1 auto; min-height: 52px; padding: 12px 20px; border: 1px solid var(--line-strong); border-radius: 8px; background: var(--paper); color: var(--background); font: inherit; font-weight: 700; cursor: pointer; }
+.fields button:disabled { opacity: .65; cursor: not-allowed; }
+.fields input:focus-visible, .fields button:focus-visible { outline: 3px solid var(--purple-deep); outline-offset: 3px; }
+.fine { font-size: 14px; line-height: 1.6; color: var(--paper-dim); }
+.fine a { text-decoration: underline; text-underline-offset: 3px; }
+.status { min-height: 24px; font-size: 15px; }
+.trap { position: absolute; left: -99999px; height: 1px; width: 1px; overflow: hidden; }
+@media (max-width: 520px) { .fields button { width: 100%; flex: 1 1 100%; } }
