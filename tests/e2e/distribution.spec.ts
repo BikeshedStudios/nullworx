@@ -7,13 +7,10 @@ test("support link goes to Bikeshed Studios", async ({ page }) => {
   await expect(support).toHaveAttribute("rel", /noopener/);
 });
 
-test("Drops destination doesn't silently collect emails without a provider", async ({ page }) => {
+test("Drops destination doesn't silently collect emails without explicit activation", async ({ page }) => {
   await page.goto("/drops");
   await expect(page.getByRole("heading", { name: "Get Nullworx Drops" })).toBeVisible();
   const input = page.getByRole("textbox", { name: "Email address" });
-  if (await input.count()) {
-    await expect(input).toBeVisible();
-  } else {
-    await expect(page.getByText("Signups are not active yet.", { exact: false })).toBeVisible();
-  }
+  await expect(input).toHaveCount(0);
+  await expect(page.getByText("Signups are not active yet.", { exact: false })).toBeVisible();
 });
