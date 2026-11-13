@@ -11,14 +11,20 @@ Other values, including the former `calibrated` value, select calibrated video
 mapping. The procedural homepage fallback is unchanged. No C edge shader or D
 temporal filter is included. Fine remains 12 desktop CSS pixels with the tested
 responsive stage rule. Replacing a source preserves a user's selected detail;
-a fresh page starts at Fine.
+at adoption a fresh page started at Fine. The current release update below
+supersedes that default.
 
 The idle gate sleeps when the wave clock is frozen and pointer strength settles.
 Media frames, play/pause, seeks, visibility/intersection, size/settings changes,
 source replacement and context recovery invalidate or recreate it. The wrapper
 samples its non-preserved output inside the draw callback, without a second RAF.
 
-## Current authorization — 2026-11-13
+## Current release update — 2026-11-13
+
+The owner selected Dense as the default: 8px desktop cells, with the existing
+responsive density rule. Fine (12px) and Original (16px) remain selectable;
+replacing a source preserves an explicit selection, and a fresh page uses Dense.
+The calibrated mapping and independent idle gate remain unchanged.
 
 The owner confirms direct rights-holder permission for website streaming and
 ASCII transformation of the exact LOOP30. This supersedes the historical

@@ -14,7 +14,7 @@ test("enabled deployment uses exact fish bytes, attribution and honest missing-m
     const field = page.locator("[data-ascii-field]");
     await field.scrollIntoViewIfNeeded();
     await expect(field).toHaveAttribute("data-phase", "live");
-    await expect(page.getByLabel("local video character detail")).toHaveValue("12");
+    await expect(page.getByLabel("local video character detail")).toHaveValue("8");
     await expect(page.locator("[data-ascii-attribution]")).toContainText("Animal Exploration Project");
     await expect(page.locator("[data-ascii-attribution]")).toContainText("No endorsement");
     await expect(page.locator("[data-ascii-attribution] a").first()).toHaveAttribute("href", "https://www.youtube.com/watch?v=B30S0Vr9N9A&t=3512s");

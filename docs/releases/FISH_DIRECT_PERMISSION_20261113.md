@@ -18,6 +18,10 @@ source title and YouTube link remain factual attribution, without a CC claim.
 
 ## Application and integrity
 
+Owner-selected Dense is the default detail (8px desktop cells). Fine (12px) and
+Original (16px) remain available. Source replacement preserves the chosen detail;
+a fresh page starts at Dense. The responsive density rule is unchanged.
+
 `featured-media.ts` accepts a backward-compatible CC BY path or a direct
 permission path. Direct permission requires receipt/source-linkage identifiers,
 public credit, the exact content-addressed path/hash and server integrity mode.

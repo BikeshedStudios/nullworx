@@ -18,7 +18,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
   const reduced = useRef(false);
   const resume = useRef<() => void>(() => {});
   const [playback, setPlayback] = useState<Playback>({ phase: "loading", message: "Loading local video clip…" });
-  const [density, setDensity] = useState(12);
+  const [density, setDensity] = useState(8);
   const [attempt, setAttempt] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [renderedSource, setRenderedSource] = useState<string | null>(null);
@@ -216,7 +216,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
   return <div ref={root} className={styles.shell} data-koi-field data-ascii-field data-source-id={featured ? "featured-loop30-807bb27e" : "local-browser-file"} data-detail={density === 12 ? "fine" : density === 16 ? "original" : "dense"} data-phase={phase}>
     <div className={styles.top}><span><i /> FIELD STUDY / 001</span><span>{featured ? "featured fish" : "local video"} · {density === 12 ? "FINE" : density === 16 ? "ORIGINAL" : "DENSE"} ASCII</span><span className={styles.signal} data-phase={phase} role="status">{phase === "live" ? "● LIVE" : phase.toUpperCase()}</span></div>
     <div className={styles.stage}>
-      <canvas key={`${attempt}-${density}`} ref={canvas} aria-label="Source video rendered with fine colored ASCII characters" data-testid="koi-home-field"
+      <canvas key={`${attempt}-${density}`} ref={canvas} aria-label={`Source video rendered with ${density === 8 ? "dense" : density === 12 ? "fine" : "original"} colored ASCII characters`} data-testid="koi-home-field"
         onPointerMove={event => { if (phase !== "live" || event.pointerType === "touch") return; const box = event.currentTarget.getBoundingClientRect(); renderer.current?.setPointer((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height); }}
         onPointerLeave={() => renderer.current?.setPointerActive(false)} />
       <video ref={video} muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} className={styles.video} />
@@ -237,6 +237,6 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     <div className={styles.filePicker}><button type="button" onClick={onReset}>Use procedural animation</button><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span></div>
     {phase === "reduced" && <p className={styles.reduced}>Reduced motion is on. Showing a still ASCII frame; Play local video opts into animation.</p>}
     {phase === "buffering" && <p className={styles.reduced} role="status">{playback.message}</p>}
-    {expanded && <div className={styles.receipt}><p>The video uses the calibrated glyph mapping. Fine uses 12px desktop cells; mobile density scales with the stage. The original mapping is available with ?asciiRamp=original.</p><p>{playback.message}</p><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span><span>Rendering uses the source colors. Purple belongs to the interface.</span></div>}
+    {expanded && <div className={styles.receipt}><p>The video uses the calibrated glyph mapping. Dense is the default, using 8px desktop cells; Fine uses 12px. Mobile density scales with the stage. The original mapping is available with ?asciiRamp=original.</p><p>{playback.message}</p><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span><span>Rendering uses the source colors. Purple belongs to the interface.</span></div>}
   </div>;
 }

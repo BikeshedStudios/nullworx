@@ -37,7 +37,7 @@ for (const [label, query] of variants) test(`${label}: real media, pause, offscr
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message)); page.on('console', e => { if (e.type() === 'error') errors.push(e.text()); });
   await page.goto('/effects/ascii-waves' + query); await open();
   console.log('GPU:', await page.locator('canvas[data-testid="koi-home-field"]').evaluate(c => { const gl = (c as HTMLCanvasElement).getContext('webgl2')!; const d = gl.getExtension('WEBGL_debug_renderer_info'); return d ? gl.getParameter(d.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER); }));
-  await expect(page.getByLabel('local video character detail')).toHaveValue('12');
+  await expect(page.getByLabel('local video character detail')).toHaveValue('8');
   await expect(page.locator('canvas[data-ascii-ramp]')).toHaveAttribute('data-ascii-ramp', label === 'original rollback' ? 'original' : 'calibrated');
   const before = await counts(); await page.waitForTimeout(350);
   expect((await counts()).uploads).toBeGreaterThan(before.uploads);
@@ -100,7 +100,7 @@ test('idle: rapid replacement, loop, paused seek, invalid codec, context loss an
   await expect(page.getByText('WebGL2 context lost.', { exact: false })).toBeVisible();
   await page.getByRole('button', { name: 'Retry local video', exact: false }).click();
   await expect(field).toHaveAttribute('data-phase', 'live');
-  await expect(page.getByLabel('local video character detail')).toHaveValue('12');
+  await expect(page.getByLabel('local video character detail')).toHaveValue('8');
   await picker.setInputFiles({ name: 'unsupported.mp4', mimeType: 'video/mp4', buffer: Buffer.from('unsupported video bytes') });
   await expect(field).toHaveAttribute('data-phase', 'error');
   await expect(field).toHaveAttribute('data-media-error', /[1-4]/);
@@ -130,15 +130,17 @@ test('idle: reduced motion on first load retains a still frame and can opt into 
 });
 
 
-test('detail defaults to Fine on reload and preserves an explicit choice on replacement', async ({ page }) => {
+test('detail defaults to Dense on reload and preserves explicit Fine and Original choices on replacement', async ({ page }) => {
   test.skip(!media, 'Set ASCII_TEST_VIDEO to a local clip.');
   await page.goto('/effects/ascii-waves');
   const picker = page.getByLabel('ASCII local video');
   await picker.setInputFiles(media!);
-  await expect(page.getByLabel('local video character detail')).toHaveValue('12');
-  await page.getByLabel('local video character detail').selectOption('16');
-  await picker.setInputFiles(media!);
-  await expect(page.getByLabel('local video character detail')).toHaveValue('16');
+  await expect(page.getByLabel('local video character detail')).toHaveValue('8');
+  for (const detail of ['12', '16']) {
+    await page.getByLabel('local video character detail').selectOption(detail);
+    await picker.setInputFiles(media!);
+    await expect(page.getByLabel('local video character detail')).toHaveValue(detail);
+  }
   await page.reload(); await picker.setInputFiles(media!);
-  await expect(page.getByLabel('local video character detail')).toHaveValue('12');
+  await expect(page.getByLabel('local video character detail')).toHaveValue('8');
 });
