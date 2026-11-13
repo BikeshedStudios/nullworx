@@ -45,7 +45,7 @@ export PLAYGROUND_01C_RECEIPTS="$RELEASE_OUTPUT/playgrounds" PLAYGROUND_01A_RECE
 export FORGE_REVIEW_DIR="$RELEASE_OUTPUT/forge" SIGNATURE_REVIEW_DIR="$RELEASE_OUTPUT/signature" POLISH_EVIDENCE="$RELEASE_OUTPUT/polish"
 export LAUNCH_REPORT_DIR="$RELEASE_OUTPUT/launch" DISCOVERY_VISUAL_REPORT_DIR="$RELEASE_OUTPUT/launch/discovery" E2E_REPORT="$RELEASE_OUTPUT/e2e.json"
 mkdir -p "$PLAYGROUND_01C_RECEIPTS"
-ffmpeg -n -hide_banner -loglevel error -f lavfi -i testsrc2=size=320x180:rate=24 -t 6 -c:v libvpx-vp9 -threads 1 -pix_fmt yuv420p "$PLAYGROUND_01C_RECEIPTS/synthetic-test.webm"
+ffmpeg -nostdin -n -hide_banner -loglevel error -f lavfi -i testsrc2=size=320x180:rate=24 -t 6 -c:v libvpx-vp9 -threads 1 -pix_fmt yuv420p "$PLAYGROUND_01C_RECEIPTS/synthetic-test.webm"
 export ASCII_TEST_VIDEO="$PLAYGROUND_01C_RECEIPTS/synthetic-test.webm" POLISH_VIDEO="$PLAYGROUND_01C_RECEIPTS/synthetic-test.webm"
 CLEAN_CLONE=1 pnpm exec playwright test --reporter=line --workers=1
 bash ops/deploy/check.sh
