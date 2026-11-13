@@ -1,0 +1,28 @@
+{
+  "$schema": "https://nullworx.space/schemas/design-dna-1.0.0.json",
+  "schemaVersion": "1.0.0",
+  "id": "foil-brushed",
+  "version": "1.0.0",
+  "title": "Foil brushed",
+  "description": "Spectral foil at its approved starting light.",
+  "component": {
+    "id": "foil-reactor",
+    "version": "1.0.0"
+  },
+  "tokens": {
+    "content": {
+      "title": "Light,\ngiven form.",
+      "subtitle": "A study in surfaces that refuse to sit still.",
+      "specimen": "FR-001"
+    },
+    "layout": {
+      "material": "brushed",
+      "phase": "folded",
+      "lightX": 18,
+      "lightY": 82
+    },
+    "motion": {
+      "mode": "auto"
+    }
+  }
+}

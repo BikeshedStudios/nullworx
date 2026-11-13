@@ -1,0 +1,46 @@
+{
+  "$schema": "https://nullworx.space/schemas/design-dna-1.0.0.json",
+  "schemaVersion": "1.0.0",
+  "id": "signature-carbon",
+  "version": "1.0.0",
+  "title": "Carbon signature",
+  "description": "Approved Carbon direction.",
+  "component": {
+    "id": "signature-hero",
+    "version": "1.0.0"
+  },
+  "tokens": {
+    "palette": {
+      "background": "#171916",
+      "ink": "#eeeee5",
+      "muted": "#b1b4a7",
+      "accent": "#d5ed8b",
+      "line": "#474b40",
+      "material": [
+        "#f4f5d5",
+        "#abb59a",
+        "#475c3b",
+        "#d5ed8b"
+      ]
+    },
+    "typography": {
+      "weight": 800,
+      "tracking": -0.025
+    },
+    "content": {
+      "brand": "Form & Field",
+      "wordmark": "FORM",
+      "counterline": "with feeling.",
+      "description": "We turn a point of view into a presence. Strategy, identity and digital experiences for people moving things forward.",
+      "primaryLabel": "Start a conversation"
+    },
+    "motion": {
+      "mode": "auto",
+      "speed": 0.16,
+      "pointer": true
+    },
+    "layout": {
+      "maxWidth": 1200
+    }
+  }
+}

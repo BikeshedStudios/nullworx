@@ -1,0 +1,29 @@
+[
+  {
+    "id": "trial-a-signature-quiet-editorial",
+    "agent": "independent-agent-a",
+    "goal": "A quieter editorial studio variation of the approved Carbon direction.",
+    "base": "signature-carbon.json",
+    "changes": {
+      "tokens.palette.accent": "#c08e72",
+      "tokens.content.counterline": "with restraint.",
+      "tokens.typography.tracking": -0.03
+    },
+    "rationale": "Swap the loud lime for a desaturated clay accent, replace the counterline with a quieter editorial phrase, and tighten display tracking slightly so the hero reads composed rather than expressive.",
+    "forbidden": { "code": "<script>alert(1)</script>" }
+  },
+  {
+    "id": "trial-b-orbit-lagoon-field-notes",
+    "agent": "independent-agent-b",
+    "goal": "A lagoon studio variation of Orbit Bento with a field-notes index.",
+    "base": "orbit-iris.json",
+    "changes": {
+      "tokens.layout.accent": "lagoon",
+      "tokens.layout.radius": 24,
+      "tokens.content.title": "Field notes.",
+      "tokens.content.subtitle": "A running index of studio work. Pick a thread, then find the next step."
+    },
+    "rationale": "Keeps the approved structure and palette while switching the bento surfaces to the lagoon accent mode and a softer 24px radius, and reframes the index as a field-notes ledger with a shorter title and subtitle.",
+    "forbidden": { "tokens.layout.radius": 99 }
+  }
+]

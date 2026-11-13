@@ -1,0 +1,46 @@
+{
+  "$schema": "https://nullworx.space/schemas/design-dna-1.0.0.json",
+  "schemaVersion": "2.0.0",
+  "id": "signature-cobalt",
+  "version": "1.0.0",
+  "title": "Cobalt signature",
+  "description": "Approved Cobalt direction with the default copy and live pointer light.",
+  "component": {
+    "id": "signature-hero",
+    "version": "1.0.0"
+  },
+  "tokens": {
+    "palette": {
+      "background": "#152db3",
+      "ink": "#f1f1e6",
+      "muted": "#c0cef3",
+      "accent": "#effa9c",
+      "line": "#687bdd",
+      "material": [
+        "#f4f4dd",
+        "#b0c6ef",
+        "#6a8bda",
+        "#f1f3d4"
+      ]
+    },
+    "typography": {
+      "weight": 600,
+      "tracking": -0.02
+    },
+    "content": {
+      "brand": "Form & Field",
+      "wordmark": "FORM",
+      "counterline": "with feeling.",
+      "description": "We turn a point of view into a presence. Strategy, identity and digital experiences for people moving things forward.",
+      "primaryLabel": "Start a conversation"
+    },
+    "motion": {
+      "mode": "auto",
+      "speed": 0.2,
+      "pointer": true
+    },
+    "layout": {
+      "maxWidth": 1200
+    }
+  }
+}

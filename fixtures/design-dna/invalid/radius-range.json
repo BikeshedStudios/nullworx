@@ -1,0 +1,33 @@
+{
+  "$schema": "https://nullworx.space/schemas/design-dna-1.0.0.json",
+  "schemaVersion": "1.0.0",
+  "id": "orbit-iris",
+  "version": "1.0.0",
+  "title": "Orbit iris",
+  "description": "The approved Iris palette and default radius.",
+  "component": {
+    "id": "orbit-bento",
+    "version": "1.0.0"
+  },
+  "tokens": {
+    "palette": {
+      "background": "#f0ebe0",
+      "ink": "#292720",
+      "muted": "#676258",
+      "accent": "#59468c",
+      "line": "#e8e1ef"
+    },
+    "content": {
+      "eyebrow": "ORBIT / STUDIO WORK INDEX",
+      "title": "Work, in\nprogress.",
+      "subtitle": "A collection of ongoing work. Select a project. Find the next step."
+    },
+    "layout": {
+      "accent": "iris",
+      "radius": 80
+    },
+    "motion": {
+      "mode": "auto"
+    }
+  }
+}
