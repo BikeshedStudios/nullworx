@@ -36,6 +36,22 @@ Candidate branch: `sprint/megasprint-01` in
   `/effects/prism-text`, `/effects/ascii-waves`, `/effects/ashfall-type`,
   `/effects/seam-erosion`, `/effects/sediment-reveal`
 
+## Verification actually executed
+
+| Command | Result |
+| --- | --- |
+| `pnpm verify` | PASS. Lint, typecheck, effect/registry validation, production build and secret scan; 194 unit/contract tests passed, 1 optional-media test skipped, 5 product-baseline contracts passed. |
+| `pnpm test:e2e` | PASS. 83 tests, **74 passed**, 9 skipped, **0 failures**. Skips are the existing optional-media cases (1 Digital Wake footage, 5 ASCII real-media, 3 provisioned-media consolidation). |
+| `pnpm test:launch` | PASS. 169/169 built metadata, 109/109 HTTP, 90/90 visual, 16 accessibility states with 0 findings; exact ten-URL sitemap. |
+| `pnpm test:distribution` | PASS. 11/11 registry tests and fresh Next/Vite install, typecheck, build and browser interaction. |
+| `pnpm test:distribution:site` | PASS. 60/60 route/responsive/motion checks, 0 accessibility violations. |
+| Axe audit, new routes | PASS. 12 states across `/`, `/effects`, Signature Hero, Design DNA, Bento and Ashfall at 1440/390; 0 violations. |
+| Design DNA trials | PASS. Two independent agent patches accepted and mounted; both forbidden patches rejected with the last valid preview retained. |
+
+Screenshots and reference comparisons are evidence only; they are not the live
+preview. See `VISUAL_REVIEW.md` and `performance/SUMMARY.md` in the evidence
+packet.
+
 ## Rights and commercial boundaries
 
 - Signature Hero source carries `components/signature-hero/LICENSE.txt`:
