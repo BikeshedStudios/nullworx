@@ -20,7 +20,7 @@ Media stays privately provisioned. Keep server SHA256 enforcement, protected app
 
 ## Public and paywall boundaries
 
-Keep the existing three-file public registry closure and MIT public effect source, local-video adapter and generated examples. No media, private receipt, premium Bento implementation, ZIP/TGZ, entitlement secret or source map enters Git/public artifacts. Bento Duo previews and existing €39 Gumroad links remain public; premium deliverables stay behind the existing checkout. Signature Hero’s unfinished static showcase and all six public preview PNGs are excluded from this release by the owner’s Release Blocker Repair 01 decision. There is no released `/kits/signature-hero` route or image link. Source and reference captures remain preserved at `882f194` in the untouched integration worktree. Any future Signature Hero release must use real interactive components; static images are reference material, not an approved product. Historical review receipts do not override this release-scope decision. Digital Wake stays its separate Beta with its existing eligibility restrictions. Preserve Drops gating and the exact approved sitemap manifest/date parity.
+Keep the existing three-file public registry closure and MIT public effect source, local-video adapter and generated examples. No media, private receipt, premium Bento implementation, ZIP/TGZ, entitlement secret or source map enters Git/public artifacts. Bento Duo previews and existing €39 Gumroad links remain public; premium deliverables stay behind the existing checkout. Signature Hero’s unfinished static showcase and all six public preview PNGs are excluded from this release by the owner’s Release Blocker Repair 01 decision. The public sitemap has no Signature Hero route or image link. Source and reference captures remain preserved at `882f194` in the untouched integration worktree. Any future Signature Hero release must use real interactive components; static images are reference material, not an approved product. Historical review receipts do not override this release-scope decision. Megasprint 01 adds an internal, noindex live route; it is not a public release and does not restore the static images. Digital Wake stays its separate Beta with its existing eligibility restrictions. Preserve Drops gating and the exact approved sitemap manifest/date parity.
 
 ## Unified checkpoint and branch selection
 
@@ -41,3 +41,24 @@ Procedural waves as normal landing default, Fine 12px as normal landing default,
 ## Release Blocker Repair 01
 
 Repair branches descend from `882f194d295ca95c7cae7535f456e25cfdbab43a`. Keep the installed controller’s strict two-file public allowlist; do not expand it for the excluded static showcase. Preserve the approved ten-URL sitemap. Procedural ASCII must reject hidden/offscreen/disconnected or cleaned-up draw callbacks, including delayed ResizeObserver entries, while preserving first visible rendering, resume and reduced-motion still frames. The existing hidden frame-count assertion remains blocking and unchanged.
+
+
+## Megasprint 01 internal candidate
+
+This section records additive work on `sprint/megasprint-01`, descending from release-repair commit `7db32651b8226b21851dd3480db9dd688e50b267`. It is not a public activation and does not change production.
+
+| Surface | Contract |
+| --- | --- |
+| Signature Hero live route | `/kits/signature-hero` is a real React composition with `preset=cobalt|carbon|porcelain`, pointer light, pause, reduced-motion static mode, live customizer, generated TSX, install contract and shareable bounded URL state. It is `noindex, nofollow`, sets `X-Robots-Tag`, is absent from the sitemap, exposes no image preview and keeps its source under the internal owner-review notice in `components/signature-hero/LICENSE.txt`. |
+| Preset identity | Cobalt is the default for this route; Carbon and Porcelain use the approved preset palettes, type and material settings. Do not replace them with screenshots or re-derive them from arbitrary colors. |
+| Agent Design DNA | `lib/design-dna/` is schema `1.0.0`. Recipes target only `signature-hero`, `orbit-bento` or `foil-reactor` at version `1.0.0`. Unknown components, versions, tokens, code, CSS, imports and out-of-bounds values fail closed. `fixtures/design-dna/valid` has ten accepted recipes; `fixtures/design-dna/invalid` has twelve rejected patches. Canonical serialization sorts keys. The lab at `/lab/design-dna` is noindex. |
+| Bento Duo live demos | The product page mounts the real `OrbitBento` and `FoilReactor` components. The homepage teaser mounts the same components in bounded live frames. Static approved captures remain product-schema images and release references, not site previews. The premium source boundary is unchanged: no download/copy-source control is added and checkout stays the existing Gumroad URL. |
+| Material customization | Ashfall Type, Seam Erosion and Sediment Reveal keep their approved defaults. Optional `intensity` and `density` props are additive; defaults normalize to `{ intensity: 1, density: 1 }`. The generated usage snippet carries the current lines, color, intensity and density. Clock, coverage, compositor, raster and surface implementations remain hash-pinned. |
+| Public journey | Header/footer link to the live Signature Hero route; the effects gallery links to the three directions and Design DNA. The sitemap remains the approved ten URLs. New routes are noindex. |
+
+Blocking checks for this work:
+
+- `pnpm test:contracts` keeps the static-image exclusion and requires the live route to render `<SignatureHero>` rather than `next/image`.
+- `tests/unit/design-dna.test.ts` is the fixture/schema/serialization/adaptor gate.
+- `tests/e2e/signature-hero.spec.ts`, `tests/e2e/bento-live.spec.ts`, `tests/e2e/design-dna.spec.ts` and `tests/e2e/material-routes.spec.ts` exercise real browser behavior.
+- `pnpm verify` and `pnpm build` remain required. Protected staging is blocked on authenticated sudo; local checks cannot attest the VPS.
