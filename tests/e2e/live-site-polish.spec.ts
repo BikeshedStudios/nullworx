@@ -133,7 +133,9 @@ test("local video autoplay, pause, visibility and blocked-play recovery", async 
   test.skip(!process.env.POLISH_VIDEO, "Set POLISH_VIDEO to a locally generated test-pattern video, never restricted footage.");
   const uploads: string[] = [];
   page.on("request", request => { if (!["GET", "HEAD"].includes(request.method())) uploads.push(request.url()); });
-  await page.goto("/effects/ascii-waves");
+  await page.goto("/");
+  await page.locator("[data-procedural-ascii]").scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-procedural-ascii]")).toHaveAttribute("data-frame", /^\d+$/);
   await page.getByLabel("ASCII local video").setInputFiles(process.env.POLISH_VIDEO!);
   const field = page.locator("[data-ascii-field]");
   await field.scrollIntoViewIfNeeded();

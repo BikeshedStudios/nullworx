@@ -9,7 +9,7 @@ test("enabled deployment uses exact fish bytes, attribution and honest missing-m
   const bytes = await readFile(path!);
   expect(createHash("sha256").update(bytes).digest("hex")).toBe("807bb27edac1d4bd71be9c5efc79d6386c4d97bd26589dee5e7fa784e029b238");
   await page.route("**/media/ascii/loop30-v2-807bb27e.mp4", route => route.fulfill({ body: route.request().method() === "HEAD" ? undefined : bytes, contentType: "video/mp4", headers: { "content-length": String(bytes.length) } }));
-  for (const route of ["/", "/effects/ascii-waves"]) {
+  for (const route of ["/"]) {
     await page.goto(route);
     const field = page.locator("[data-ascii-field]");
     await field.scrollIntoViewIfNeeded();

@@ -216,10 +216,10 @@ const rawManifest = {
         install: [
           "Copy prism-text.tsx and prism-text.module.css into components/forge-factory-01/.",
           "Import PrismText and pass text, speed and intensity; paused is exposed for user or preference control.",
-          "Check color contrast at the chosen saturation and pause the effect for reduced-motion users.",
+          "Check color contrast at the chosen saturation; the included CSS freezes the sweep for reduced-motion users.",
         ],
         limits: [
-          "The component does not read prefers-reduced-motion itself; callers must pass paused when required.",
+          "The CSS honors prefers-reduced-motion automatically. The paused prop also supports an explicit pause control.",
           "The effect animates color, not layout, and is not a substitute for accessible contrast testing.",
           "No gradient image or canvas is used; the visible treatment is CSS.",
         ],

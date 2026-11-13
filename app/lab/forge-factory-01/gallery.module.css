@@ -39,10 +39,19 @@
 .settingRow { display: grid; gap: 8px; }
 .settingRow label { display: flex; justify-content: space-between; gap: 12px; color: #5F5669; font-family: ui-monospace, monospace; font-size: .66rem; }
 .settingRow output { color: var(--f-accent); font-weight: 650; }
-.settingRow select { min-height: 42px; border: 1px solid var(--f-line); border-radius: 0; background: #FAF7F3; color: var(--f-ink); font-size: .76rem; max-width: 100%; padding: 8px; }
+.settingRow select { min-height: 44px; border: 1px solid var(--f-line); border-radius: 0; background: #FAF7F3; color: var(--f-ink); font-size: .76rem; max-width: 100%; padding: 8px; }
 .settingRow input { accent-color: var(--f-accent); cursor: pointer; width: 100%; }
+.settingRow input[type="range"] { min-height: 44px; margin: 0; }
+.settingRow input[type="text"], .settingRow input[type="number"], .share input { min-width: 0; width: 100%; min-height: 44px; border: 1px solid #B7A9C2; background: #FAF7F3; color: var(--f-ink); padding: 9px; font: .8rem var(--font-mono); cursor: text; }
+.settingRow, .share { min-width: 0; }
+.share { display: grid; gap: 12px; }
+.share label { display: grid; gap: 8px; font-size: .75rem; }
+.share > button, .previewToolbar button { min-height: 44px; border: 1px solid #B7A9C2; color: var(--f-accent); background: #FAF7F3; padding: 8px 14px; font: .7rem var(--font-mono); }
+.previewToolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 12px 20px; border-bottom: 1px solid var(--f-line); }
+.previewToolbar button[aria-pressed="true"] { background: var(--f-accent); border-color: var(--f-accent); color: #FAF7F3; }
+.previewToolbar > span { color: var(--f-quiet); font: .65rem var(--font-mono); }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.actions button { min-height: 42px; flex: 1; border: 1px solid #B7A9C2; background: var(--elevated); color: var(--f-ink); font-family: ui-monospace, monospace; font-size: .66rem; cursor: pointer; }
+.actions button { min-height: 44px; flex: 1; border: 1px solid #B7A9C2; background: var(--elevated); color: var(--f-ink); font-family: ui-monospace, monospace; font-size: .66rem; cursor: pointer; }
 .actions button:hover { background: #E5DDED; }
 .note { color: #675D70; font-size: .7rem; line-height: 1.6; }
 .viewer { min-width: 0; display: flex; flex-direction: column; }
@@ -58,6 +67,9 @@
 .coordTop { top: 24px; left: 26px; }
 .coordBottom { bottom: 24px; left: 26px; right: 26px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .effectWrap { position: relative; z-index: 2; max-width: 100%; text-align: center; }
+.magneticPreview { width: 100%; max-width: 720px; padding: 42px 16px; border: 1px solid #B7A9C2; background: #F1EDE7; }
+.textPreview { width: 100%; max-width: 720px; min-width: 0; padding: 36px 8px; border: 1px solid #B7A9C2; }
+.magneticPreview[data-preview="mobile"], .textPreview[data-preview="mobile"] { max-width: 390px; }
 .magneticGroup { display: grid; gap: 28px; justify-items: center; }
 .counter { color: #675D70; font-family: ui-monospace, monospace; font-size: .64rem; }
 .viewerFoot { display: flex; justify-content: space-between; align-items: center; gap: 22px; padding: 20px 24px; border-top: 1px solid var(--f-line); }
@@ -96,7 +108,8 @@
   .tabName small { font-size: .5rem; }
   .tabArrow { display: none; }
   .settings { grid-template-columns: 1fr 1fr; gap: 15px; }
-  .settings > .sectionTitle, .settings > .note { grid-column: 1 / -1; }
+  .settings > .actions { grid-column: 1 / -1; }
+  .settings > .sectionTitle, .settings > .note, .settings > .share { grid-column: 1 / -1; }
   .stage { min-height: 380px; }
   .under { grid-template-columns: 1fr; gap: 30px; }
 }

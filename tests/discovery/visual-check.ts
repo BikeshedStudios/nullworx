@@ -3,6 +3,7 @@ import { chromium, expect } from "@playwright/test";
 import { getIndexableEffects } from "../../lib/discovery/eligibility";
 
 const baseUrl = process.env.SEO_BASE_URL ?? "http://127.0.0.1:3350";
+const reportDirectory = process.env.DISCOVERY_VISUAL_REPORT_DIR ?? "test-results/discovery";
 const failures: string[] = [];
 let checks = 0;
 
@@ -17,7 +18,7 @@ function check(condition: boolean, message: string) {
 }
 
 async function main() {
-  await mkdir("test-results/discovery", { recursive: true });
+  await mkdir(reportDirectory, { recursive: true });
   const browser = await chromium.launch({ headless: true });
 
   for (const width of [1440, 390]) {
@@ -42,7 +43,7 @@ async function main() {
       check(overflow, `${effect.canonicalPath} @${width}: no horizontal overflow`);
       await heading.scrollIntoViewIfNeeded();
       await page.locator("#effect-notes").screenshot({
-        path: `test-results/discovery/${effect.slug}-${width}.png`,
+        path: `${reportDirectory}/${effect.slug}-${width}.png`,
         animations: "disabled",
       });
     }
@@ -74,7 +75,7 @@ async function main() {
     check(bentoOverflow, `Bento Duo @${width}: no horizontal overflow`);
     check((await page.locator('script[type="application/ld+json"]').count()) >= 1, `Bento Duo @${width}: product JSON-LD`);
     await page.locator("#kits-title").screenshot({
-      path: `test-results/discovery/bento-duo-${width}.png`,
+      path: `${reportDirectory}/bento-duo-${width}.png`,
       animations: "disabled",
     });
 

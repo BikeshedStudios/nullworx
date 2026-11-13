@@ -2,23 +2,36 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ProceduralAscii } from "./procedural-ascii";
-import { AsciiWavesRenderer, DEFAULT_SETTINGS } from "./original-ascii/renderer";
+import { AsciiWavesRenderer, DEFAULT_SETTINGS, type WavesSettings } from "./original-ascii/renderer";
 import styles from "./home-koi-field.module.css";
 
 type Phase = "loading" | "verifying" | "live" | "paused" | "reduced" | "blocked" | "buffering" | "error";
 type Playback = { phase: Phase; message: string };
 
+export function VideoDetailControl({ value, onChange }: { value: number; onChange: (value: number) => void }) {
+  return <label className={styles.detail}>Detail <select aria-label="local video character detail" value={value} onChange={e => onChange(Number(e.target.value))}>
+    {![8, 12, 16].includes(value) && <option value={value}>Custom · {value}px</option>}
+    <option value={16}>Original</option><option value={12}>Fine</option><option value={8}>Dense</option>
+  </select></label>;
+}
+
 /** Lifecycle and presentation adapter. Calibrated video mapping with an independent idle-draw gate. */
-export function LocalVideoField({ source, onReset, featured = false }: { source: string; onReset: () => void; featured?: boolean }) {
+export function LocalVideoField({ source, onReset, featured = false, settings, paused, resetKey = 0, controls = true, onPausedChange, onSettingsChange }: { source: string; onReset: () => void; featured?: boolean; settings?: WavesSettings; paused?: boolean; resetKey?: number; controls?: boolean; onPausedChange?: (paused: boolean) => void; onSettingsChange?: (settings: WavesSettings) => void }) {
   const root = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const renderer = useRef<AsciiWavesRenderer | null>(null);
   const wantsPlayback = useRef(true);
+  const onPausedChangeRef = useRef(onPausedChange);
+  useEffect(() => { onPausedChangeRef.current = onPausedChange; }, [onPausedChange]);
   const reduced = useRef(false);
   const resume = useRef<() => void>(() => {});
   const [playback, setPlayback] = useState<Playback>({ phase: "loading", message: "Loading local video clip…" });
-  const [density, setDensity] = useState(8);
+  const [localDensity, setDensity] = useState(featured ? 8 : 12);
+  const density = settings?.cellSize ?? localDensity;
+  const input = useRef({ settings, density, paused });
+  const refresh = useRef<() => void>(() => {});
+  const pausePlayback = useRef<() => void>(() => {});
   const [attempt, setAttempt] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const [renderedSource, setRenderedSource] = useState<string | null>(null);
@@ -44,28 +57,32 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     };
     const fail = (message: string) => {
       failed = true; media.pause();
-      instance?.setFrozenTime(instance.getWaveClock());
+      instance?.setFrozenTime(instance.getWaveClock()); instance?.setSuspended(true);
       report("error", message);
     };
     const syncSettings = () => {
       const width = field.getBoundingClientRect().width;
       // Maintain silhouette detail on a small stage without cropping the source.
-      const cellSize = width < 700 ? Math.max(4, density * width / 960) : density;
-      instance?.setSettings({ ...DEFAULT_SETTINGS, cellSize, cursorInteraction: wantsPlayback.current && !reduced.current });
+      const current = input.current.settings ?? { ...DEFAULT_SETTINGS, cellSize: input.current.density };
+      const cellSize = width < 700 ? Math.max(4, current.cellSize * width / 960) : current.cellSize;
+      instance?.setSettings({ ...current, cellSize, cursorInteraction: current.cursorInteraction && wantsPlayback.current && !reduced.current });
+      field.dataset.settings = JSON.stringify(instance?.snapshot().settings);
       instance?.resize();
+      // Resizing clears the drawing buffer. Refresh a visible still frame once.
+      if (!failed && inView && !document.hidden && (reduced.current || !wantsPlayback.current)) instance?.redraw();
     };
     const hold = () => {
       media.pause(); instance?.setPointerActive(false);
-      instance?.setFrozenTime(instance.getWaveClock());
+      instance?.setFrozenTime(instance.getWaveClock()); instance?.setSuspended(true);
     };
     const play = () => {
       if (failed || !active || !inView || document.hidden) return;
-      lastProgress = performance.now(); instance?.setFrozenTime(null);
+      lastProgress = performance.now(); instance?.setFrozenTime(null); instance?.setSuspended(false);
       report("verifying", "Checking video, rendered frames and visible motion…");
       void media.play().then(() => {
         if (!active || !inView || document.hidden || !wantsPlayback.current || reduced.current) hold();
       }).catch((error: unknown) => {
-        instance?.setFrozenTime(instance.getWaveClock());
+        instance?.setFrozenTime(instance.getWaveClock()); instance?.setSuspended(true);
         if (error instanceof DOMException && error.name === "NotAllowedError") {
           report("blocked", "Your browser needs a click to start this muted video.");
         } else if (active && !(error instanceof DOMException && error.name === "AbortError")) {
@@ -74,7 +91,10 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
       });
     };
     resume.current = () => {
-      wantsPlayback.current = true; reduced.current = false;
+      wantsPlayback.current = true;
+      onPausedChangeRef.current?.(false);
+      // Preserve the existing explicit Play opt-in. Shared prop updates never opt in.
+      reduced.current = false;
       syncSettings(); play();
     };
     const ready = () => {
@@ -82,6 +102,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
       instance?.markVideoDirty();
       if (reduced.current || !wantsPlayback.current || document.hidden) {
         hold();
+        if (inView && !document.hidden) instance?.redraw();
         report(reduced.current ? "reduced" : "paused", reduced.current ? "Reduced motion · still ASCII frame of local video" : "Playback paused");
       } else play();
     };
@@ -106,10 +127,10 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     const contextRestored = () => {
       if (active) { setRenderedSource(null); setPlayback({ phase: "loading", message: "Restoring video rendering…" }); setAttempt(n => n + 1); }
     };
-    const mediaPause = () => { instance?.setFrozenTime(instance.getWaveClock()); };
+    const mediaPause = () => { instance?.setFrozenTime(instance.getWaveClock()); instance?.setSuspended(true); };
     const mediaPlay = () => {
       if (reduced.current || !wantsPlayback.current || document.hidden || !inView) hold();
-      else instance?.setFrozenTime(null);
+      else { instance?.setFrozenTime(null); instance?.setSuspended(false); }
     };
     const visibility = () => {
       if (document.hidden || !inView) { hold(); if (!failed) report("paused", "Playback paused while the preview is out of view"); }
@@ -139,7 +160,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
         }
       }
       Object.assign(node.dataset, {
-        currentTime: media.currentTime.toFixed(4), frameCount: String(snapshot.frameCount),
+        time: snapshot.waveClock.toFixed(3), frame: String(snapshot.frameCount), currentTime: media.currentTime.toFixed(4), frameCount: String(snapshot.frameCount),
         videoUploads: String(metrics.videoUploads), outputDifference: difference.toFixed(4),
         outputEnergy: energy.toFixed(4), webgl: "webgl2", cellSize: String(snapshot.cellSize),
         canvasSize: `${field.width}×${field.height}`, source: media.currentSrc || source, fps: String(metrics.fps), sampledAt: now.toFixed(1),
@@ -155,6 +176,15 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
         report("blocked", "Playback stopped. Start local video to continue.");
       }
       lastTime = media.currentTime; lastFrames = snapshot.frameCount; lastUploads = metrics.videoUploads;
+    };
+    refresh.current = () => {
+      if (input.current.paused !== undefined) wantsPlayback.current = !input.current.paused;
+      syncSettings();
+      if (!failed) ready();
+    };
+    pausePlayback.current = () => {
+      wantsPlayback.current = false; onPausedChangeRef.current?.(true); hold(); syncSettings();
+      report("paused", "local video and its wave field are paused");
     };
     field.addEventListener("webglcontextlost", contextLost);
     field.addEventListener("webglcontextrestored", contextRestored);
@@ -174,6 +204,8 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     try {
       // Read the non-preserved buffer immediately after a draw, including wake-up.
       instance = new AsciiWavesRenderer(field, monitor); renderer.current = instance;
+      instance.setSuspended(true);
+      if (input.current.paused !== undefined) wantsPlayback.current = !input.current.paused;
       syncSettings(); instance.setVideo(media, true);
       if (reduced.current) instance.setFrozenTime(0);
       resize.observe(field);
@@ -202,23 +234,35 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
       queueMicrotask(() => { if (!field.isConnected) field.getContext("webgl2")?.getExtension("WEBGL_lose_context")?.loseContext(); });
       if (renderer.current === instance) renderer.current = null;
     };
-  }, [density, attempt, source, featured]);
+  }, [attempt, source, featured]);
+
+  useEffect(() => {
+    // Uniform updates are immediate; glyph/cell changes share one debounced atlas update.
+    const previous = input.current;
+    const glyphChanged = previous.settings?.characters !== settings?.characters || previous.density !== density;
+    input.current = { settings: settings && glyphChanged ? { ...settings, characters: previous.settings?.characters ?? settings.characters, cellSize: previous.density } : settings, density: glyphChanged ? previous.density : density, paused };
+    refresh.current();
+    if (!glyphChanged) return;
+    const timer = setTimeout(() => { input.current = { settings, density, paused }; refresh.current(); }, 100);
+    return () => clearTimeout(timer);
+  }, [settings, density, paused]);
+
+  useEffect(() => {
+    if (!resetKey) return;
+    const instance = renderer.current, media = video.current;
+    instance?.setFrozenTime(0);
+    if (media?.readyState) media.currentTime = 0;
+    refresh.current();
+  }, [resetKey]);
 
   const phase = playback.phase;
-  const pause = () => {
-    wantsPlayback.current = false; video.current?.pause();
-    const current = renderer.current;
-    current?.setPointerActive(false);
-    current?.setSettings({ ...current.snapshot().settings, cursorInteraction: false, interactionIntensity: 0 });
-    current?.setFrozenTime(current.getWaveClock());
-    setPlayback({ phase: "paused", message: "local video and its wave field are paused" });
-  };
+  const pause = () => pausePlayback.current();
   return <div ref={root} className={styles.shell} data-koi-field data-ascii-field data-source-id={featured ? "featured-loop30-807bb27e" : "local-browser-file"} data-detail={density === 12 ? "fine" : density === 16 ? "original" : "dense"} data-phase={phase}>
     <div className={styles.top}><span><i /> FIELD STUDY / 001</span><span>{featured ? "featured fish" : "local video"} · {density === 12 ? "FINE" : density === 16 ? "ORIGINAL" : "DENSE"} ASCII</span><span className={styles.signal} data-phase={phase} role="status">{phase === "live" ? "● LIVE" : phase.toUpperCase()}</span></div>
     <div className={styles.stage}>
-      <canvas key={`${attempt}-${density}`} ref={canvas} aria-label={`Source video rendered with ${density === 8 ? "dense" : density === 12 ? "fine" : "original"} colored ASCII characters`} data-testid="koi-home-field"
+      <canvas key={attempt} ref={canvas} aria-label={`Source video rendered with ${density === 8 ? "dense" : density === 12 ? "fine" : "original"} colored ASCII characters`} data-testid="koi-home-field"
         onPointerMove={event => { if (phase !== "live" || event.pointerType === "touch") return; const box = event.currentTarget.getBoundingClientRect(); renderer.current?.setPointer((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height); }}
-        onPointerLeave={() => renderer.current?.setPointerActive(false)} />
+        onPointerLeave={() => { if (phase === "live") renderer.current?.setPointerActive(false); }} />
       <video ref={video} muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} className={styles.video} />
       {(renderedSource !== source || phase === "loading" || phase === "error" || phase === "blocked") && <div className={styles.fallback}>
         <div className={styles.loadingField} aria-hidden="true"><ProceduralAscii compact paused /></div>
@@ -230,13 +274,13 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     </div>
     <div className={styles.bottom}>
       <div className={styles.source}><strong>{featured ? "FEATURED FISH" : "LOCAL VIDEO"}</strong><span>{featured ? "VERIFIED SOURCE / WEBGL2" : "BROWSER LOCAL / WEBGL2"}</span></div>
-      <label className={styles.detail}>Detail <select aria-label="local video character detail" value={density} onChange={e => { setRenderedSource(null); setPlayback({ phase: "loading", message: "Updating the character field…" }); setDensity(Number(e.target.value)); }}><option value={16}>Original</option><option value={12}>Fine</option><option value={8}>Dense</option></select></label>
-      {phase !== "error" && <button className={styles.play} type="button" aria-label={phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video" : "Pause local video"} onClick={phase === "paused" || phase === "reduced" || phase === "blocked" ? () => resume.current() : pause}>{phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video ↗" : "Pause local video Ⅱ"}</button>}
+      {controls && (!settings || onSettingsChange) && <VideoDetailControl value={density} onChange={cellSize => settings ? onSettingsChange?.({ ...settings, cellSize }) : setDensity(cellSize)} />}
+      {controls && phase !== "error" && <button className={styles.play} type="button" aria-label={phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video" : "Pause local video"} onClick={phase === "paused" || phase === "reduced" || phase === "blocked" ? () => resume.current() : pause}>{phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video ↗" : "Pause local video Ⅱ"}</button>}
       <button type="button" className={styles.expand} onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>Source notes {expanded ? "−" : "+"}</button>
     </div>
     <div className={styles.filePicker}><button type="button" onClick={onReset}>Use procedural animation</button><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span></div>
     {phase === "reduced" && <p className={styles.reduced}>Reduced motion is on. Showing a still ASCII frame; Play local video opts into animation.</p>}
     {phase === "buffering" && <p className={styles.reduced} role="status">{playback.message}</p>}
-    {expanded && <div className={styles.receipt}><p>The video uses the calibrated glyph mapping. Dense is the default, using 8px desktop cells; Fine uses 12px. Mobile density scales with the stage. The original mapping is available with ?asciiRamp=original.</p><p>{playback.message}</p><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span><span>Rendering uses the source colors. Purple belongs to the interface.</span></div>}
+    {expanded && <div className={styles.receipt}><p>The video uses the calibrated glyph mapping. The homepage starts at Dense (8px desktop cells); Fine uses 12px and Original uses 16px. Mobile density scales with the stage. The original mapping is available with ?asciiRamp=original.</p><p>{playback.message}</p><span>{featured ? "Featured media is served from this site." : "Your file stays in this browser. No upload."}</span><span>Rendering uses the source colors. Purple belongs to the interface.</span></div>}
   </div>;
 }

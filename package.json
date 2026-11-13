@@ -28,7 +28,10 @@
     "verify": "pnpm lint && pnpm typecheck && pnpm validate:effects && pnpm validate:registry && pnpm test && pnpm build && pnpm check:secrets",
     "test:distribution": "node --test tests/distribution/registry.test.mjs && node tests/distribution/consumers.mjs",
     "test:distribution:site": "node tests/distribution/site.mjs",
-    "test:launch": "bash tests/launch/check.sh"
+    "test:launch": "bash tests/launch/check.sh",
+    "test:contracts": "vitest run tests/unit/product-baselines.test.ts",
+    "prebuild": "pnpm test:contracts",
+    "test:product": "node scripts/verify-product-baselines.mjs"
   },
   "dependencies": {
     "@fontsource-variable/space-grotesk": "5.3.0",

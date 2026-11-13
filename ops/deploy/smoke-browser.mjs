@@ -74,15 +74,17 @@ try {
     await expect(field.locator("canvas")).toBeVisible();
     await expect(page.getByLabel("ASCII local video")).toBeVisible();
     await expect(page.locator("[data-ascii-field]")).toHaveCount(0);
-    if (featured) expect(mediaRequests).toBeGreaterThan(0);
+    if (featured && path === "/") expect(mediaRequests).toBeGreaterThan(0);
     else expect(mediaRequests).toBe(0);
   });
   if (featured) for (const [label, width, reducedMotion] of [["mobile", 390, "no-preference"], ["desktop", 1440, "no-preference"], ["reduced motion", 390, "reduce"]]) {
     await check(`featured fish ${label}`, async page => {
-      await page.goto(label === "desktop" ? "/effects/ascii-waves" : "/");
+      await page.goto("/");
       const field = page.locator("[data-ascii-field]").first();
       await expect(field).toBeVisible({ timeout: 30000 });
       await field.scrollIntoViewIfNeeded();
+      await expect(field).toHaveAttribute("data-detail", "dense");
+      await expect(page.getByLabel("local video character detail")).toHaveValue("8");
       const attribution = page.locator("[data-ascii-attribution]").first();
       await expect(attribution).toContainText(featuredMedia.credit);
       await expect(attribution).toContainText(/permission/i);

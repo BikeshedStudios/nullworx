@@ -328,6 +328,8 @@ export class AsciiWavesRenderer {
   private lastTimestamps: number[] = [];
   private frameDurations: number[] = [];
   private disposed = false;
+  private suspended = false;
+  private stillRequested = false;
   private readonly handleResize = () => { this.resize(); this.invalidate(); };
   private readonly handleVisibility = () => {
     if (!document.hidden) { this.lastFrame = performance.now(); this.invalidate(); }
@@ -442,7 +444,7 @@ export class AsciiWavesRenderer {
     const video = this.video as (HTMLVideoElement & {
       requestVideoFrameCallback?: (callback: () => void) => number;
     }) | null;
-    if (!video || typeof video.requestVideoFrameCallback !== 'function') return;
+    if (this.suspended || this.disposed || !video || typeof video.requestVideoFrameCallback !== 'function') return;
     this.videoFrameHandle = video.requestVideoFrameCallback(() => {
       this.videoFrameDirty = true;
       this.invalidate();
@@ -525,17 +527,18 @@ export class AsciiWavesRenderer {
   }
 
   private invalidate() {
-    if (!this.stopWhenFrozen || this.disposed || this.raf) return;
+    if (!this.stopWhenFrozen || this.disposed || this.suspended || this.raf) return;
     this.lastFrame = performance.now();
     this.raf = requestAnimationFrame(this.render);
   }
 
   private render(now: number) {
-    if (this.disposed) return;
+    if (this.disposed || (this.suspended && !this.stillRequested)) return;
+    this.stillRequested = false;
     if (this.stopWhenFrozen) this.raf = 0;
     else this.raf = requestAnimationFrame(this.render);
     const rawDt = (now - this.lastFrame) / 1000;
-    const dt = Math.min(0.08, Math.max(0, rawDt));
+    const dt = this.suspended ? 0 : Math.min(0.08, Math.max(0, rawDt));
     this.lastFrame = now;
     if (this.frozenTime !== null) {
       this.waveClock = this.frozenTime;
@@ -591,7 +594,7 @@ export class AsciiWavesRenderer {
     // A frozen field needs one redraw on invalidation, then no GPU draws.
     // Let any existing pointer eddy settle before sleeping. The video-frame
     // callback wakes a paused seek; settings, resize and resume also wake it.
-    if (this.stopWhenFrozen && !this.raf) {
+    if (this.stopWhenFrozen && !this.suspended && !this.raf) {
       const desired = this.settings.cursorInteraction ? this.pointerStrengthTarget : 0;
       if (this.frozenTime === null || Math.abs(this.pointerStrength - desired) > 0.0001) {
         this.raf = requestAnimationFrame(this.render);
@@ -651,7 +654,31 @@ export class AsciiWavesRenderer {
 
   setFrozenTime(value: number | null) {
     this.frozenTime = value;
+    if (value !== null) this.waveClock = value;
     this.invalidate();
+  }
+
+  /** Stop RAF and decoded-video callbacks immediately, including pointer settling. */
+  setSuspended(value: boolean) {
+    if (value === this.suspended) return;
+    this.suspended = value;
+    cancelAnimationFrame(this.raf);
+    this.raf = 0;
+    this.stillRequested = false;
+    this.lastFrame = performance.now();
+    if (value) {
+      this.pointerStrength = 0; this.pointerStrengthTarget = 0;
+      this.cancelVideoFrameCallback();
+    }
+    else { this.queueVideoFrameCallback(); this.invalidate(); }
+  }
+
+  /** A single settings/resize/seek redraw while paused; never starts a loop. */
+  redraw() {
+    if (this.disposed) return;
+    if (!this.suspended) { this.invalidate(); return; }
+    this.stillRequested = true;
+    if (!this.raf) this.raf = requestAnimationFrame(this.render);
   }
 
   getWaveClock(): number {

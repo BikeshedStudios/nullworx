@@ -1,3 +1,7 @@
+## Permanent product contracts
+
+Before changing homepage, media, effects, distribution or release gates, read `docs/PRODUCT_BASELINES.md` and the referenced source/release receipts. Preserve all accepted feature sets. Add a blocking regression test for every accepted behavior; never replace an accepted default from an older experiment. Verify actual provisioned LOOP30 bytes for fish deployment gates; fixtures and procedural fallback cannot attest fish autoplay. Preserve dirty worktrees/indexes and immutable evidence. New product branches start from the latest accepted unified checkpoint.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

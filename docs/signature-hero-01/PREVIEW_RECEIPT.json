@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "approval": {
+    "reference": "drafts/premium-release-candidate-01/APPROVED_BASELINE.json#approvedVisuals",
+    "baselineSha256": "60cdc805e928dbfb8beb54e2887e31b35aa2f7462c9c92f6e64e7a457423afc8",
+    "date": "2026-11-12",
+    "decision": "Carbon, Porcelain and Cobalt visually approved; keep all three; no aesthetic redesign"
+  },
+  "assets": [
+    {
+      "path": "public/signature-hero-01/carbon-1440.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-carbon-1440.png",
+      "sha256": "819fb12d94901ad7e9c71094e138ee8c4745eef27a3a7da43f5dc7a46cf434e0",
+      "sourceSha256": "819fb12d94901ad7e9c71094e138ee8c4745eef27a3a7da43f5dc7a46cf434e0",
+      "approvedSha256": "819fb12d94901ad7e9c71094e138ee8c4745eef27a3a7da43f5dc7a46cf434e0",
+      "width": 1440,
+      "height": 980,
+      "preset": "carbon",
+      "viewport": 1440
+    },
+    {
+      "path": "public/signature-hero-01/carbon-390.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-carbon-390.png",
+      "sha256": "e4544a10c345d51adf76a43d68ec19d459987078ba2d34076420319ec7fe9200",
+      "sourceSha256": "e4544a10c345d51adf76a43d68ec19d459987078ba2d34076420319ec7fe9200",
+      "approvedSha256": "e4544a10c345d51adf76a43d68ec19d459987078ba2d34076420319ec7fe9200",
+      "width": 390,
+      "height": 718,
+      "preset": "carbon",
+      "viewport": 390
+    },
+    {
+      "path": "public/signature-hero-01/porcelain-1440.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-porcelain-1440.png",
+      "sha256": "c63e526bb9f3fd037cb5d75d5bffc708f98108869a72076de7c4331aa4948050",
+      "sourceSha256": "c63e526bb9f3fd037cb5d75d5bffc708f98108869a72076de7c4331aa4948050",
+      "approvedSha256": "c63e526bb9f3fd037cb5d75d5bffc708f98108869a72076de7c4331aa4948050",
+      "width": 1440,
+      "height": 980,
+      "preset": "porcelain",
+      "viewport": 1440
+    },
+    {
+      "path": "public/signature-hero-01/porcelain-390.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-porcelain-390.png",
+      "sha256": "083f23a2817506f4f0e28c87994b4a112eb61349fcf353e33dac05ca7117d2f9",
+      "sourceSha256": "083f23a2817506f4f0e28c87994b4a112eb61349fcf353e33dac05ca7117d2f9",
+      "approvedSha256": "083f23a2817506f4f0e28c87994b4a112eb61349fcf353e33dac05ca7117d2f9",
+      "width": 390,
+      "height": 718,
+      "preset": "porcelain",
+      "viewport": 390
+    },
+    {
+      "path": "public/signature-hero-01/cobalt-1440.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-cobalt-1440.png",
+      "sha256": "c9f5e94d70ac12fcdb4badf63f87a0da51966653143e607e962d4b1052e1027d",
+      "sourceSha256": "c9f5e94d70ac12fcdb4badf63f87a0da51966653143e607e962d4b1052e1027d",
+      "approvedSha256": "c9f5e94d70ac12fcdb4badf63f87a0da51966653143e607e962d4b1052e1027d",
+      "width": 1440,
+      "height": 980,
+      "preset": "cobalt",
+      "viewport": 1440
+    },
+    {
+      "path": "public/signature-hero-01/cobalt-390.png",
+      "sourcePath": "drafts/premium-release-candidate-01/prototype/assets/vite-cobalt-390.png",
+      "sha256": "542f968b3a3ad20a62470ac931dcb8ce1dffc21a5df0834c608a325b07e91ec5",
+      "sourceSha256": "542f968b3a3ad20a62470ac931dcb8ce1dffc21a5df0834c608a325b07e91ec5",
+      "approvedSha256": "542f968b3a3ad20a62470ac931dcb8ce1dffc21a5df0834c608a325b07e91ec5",
+      "width": 390,
+      "height": 718,
+      "preset": "cobalt",
+      "viewport": 390
+    }
+  ]
+}
