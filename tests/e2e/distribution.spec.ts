@@ -27,7 +27,8 @@ test("published Bento Duo is discoverable but the premium files are not public",
   await expect(checkout).toHaveAttribute("target", "_blank");
   await expect(checkout).toHaveAttribute("rel", "noopener noreferrer");
   await expect(page.getByText(/MIT-licensed/).first()).toBeVisible();
-  await expect(page.locator("main img")).toHaveCount(4);
+  await expect(page.locator("main img")).toHaveCount(0);
+  await expect(page.locator("[data-live-kit]")).toHaveCount(2);
   const pathNames = await page.locator("main a[href]").evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).getAttribute("href")));
   expect(pathNames.some((value) => !!value && /\.(tgz|zip)(\?|$)/i.test(value))).toBe(false);
   if (isMobile) {

@@ -1,0 +1,17 @@
+.live { display: grid; gap: 10px; }
+.receipt { display: flex; align-items: flex-start; gap: 8px; min-height: 34px; padding: 8px 12px; border: 1px solid rgb(255 255 255 / .14); background: #11141b; color: #aeb6c5; font: 10px/1.5 var(--font-mono); letter-spacing: .03em; }
+.receipt span { color: #9be26d; font-size: 7px; line-height: 2; }
+.teaserGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.teaserCard { min-width: 0; border: 1px solid var(--border); background: #10121a; color: #eae4f3; }
+.teaserHead { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 9px 12px; border-bottom: 1px solid #2b2d38; color: #9da3b4; font: 9px var(--font-mono); letter-spacing: .06em; }
+.teaserHead span:last-child { color: #9be26d; }
+.teaserViewport { position: relative; height: 380px; overflow: auto; overscroll-behavior: contain; background: #10121a; scrollbar-color: #4c5060 #171a22; }
+.teaserViewport[data-teaser="orbit"] { color-scheme: light; }
+.teaserViewport > div { min-width: 0; }
+.teaserFoot { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 14px; padding: 16px; border-top: 1px solid #2b2d38; }
+.teaserFoot h3 { margin: 0 0 3px; font-size: 20px; font-weight: 550; letter-spacing: -.035em; }
+.teaserFoot p { margin: 0; color: #9da3b4; font-size: 11px; line-height: 1.5; }
+.teaserFoot a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; border: 1px solid #4e5262; color: #f2edf8; font-size: 12px; white-space: nowrap; }
+.teaserFoot a:hover { border-color: #9be26d; color: #d9ffbe; }
+@media (max-width: 880px) { .teaserGrid { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .teaserViewport { height: 320px; } .teaserFoot { grid-template-columns: 1fr; } .teaserFoot a { justify-content: center; } }

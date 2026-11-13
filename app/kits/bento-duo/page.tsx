@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { BENTO_DUO } from "@/lib/bento-duo";
 import { createPageMetadata } from "@/lib/discovery/metadata";
 import { getDiscoveryPage } from "@/lib/discovery/manifest";
 import { bentoDuoStructuredData } from "@/lib/discovery/structured-data";
 import { JsonLd } from "@/components/discovery/json-ld";
+import { FoilLive, OrbitLive } from "@/components/bento-duo/live";
 import styles from "./page.module.css";
 
 const discovery = getDiscoveryPage("/kits/bento-duo");
@@ -73,7 +73,7 @@ export default function BentoDuoProductPage() {
         <div className={styles.shell}>
           <div className={styles.sectionHead}>
             <div><span className={styles.eyebrow}>01 / THE TWO KITS</span><h2 id="kits-title">Different character.<br/><em>Equal attention.</em></h2></div>
-            <p>The screenshots below are from the working kits at desktop and mobile widths. They are still previews, not simulated live animations. The actual interactions are in the source download.</p>
+            <p>Both kits are mounted below as real interactive components, not screenshots. Select projects, complete checklist items, move the light, change materials and use the native controls. Resize the window to see the responsive layouts.</p>
           </div>
           {BENTO_DUO.kits.map((kit, index) => (
             <article id={kit.slug} className={styles.kit} key={kit.slug} aria-labelledby={kit.slug + "-title"}>
@@ -85,33 +85,9 @@ export default function BentoDuoProductPage() {
                 <h3 id={kit.slug + "-title"}>{kit.name}</h3>
                 <div><p>{kit.description}</p><p className={styles.kitDetail}>{kit.detail}</p></div>
               </div>
-              <div className={styles.previews}>
-                <figure className={styles.desktopFrame}>
-                  <div className={styles.frameBar}><span>DESKTOP / 1440 PX</span><span>APPROVED CAPTURE</span></div>
-                  <a href={kit.desktop.src} target="_blank" rel="noopener noreferrer" aria-label={"Open full desktop preview of " + kit.name}>
-                    <Image
-                      src={kit.desktop.src}
-                      alt={kit.name + " desktop screenshot of the approved interactive bento layout"}
-                      width={kit.desktop.width}
-                      height={kit.desktop.height}
-                      unoptimized
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                  </a>
-                </figure>
-                <figure className={styles.mobileFrame}>
-                  <div className={styles.frameBar}><span>MOBILE / 390 PX</span><span>APPROVED CAPTURE</span></div>
-                  <a href={kit.mobile.src} target="_blank" rel="noopener noreferrer" aria-label={"Open full mobile preview of " + kit.name}>
-                    <Image
-                      src={kit.mobile.src}
-                      alt={kit.name + " mobile screenshot of the approved responsive bento layout"}
-                      width={kit.mobile.width}
-                      height={kit.mobile.height}
-                      unoptimized
-                      loading="lazy"
-                    />
-                  </a>
-                </figure>
+              <div className={styles.liveStage} data-live-stage={kit.slug}>
+                <div className={styles.frameBar}><span>LIVE COMPONENT / RESPONSIVE</span><span>INTERACTIVE, NOT A CAPTURE</span></div>
+                {kit.slug === "orbit" ? <OrbitLive /> : <FoilLive />}
               </div>
             </article>
           ))}
@@ -122,7 +98,7 @@ export default function BentoDuoProductPage() {
         <div className={styles.shell}>
           <div className={styles.sectionHead}>
             <div><span className={styles.eyebrow}>02 / INSIDE THE ZIP</span><h2 id="included-title">Built to leave<br/><em>this website.</em></h2></div>
-            <p>Each kit can be integrated independently. The package provides typed React components and install instructions, without a Nullworx account, hosted API, or proprietary activation.</p>
+            <p>Each kit can be integrated independently. The package provides typed React components, scoped CSS Modules and install instructions, without a Nullworx account, hosted API, or proprietary activation. The live demos above use the public component API; the paid ZIP carries the full source.</p>
           </div>
           <div className={styles.includedGrid}>
             <div><strong>01</strong><h3>Editable source</h3><p>React 19, TypeScript, scoped CSS Modules, typed APIs and original compositions.</p></div>

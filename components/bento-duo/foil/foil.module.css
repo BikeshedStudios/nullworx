@@ -1,0 +1,818 @@
+.root {
+  --lx: 35%;
+  --ly: 30%;
+  --tilt: -1.8deg;
+  --lift: -2px;
+  color: #e9ecf2;
+  font-family: "Space Grotesk Variable", system-ui, sans-serif;
+}
+.root * {
+  box-sizing: border-box;
+}
+.root button,
+.root input {
+  font: inherit;
+}
+.root button {
+  cursor: pointer;
+}
+.root button:focus-visible,
+.root input:focus-visible {
+  outline: 3px solid #89e8e0;
+  outline-offset: 4px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 12px;
+}
+.panel {
+  color: #e9ecf2;
+  font-family: "Space Grotesk Variable", system-ui, sans-serif;
+  grid-column: span var(--span, 4);
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid #434754;
+  background: #1c202a;
+  padding: 28px;
+}
+.panel:before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at var(--lx, 35%) var(--ly, 30%),
+    #aae9ff16,
+    transparent 65%
+  );
+  transition: opacity 0.3s;
+}
+.panel > * {
+  position: relative;
+}
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font:
+    9px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  color: #acb5c5;
+  line-height: 1.5;
+}
+.specimen {
+  --span: 8;
+  background: #d9dde4;
+  color: #222a39;
+  padding: 25px 28px 0;
+  min-height: 600px;
+  isolation: isolate;
+}
+.specimen:before {
+  background: radial-gradient(
+    ellipse at var(--lx, 35%) var(--ly, 30%),
+    #fff 0%,
+    #fff0 66%
+  );
+  z-index: -1;
+}
+.specimen .topline {
+  color: #4c586c;
+}
+.specimenCopy {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+.specimenCopy h2 {
+  font-weight: 500;
+  font-size: clamp(50px, 5.2vw, 76px);
+  line-height: 0.96;
+  letter-spacing: -4px;
+  margin: 36px 0 13px;
+}
+.specimenCopy h2 span {
+  display: block;
+}
+.specimenCopy p {
+  font-size: 11px;
+  color: #4d596c;
+  max-width: 180px;
+  line-height: 1.6;
+}
+.surface {
+  position: absolute;
+  inset: 75px 0 35px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sculpture {
+  position: absolute;
+  width: 400px;
+  height: 380px;
+  right: 4%;
+  top: 36%;
+  transform: translateY(-18%) rotate(var(--tilt, -1.8deg));
+  transition: transform 0.3s ease-out;
+  filter: drop-shadow(9px 25px 16px #19294444);
+}
+.ribbon {
+  position: absolute;
+  left: calc(var(--i) * 13px);
+  top: calc(var(--i) * 6px);
+  width: 280px;
+  height: 300px;
+  border-radius: 48% 52% 50% 50%;
+  border: 1px solid #ffffff90;
+  transform: rotate(calc(-33deg + var(--i) * 14deg)) skewX(-16deg) scaleX(0.68);
+  background: #b4bfce;
+  background: conic-gradient(
+    from 18deg at var(--lx, 35%) var(--ly, 30%),
+    #273d56,
+    #c9eafa 14%,
+    #fafbff 20%,
+    #70b2bc 25%,
+    #51558b 30%,
+    #cb96bd 39%,
+    #eee4c7 44%,
+    #faffff 48%,
+    #537a8f 55%,
+    #142d4b 65%,
+    #c3d1df 76%,
+    #fff 81%,
+    #9a9bcb 85%,
+    #ced9e5 91%,
+    #273d56
+  );
+  box-shadow:
+    inset 3px 3px 5px #fff9,
+    inset -3px -5px 10px #11335488,
+    5px 9px 9px #1b2c3b35;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%,
+    0 0,
+    29% 34%,
+    31% 66%,
+    68% 73%,
+    76% 38%,
+    29% 34%
+  );
+  transition:
+    transform 0.95s cubic-bezier(0.2, 0.7, 0.15, 1),
+    border-radius 0.95s,
+    filter 0.6s;
+  will-change: auto;
+}
+.ribbon:nth-child(2n) {
+  background: conic-gradient(
+    from 80deg at var(--lx, 35%) var(--ly, 30%),
+    #f4b8d3,
+    #b6b7dc,
+    #478e97 15%,
+    #e7fbf1 23%,
+    #fefefe 32%,
+    #929bc4 39%,
+    #4c6c93 47%,
+    #e6e7de 57%,
+    #d2a3c0 67%,
+    #547c8b 80%,
+    #e4f6fb 90%,
+    #f4b8d3
+  );
+}
+.surface[data-phase="annealed"] .ribbon {
+  transform: rotate(calc(-44deg + var(--i) * 23deg))
+    translateX(calc((var(--i) - 2) * 13px)) skewX(3deg) scaleX(0.91);
+  border-radius: 50% 38% 50% 42%;
+}
+.surface[data-material="brushed"] .ribbon {
+  background:
+    repeating-linear-gradient(92deg, #fff0 0 2px, #23354e15 2px 3px),
+    conic-gradient(
+      from 15deg at var(--lx, 35%) var(--ly, 30%),
+      #344252,
+      #ccd2d5,
+      #fefefe,
+      #737e88,
+      #d2dbe4,
+      #394757,
+      #fff,
+      #344252
+    );
+}
+.surface[data-material="oxide"] .ribbon {
+  background: conic-gradient(
+    from 32deg at var(--lx, 35%) var(--ly, 30%),
+    #302843,
+    #a1d6cf,
+    #397f83,
+    #c9c4f1,
+    #4c3c63,
+    #c19cd6,
+    #281f42,
+    #80c9c3,
+    #302843
+  );
+}
+.shadow {
+  position: absolute;
+  width: 300px;
+  height: 42px;
+  right: 5%;
+  bottom: 35px;
+  background: radial-gradient(ellipse, #1c2d3b55, transparent 65%);
+  transform: translateX(var(--lift, -2px)) rotate(-8deg);
+  filter: blur(8px);
+}
+.ruler {
+  position: absolute;
+  bottom: 30px;
+  left: 28px;
+  width: 130px;
+  height: 7px;
+  background: repeating-linear-gradient(
+    90deg,
+    #667185 0 1px,
+    transparent 1px 10px
+  );
+}
+.cross,
+.cross2 {
+  position: absolute;
+  right: 27px;
+  top: 22%;
+  font:
+    18px ui-monospace,
+    monospace;
+  color: #647085;
+}
+.cross2 {
+  right: auto;
+  left: 28px;
+  top: 65%;
+}
+.specimenFoot {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 28px;
+  border-top: 1px solid #959fac;
+  background: #c7ced8;
+  color: #344153;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  font:
+    8px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  z-index: 3;
+}
+.specimenFoot i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #3b5a68;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.control {
+  --span: 4;
+  background: #1a1d26;
+}
+.control h3 {
+  font-size: 36px;
+  letter-spacing: -1.7px;
+  line-height: 1.08;
+  font-weight: 400;
+  margin: 34px 0 20px;
+}
+.control > p {
+  color: #aab3c2;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.phaseTabs {
+  display: flex;
+  border: 1px solid #525b6c;
+  border-radius: 4px;
+  margin: 30px 0 20px;
+  padding: 4px;
+  gap: 4px;
+}
+.phaseTabs button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  border-radius: 2px;
+  color: #b8c3d4;
+  padding: 12px 10px;
+  font-size: 11px;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+.phaseTabs button[aria-pressed="true"] {
+  background: #d3dce9;
+  color: #202b3a;
+}
+.stateInfo {
+  min-height: 86px;
+}
+.stateInfo > span {
+  font:
+    8px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  color: #a4c9ce;
+}
+.stateInfo > p {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #aeb9c9;
+  max-width: 270px;
+}
+.lightControls {
+  display: grid;
+  gap: 5px;
+  padding: 15px 0;
+}
+.lightControls label {
+  display: flex;
+  justify-content: space-between;
+  font:
+    9px ui-monospace,
+    monospace;
+  color: #aeb9c9;
+}
+.lightControls input {
+  width: 100%;
+  accent-color: #a2d7d7;
+  height: 22px;
+  cursor: pointer;
+  margin: 0 0 10px;
+}
+.lightControls input:disabled {
+  opacity: 0.5;
+}
+.lock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: 0;
+  border-top: 1px solid #434c5c;
+  color: #d9e4ef;
+  padding: 17px 0 2px;
+  text-align: left;
+  font-size: 11px;
+}
+.lock span {
+  font-size: 20px;
+}
+.library {
+  --span: 5;
+  background: #bfc7d0;
+  color: #1f2b3d;
+}
+.library:before {
+  background: radial-gradient(
+    ellipse at var(--lx, 35%) var(--ly, 30%),
+    #fff9,
+    transparent 75%
+  );
+}
+.library .topline {
+  color: #425066;
+}
+.panel h3 {
+  overflow-wrap: anywhere;
+}
+.library h3 {
+  font-size: 26px;
+  letter-spacing: -1px;
+  font-weight: 400;
+  margin: 28px 0 22px;
+}
+.materials {
+  display: grid;
+  gap: 4px;
+}
+.materials button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid #7f8e9f;
+  background: #d2d9e05c;
+  border-radius: 3px;
+  padding: 8px;
+  color: #202d40;
+  min-height: 55px;
+  font-size: 11px;
+  transition: background 0.3s;
+}
+.materials button[aria-pressed="true"] {
+  background: #eff4f6c9;
+  border-color: #4d657c;
+}
+.materials button > span:last-child {
+  margin-left: auto;
+  font-size: 13px;
+  padding-right: 8px;
+}
+.materials small {
+  display: block;
+  font:
+    8px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  color: #4c5a6e;
+  margin-top: 5px;
+}
+.swatch {
+  width: 43px;
+  height: 35px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px #fff9;
+}
+.spectral {
+  background: conic-gradient(
+    from 30deg at var(--lx, 35%) var(--ly, 30%),
+    #7e90bb,
+    #c2efe8,
+    #f8f1d7,
+    #8b899c,
+    #cad7f5,
+    #d4a5bf,
+    #7e90bb
+  );
+}
+.brushed {
+  background:
+    repeating-linear-gradient(89deg, #fff0 0 2px, #24395130 2px 3px),
+    linear-gradient(100deg, #657787, #eff4fc, #6c7c8c);
+}
+.oxide {
+  background: conic-gradient(
+    at var(--lx, 35%) var(--ly, 30%),
+    #716091,
+    #1d6975,
+    #d1bfd9,
+    #4a3561,
+    #716091
+  );
+}
+.light {
+  --span: 3;
+  display: flex;
+  flex-direction: column;
+  background: #111d29;
+}
+.light .topline {
+  font-size: 8px;
+}
+.field {
+  height: 175px;
+  position: relative;
+  margin: 14px -5px 14px;
+  overflow: hidden;
+  background: radial-gradient(
+    ellipse at var(--lx, 35%) var(--ly, 30%),
+    #b7eee12a,
+    transparent 66%
+  );
+}
+.fieldLines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#9fced318 1px, transparent 1px),
+    linear-gradient(90deg, #9fced318 1px, transparent 1px);
+  background-size: 23px 23px;
+  border: 1px solid #9fced32a;
+}
+.reticle {
+  position: absolute;
+  left: var(--lx, 35%);
+  top: var(--ly, 30%);
+  width: 34px;
+  height: 34px;
+  transform: translate(-50%, -50%);
+  border: 1px solid #b9f2e6;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #82e5d577;
+  transition:
+    left 0.2s ease-out,
+    top 0.2s ease-out;
+}
+.reticle:before,
+.reticle:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -150px;
+  bottom: -150px;
+  width: 1px;
+  background: #b9f2e630;
+}
+.reticle:after {
+  transform: rotate(90deg);
+}
+.field > span {
+  position: absolute;
+  bottom: 9px;
+  right: 8px;
+  font:
+    9px ui-monospace,
+    monospace;
+  color: #9bb6c4;
+}
+.light h3 {
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin: 0 0 12px;
+}
+.coordinates {
+  font:
+    9px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+  color: #9db5c8;
+  margin: auto 0 0;
+}
+.notes {
+  --span: 4;
+  background: linear-gradient(145deg, #262334, #22232d 70%);
+}
+.notes:before {
+  background: radial-gradient(
+    ellipse at var(--lx, 35%) var(--ly, 30%),
+    #a397ef28,
+    transparent 75%
+  );
+}
+.noteMark {
+  font:
+    italic 52px/1 Georgia,
+    serif;
+  background: linear-gradient(130deg, #fff, #b4cfcf 30%, #b5a6d6 80%);
+  background-clip: text;
+  color: transparent;
+  display: block;
+  margin: 25px 0 14px;
+}
+.notes h3 {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+  margin: 0 0 13px;
+}
+.notes > p {
+  color: #b5b4c5;
+  font-size: 11px;
+  line-height: 1.7;
+  max-width: 290px;
+}
+.save {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0 0;
+  margin-top: 23px;
+  background: none;
+  border: 0;
+  border-top: 1px solid #5b536d;
+  color: #e7e1f1;
+  font-size: 11px;
+  text-align: left;
+}
+.save span {
+  font-size: 20px;
+}
+.notes .status {
+  font:
+    8px/1.7 ui-monospace,
+    monospace;
+  margin-bottom: 0;
+  min-height: 27px;
+  color: #a7a8ba;
+}
+.root[data-material="oxide"] .specimen {
+  background: #d2cddd;
+}
+.root[data-material="brushed"] .specimen {
+  background: #d0d7db;
+}
+.root[data-locked="true"] .reticle {
+  box-shadow: none;
+}
+.specimen {
+  transition: background 0.7s;
+}
+@media (max-width: 1000px) {
+  .specimen {
+    --span: 7;
+  }
+  .control {
+    --span: 5;
+  }
+  .sculpture {
+    right: -27%;
+    top: 42%;
+    transform: translateY(-2%) rotate(var(--tilt, -1.8deg)) scale(0.85);
+  }
+  .specimenCopy h2 {
+    font-size: 58px;
+  }
+  .edition {
+    display: none;
+  }
+  .panel {
+    padding: 22px;
+  }
+  .specimen {
+    padding-bottom: 0;
+    min-height: 600px;
+  }
+  .specimenFoot {
+    padding: 16px 22px;
+  }
+  .specimenFoot > span:last-child {
+    display: none;
+  }
+  .library {
+    --span: 5;
+  }
+  .light {
+    --span: 3;
+  }
+  .notes {
+    --span: 4;
+  }
+  .topline {
+    font-size: 8px;
+  }
+  .light .topline {
+    font-size: 7px;
+    letter-spacing: 0.4px;
+  }
+  .light h3 {
+    font-size: 24px;
+  }
+  .noteMark {
+    margin-top: 22px;
+  }
+  .control h3 {
+    font-size: 32px;
+  }
+}
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .panel {
+    grid-column: 1 !important;
+    padding: 24px;
+  }
+  .specimen {
+    min-height: 610px;
+    padding-bottom: 0;
+  }
+  .specimenCopy h2 {
+    font-size: clamp(44px, 13.5vw, 56px);
+    letter-spacing: -2.5px;
+    margin-top: 30px;
+  }
+  .specimenCopy p {
+    max-width: 180px;
+  }
+  .sculpture {
+    right: -12%;
+    top: 20px;
+    transform: scale(0.68) rotate(var(--tilt, -1.8deg));
+  }
+  .surface {
+    inset: 225px 0 50px;
+  }
+  .shadow {
+    bottom: 14px;
+  }
+  .ruler {
+    bottom: 12px;
+  }
+  .specimenFoot {
+    padding: 16px 24px;
+    font-size: 7px;
+    letter-spacing: 0.4px;
+  }
+  .control h3 {
+    font-size: 42px;
+    margin-top: 28px;
+  }
+  .control > p {
+    font-size: 12px;
+  }
+  .phaseTabs {
+    margin-top: 25px;
+  }
+  .lightControls input {
+    height: 32px;
+  }
+  .stateInfo {
+    min-height: 80px;
+  }
+  .materials button {
+    min-height: 64px;
+  }
+  .field {
+    height: 205px;
+  }
+  .light h3 {
+    font-size: 34px;
+    margin-top: 10px;
+  }
+  .coordinates {
+    margin-top: 15px;
+  }
+  .light .topline {
+    font-size: 8px;
+  }
+  .noteMark {
+    font-size: 64px;
+  }
+  .notes > p {
+    font-size: 12px;
+  }
+  .library h3 {
+    font-size: 28px;
+  }
+  .notes .status {
+    min-height: 0;
+  }
+  .library .topline {
+    font-size: 8px;
+  }
+}
+@media (max-width: 350px) {
+  .sculpture {
+    right: -24%;
+    top: 10px;
+    transform: scale(0.64) rotate(var(--tilt, -1.8deg));
+  }
+  .specimen {
+    min-height: 575px;
+  }
+  .panel {
+    padding: 20px;
+  }
+  .topline {
+    font-size: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .root *,
+  .root *:before,
+  .root *:after {
+    transition: none !important;
+    animation: none !important;
+  }
+  .sculpture {
+    transform: translateY(-18%) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 1000px) {
+  .sculpture {
+    transform: translateY(-2%) scale(0.85) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 700px) {
+  .sculpture {
+    transform: scale(0.68) !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) and (max-width: 350px) {
+  .sculpture {
+    transform: scale(0.64) !important;
+  }
+}
