@@ -1,7 +1,7 @@
 // Fresh manual installation from actual clipboard output; no app imports or parent CSS.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { cp, mkdir, mkdtemp, readFile, readdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -54,7 +54,9 @@ try {
       imports.push(`import { MyInterface as ${component} } from './${name}';`);
       sections.push(`<section id="${name}"><h2>${name}</h2><${component} /></section>`);
     }
-    const baseline = execFileSync('git', ['show', '6c5779b:components/white-journey/procedural-ascii.tsx'], { cwd: root, encoding: 'utf8' });
+    // Exact 01B golden source, retained so clean git archives need no .git metadata.
+    const baseline = await readFile(join(root, 'tests/distribution/fixtures/procedural-01b.tsx.fixture'), 'utf8');
+    assert.equal(hash(baseline), '2bedd8b67d1d3a9d17cd22bbeeefc17fc91958628f39b31189754f07c05e55fc', '01B golden baseline source drift');
     await put(join(cwd, 'components/white-journey/baseline-procedural.tsx'), baseline);
     await put(join(cwd, 'default-usage.tsx'), studies[0].defaultUsage);
     imports.push("import { MyInterface as DefaultUsage } from './default-usage';", "import { ProceduralAscii as Baseline } from './components/white-journey/baseline-procedural';");

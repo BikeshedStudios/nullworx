@@ -24,7 +24,7 @@ Keep the existing three-file public registry closure and MIT public effect sourc
 
 ## Unified checkpoint and branch selection
 
-Current integration checkpoint: the commit containing this contract on `integration/approved-product-20261113`, parent `54f7716`; its full SHA and diff are pinned in the immutable review receipt. It adds the accepted `3f6e636..6c5779b` slice and exact recovered 01C WIP, followed by scoped shared-adapter reconciliation.
+Accepted unified integration checkpoint: `882f194d295ca95c7cae7535f456e25cfdbab43a` on `integration/approved-product-20261113`, parent `54f7716`. It adds the accepted `3f6e636..6c5779b` slice and exact recovered 01C WIP, followed by scoped shared-adapter reconciliation. The current release-repair candidate is the commit containing Release Blocker Repair 01 on `repair/release-blockers-01`, descending from `882f194`; its final commit/archive hashes and gate results are pinned in the new immutable repair evidence packet. Its explicit static-showcase exclusion supersedes earlier review-route scope.
 
 Exact 01C WIP archive, index, patches and 23-file hash manifest: `/home/swirky/DevHub/experiments/nullworx-live-playgrounds-01c/evidence/unified-reconciliation-20261113T180416Z/`. Original index/worktree remain untouched. Prior receipts are inventoried there. Do not restore a patch over later owner edits.
 
