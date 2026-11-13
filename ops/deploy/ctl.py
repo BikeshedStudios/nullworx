@@ -30,6 +30,32 @@ ROOT = Path("/srv/nullworx")
 CONFIG = Path("/etc/nullworx/deploy.json")
 ORIGIN = "https://nullworx.space"
 HERE = Path(__file__).resolve().parent
+FEATURED_MODE = "ascii-loop30-direct-permission"
+FEATURED_MEDIA = json.loads((HERE / "ascii-featured-media.json").read_text())
+FEATURED_FILE = Path("/srv/nullworx-media/ascii/loop30-v2-807bb27e.mp4")
+FEATURED_SIZE = 12862251
+
+
+def media_contract(data):
+    mode = data.get("media", "unavailable")
+    require(mode in {"unavailable", FEATURED_MODE}, "Unsupported media release mode")
+    if mode == FEATURED_MODE:
+        require(data.get("featuredMedia") == FEATURED_MEDIA, "Featured media receipt mismatch")
+    else:
+        require(data.get("featuredMedia") is None, "Unavailable release cannot claim featured media")
+    return mode
+
+
+def verify_hosted_media():
+    for path in [FEATURED_FILE.parent.parent, FEATURED_FILE.parent]:
+        info = path.lstat()
+        require(stat.S_ISDIR(info.st_mode) and info.st_uid == 0 and info.st_mode & 0o022 == 0,
+                "Unsafe hosted media directory")
+    info = FEATURED_FILE.lstat()
+    require(stat.S_ISREG(info.st_mode) and info.st_uid == 0 and info.st_mode & 0o022 == 0,
+            "Hosted media must be a regular protected root-owned file")
+    require(info.st_size == FEATURED_SIZE and digest(FEATURED_FILE) == FEATURED_MEDIA["sha256"],
+            "Hosted media differs from the approved exact video")
 
 
 def require(condition, message):
@@ -87,8 +113,10 @@ def approval(path, config, action):
                           "publicIPv4": config["publicIPv4"], "publicIPv6": config.get("publicIPv6"),
                           "sshTarget": config["sshTarget"], "sshPort": config["sshPort"],
                           "sshHostKeySha256": config["sshHostKeySha256"],
-                          "productionPort": config["productionPort"], "stagingPort": config["stagingPort"], "media": "unavailable"}.items():
+                          "productionPort": config["productionPort"], "stagingPort": config["stagingPort"]}.items():
         require(data.get(key) == expected, f"Approval mismatch: {key}")
+    require("media" in data, "Approval requires explicit media mode")
+    media_contract(data)
     require(re.fullmatch(r"[a-f0-9]{40}", data.get("commit", "")), "Full commit required")
     require(re.fullmatch(r"[a-f0-9]{64}", data.get("sha256", "")), "Artifact SHA256 required")
     require(data.get("owner") and data.get("authorizationRef") and "REPLACE" not in str(data), "Explicit owner authorization receipt required")
@@ -179,7 +207,12 @@ def switch(slot, release, verify, verify_old=None):
 
 def manifest(release, config, auth):
     data = read_json(release / "release.json")
-    for key, value in {"schema": 1, "commit": auth["commit"], "site": ORIGIN, "media": "unavailable", "platform": "linux", "pnpm": "12.15.0", "tests": "passed"}.items():
+    mode = media_contract(auth)
+    require("media" in data, "Release manifest requires media mode")
+    require(media_contract(data) == mode, "Release manifest mismatch: media")
+    if mode == FEATURED_MODE:
+        verify_hosted_media()
+    for key, value in {"schema": 1, "commit": auth["commit"], "site": ORIGIN, "platform": "linux", "pnpm": "12.15.0", "tests": "passed"}.items():
         require(data.get(key) == value, f"Release manifest mismatch: {key}")
     arch = {"x86_64": "x64", "aarch64": "arm64"}.get(platform.machine())
     require(data.get("arch") == arch and arch is not None, "Builder architecture differs from VPS")
@@ -271,7 +304,7 @@ def smoke(config, slot, auth, profile="origin"):
             raise ValueError("Service did not become ready")
         time.sleep(1)
     result = subprocess.run([config["node"], str(HERE / "smoke-http.mjs"), "--base-url", base,
-                                 "--profile", profile, "--commit", auth["commit"], "--digest", auth["sha256"],
+                                 "--profile", profile, "--media", data["media"], "--commit", auth["commit"], "--digest", auth["sha256"],
                                  "--asset-path", data["asset"]["path"], "--asset-sha256", data["asset"]["sha256"]],
                             text=True, capture_output=True, timeout=420)
     print(result.stdout)
@@ -284,13 +317,35 @@ def validate_report(path, suite, config, auth, data, edge=False):
     for key, expected in {"schema": 1, "suite": suite, "passed": True, "commit": auth["commit"], "digest": auth["sha256"], "baseUrl": expected_base}.items():
         require(report.get(key) == expected, f"Smoke report mismatch: {key}")
     require(report.get("checks") and all(c.get("passed") is True for c in report["checks"]), "Report has failed/empty checks")
+    mode = media_contract(data)
+    if mode == FEATURED_MODE:
+        require(report.get("media") == mode and report.get("featuredMedia") == FEATURED_MEDIA,
+                "Smoke report not bound to featured media receipt")
+    else:
+        require(report.get("media", "unavailable") == "unavailable" and report.get("featuredMedia") is None,
+                "Smoke report media differs from unavailable release")
     # Require the entire current suite, not just a caller-supplied passed flag.
+    legacy = auth["commit"] == "697468992c453c9ca9ed93862f35b3089dc67acb"
     pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]]
+    if not legacy:
+        pages += ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
     names = {c["name"] for c in report["checks"]}
     if suite == "browser":
-        expected = {"mobile " + path for path in pages} | {"navigation home to gallery to effect"} | {"missing media " + path for path in ["/", "/effects/ascii-waves", "/effects/digital-wake", "/effects/sediment-reveal"]}
+        expected = {"mobile " + path for path in pages} | {"navigation home to gallery to effect"}
+        if not legacy:
+            expected |= {"published Bento Duo checkout", "support destinations", "disabled Drops"}
+        expected.add("missing media /effects/sediment-reveal")
+        if mode == FEATURED_MODE:
+            expected |= {"featured media failure fallback " + path for path in ["/", "/effects/ascii-waves"]}
+            expected |= {"featured fish " + label for label in ["mobile", "desktop", "reduced motion"]}
+        else:
+            expected |= {"procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves"}
+        if not edge:
+            expected.add("missing media /effects/digital-wake")
     else:
         expected = {"page " + path for path in pages} | {"sitemap", "robots", "release asset"} | {"noindex " + path for path in ["/lab/forge-factory-01", "/effects/nullworx-missing-effect", "/nullworx-smoke-missing-page"]}
+        if mode == FEATURED_MODE:
+            expected |= {"featured media HEAD", "featured media Range", "featured media checksum", "unpublished media paths"}
         require(report.get("asset") == data["asset"], "Report not bound to release asset")
     require(expected <= names, "Incomplete smoke report")
     age = (dt.datetime.now(dt.timezone.utc) - timestamp(report["checkedAt"])).total_seconds()
@@ -300,7 +355,9 @@ def validate_report(path, suite, config, auth, data, edge=False):
 
 def verify_restored(config, slot, old):
     if old:
-        prior_auth = {"commit": old.name, "sha256": (old / ".artifact-sha256").read_text().strip()}
+        prior = read_json(old / "release.json")
+        prior_auth = {"commit": old.name, "sha256": (old / ".artifact-sha256").read_text().strip(),
+                      "media": prior["media"], "featuredMedia": prior.get("featuredMedia")}
         smoke(config, slot, prior_auth)
 
 

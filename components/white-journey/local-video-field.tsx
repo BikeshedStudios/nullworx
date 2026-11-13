@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ProceduralAscii } from "./procedural-ascii";
 import { AsciiWavesRenderer, DEFAULT_SETTINGS } from "./original-ascii/renderer";
 import styles from "./home-koi-field.module.css";
 
@@ -20,6 +21,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
   const [density, setDensity] = useState(12);
   const [attempt, setAttempt] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [renderedSource, setRenderedSource] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -29,8 +31,8 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     let lastProgress = performance.now();
     let previous: Uint8ClampedArray | null = null;
     let instance: AsciiWavesRenderer | null = null;
-    let failed = false;
-    node.dataset.codec = "Local browser file";
+    let failed = false, receivedFrame = false;
+    node.dataset.codec = featured ? "H.264 / avc1" : "Local browser file";
     let inView = false;
     const motion = matchMedia("(prefers-reduced-motion: reduce)");
     reduced.current = motion.matches;
@@ -102,7 +104,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     };
     const contextLost = (event: Event) => { event.preventDefault(); fail("WebGL2 context lost. Retry to create a fresh renderer."); };
     const contextRestored = () => {
-      if (active) { setPlayback({ phase: "loading", message: "Restoring video rendering…" }); setAttempt(n => n + 1); }
+      if (active) { setRenderedSource(null); setPlayback({ phase: "loading", message: "Restoring video rendering…" }); setAttempt(n => n + 1); }
     };
     const mediaPause = () => { instance?.setFrozenTime(instance.getWaveClock()); };
     const mediaPlay = () => {
@@ -131,6 +133,10 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
         difference /= sample.width * sample.height * 3;
         energy /= sample.width * sample.height * 3;
         previous = new Uint8ClampedArray(current);
+        if (!receivedFrame && metrics.videoUploads > 0 && energy > 0.3) {
+          receivedFrame = true;
+          setRenderedSource(source);
+        }
       }
       Object.assign(node.dataset, {
         currentTime: media.currentTime.toFixed(4), frameCount: String(snapshot.frameCount),
@@ -163,7 +169,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     document.addEventListener("visibilitychange", visibility);
     motion.addEventListener("change", motionChange);
     const resize = new ResizeObserver(syncSettings);
-    const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; visibility(); });
+    const intersection = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting && entry.intersectionRatio >= 0.2; visibility(); }, { threshold: [0, 0.2] });
     intersection.observe(node);
     try {
       // Read the non-preserved buffer immediately after a draw, including wake-up.
@@ -196,7 +202,7 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
       queueMicrotask(() => { if (!field.isConnected) field.getContext("webgl2")?.getExtension("WEBGL_lose_context")?.loseContext(); });
       if (renderer.current === instance) renderer.current = null;
     };
-  }, [density, attempt, source]);
+  }, [density, attempt, source, featured]);
 
   const phase = playback.phase;
   const pause = () => {
@@ -207,23 +213,24 @@ export function LocalVideoField({ source, onReset, featured = false }: { source:
     current?.setFrozenTime(current.getWaveClock());
     setPlayback({ phase: "paused", message: "local video and its wave field are paused" });
   };
-  return <div ref={root} className={styles.shell} data-koi-field data-ascii-field data-source-id={"local-browser-file"} data-detail={density === 12 ? "fine" : density === 16 ? "original" : "dense"} data-phase={phase}>
+  return <div ref={root} className={styles.shell} data-koi-field data-ascii-field data-source-id={featured ? "featured-loop30-807bb27e" : "local-browser-file"} data-detail={density === 12 ? "fine" : density === 16 ? "original" : "dense"} data-phase={phase}>
     <div className={styles.top}><span><i /> FIELD STUDY / 001</span><span>{featured ? "featured fish" : "local video"} · {density === 12 ? "FINE" : density === 16 ? "ORIGINAL" : "DENSE"} ASCII</span><span className={styles.signal} data-phase={phase} role="status">{phase === "live" ? "● LIVE" : phase.toUpperCase()}</span></div>
     <div className={styles.stage}>
       <canvas key={`${attempt}-${density}`} ref={canvas} aria-label="Source video rendered with fine colored ASCII characters" data-testid="koi-home-field"
         onPointerMove={event => { if (phase !== "live" || event.pointerType === "touch") return; const box = event.currentTarget.getBoundingClientRect(); renderer.current?.setPointer((event.clientX - box.left) / box.width, (event.clientY - box.top) / box.height); }}
         onPointerLeave={() => renderer.current?.setPointerActive(false)} />
       <video ref={video} muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1} className={styles.video} />
-      {(phase === "loading" || phase === "error" || phase === "blocked") && <div className={styles.fallback}>
+      {(renderedSource !== source || phase === "loading" || phase === "error" || phase === "blocked") && <div className={styles.fallback}>
+        <div className={styles.loadingField} aria-hidden="true"><ProceduralAscii compact paused /></div>
         <div className={styles.notice}><strong>{phase === "error" ? "Video unavailable" : phase === "blocked" ? "Ready when you are." : "Preparing the character field"}</strong><p>{playback.message}</p>
           {phase === "blocked" && <button type="button" onClick={() => resume.current()}>Start local video ↗</button>}
-          {phase === "error" && <button type="button" onClick={() => { setPlayback({ phase: "loading", message: "Retrying your local file…" }); setAttempt(n => n + 1); }}>Retry local video ↻</button>}
+          {phase === "error" && <button type="button" onClick={() => { setRenderedSource(null); setPlayback({ phase: "loading", message: "Retrying your local file…" }); setAttempt(n => n + 1); }}>Retry local video ↻</button>}
         </div>
       </div>}
     </div>
     <div className={styles.bottom}>
       <div className={styles.source}><strong>{featured ? "FEATURED FISH" : "LOCAL VIDEO"}</strong><span>{featured ? "VERIFIED SOURCE / WEBGL2" : "BROWSER LOCAL / WEBGL2"}</span></div>
-      <label className={styles.detail}>Detail <select aria-label="local video character detail" value={density} onChange={e => { setPlayback({ phase: "loading", message: "Updating the character field…" }); setDensity(Number(e.target.value)); }}><option value={16}>Original</option><option value={12}>Fine</option><option value={8}>Dense</option></select></label>
+      <label className={styles.detail}>Detail <select aria-label="local video character detail" value={density} onChange={e => { setRenderedSource(null); setPlayback({ phase: "loading", message: "Updating the character field…" }); setDensity(Number(e.target.value)); }}><option value={16}>Original</option><option value={12}>Fine</option><option value={8}>Dense</option></select></label>
       {phase !== "error" && <button className={styles.play} type="button" aria-label={phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video" : "Pause local video"} onClick={phase === "paused" || phase === "reduced" || phase === "blocked" ? () => resume.current() : pause}>{phase === "paused" || phase === "reduced" || phase === "blocked" ? "Play local video ↗" : "Pause local video Ⅱ"}</button>}
       <button type="button" className={styles.expand} onClick={() => setExpanded(!expanded)} aria-expanded={expanded}>Source notes {expanded ? "−" : "+"}</button>
     </div>

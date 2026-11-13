@@ -1,6 +1,8 @@
 import copy
 import datetime as dt
 import importlib.util
+import hashlib
+from types import SimpleNamespace
 import json
 import os
 import tarfile
@@ -162,6 +164,19 @@ class ControllerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "empty"):
                 ctl.validate_report(path, "browser", self.config, self.auth, {})
 
+    def test_browser_report_requires_current_routes_and_actual_fallback_names(self):
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names]}
+        path = self.root / "report.json"
+        with patch.object(ctl, "secure_file", side_effect=lambda p: p):
+            path.write_text(json.dumps(report))
+            self.assertEqual(ctl.validate_report(path, "browser", self.config, self.auth, {}), ctl.digest(path))
+            report["checks"] = [check for check in report["checks"] if check["name"] != "published Bento Duo checkout"]
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "Incomplete"):
+                ctl.validate_report(path, "browser", self.config, self.auth, {})
+
     def test_failed_edge_verification_restores_previous_state(self):
         ctl.link_to("production", self.new)
         old_state = {"production": {"commit": self.old.name, "verifiedEdge": True}, "previous": None}
@@ -172,6 +187,68 @@ class ControllerTests(unittest.TestCase):
                 ctl.execute(args, self.config, self.auth, state)
         self.assertEqual(ctl.pointer("production"), self.old)
         self.assertEqual(state["production"], old_state["production"])
+
+    def test_featured_contract_rejects_fabricated_or_substitute_receipts(self):
+        media = {"media": ctl.FEATURED_MODE, "featuredMedia": copy.deepcopy(ctl.FEATURED_MEDIA)}
+        self.assertEqual(ctl.media_contract(media), ctl.FEATURED_MODE)
+        for change in [{"sha256": "0" * 64}, {"receipt": "invented"}, {"licenseBasis": "cc-by"}, {"src": "/media/substitute.mp4"}]:
+            changed = copy.deepcopy(media)
+            changed["featuredMedia"].update(change)
+            with self.assertRaisesRegex(ValueError, "receipt mismatch"):
+                ctl.media_contract(changed)
+        for invalid in [{"media": "other-video"}, {"media": ctl.FEATURED_MODE}, {"media": "unavailable", "featuredMedia": ctl.FEATURED_MEDIA}]:
+            with self.assertRaises(ValueError):
+                ctl.media_contract(invalid)
+
+    def test_featured_host_bytes_and_permissions_are_verified(self):
+        directory = self.root / "media" / "ascii"
+        directory.mkdir(parents=True)
+        directory.chmod(0o755)
+        directory.parent.chmod(0o755)
+        file = directory / "approved.mp4"
+        file.write_bytes(b"exact approved bytes")
+        file.chmod(0o644)
+        actual_lstat = Path.lstat
+        def owner_lstat(path):
+            info = actual_lstat(path)
+            return SimpleNamespace(st_mode=info.st_mode, st_uid=0, st_size=info.st_size)
+        with patch.object(ctl, "FEATURED_FILE", file), patch.object(ctl, "FEATURED_SIZE", file.stat().st_size), patch.dict(ctl.FEATURED_MEDIA, sha256=hashlib.sha256(file.read_bytes()).hexdigest()), patch.object(Path, "lstat", owner_lstat):
+            ctl.verify_hosted_media()
+            file.write_bytes(b"wrong approved bytes")
+            with self.assertRaisesRegex(ValueError, "exact video"):
+                ctl.verify_hosted_media()
+            file.chmod(0o666)
+            with self.assertRaisesRegex(ValueError, "protected root-owned"):
+                ctl.verify_hosted_media()
+            file.unlink()
+            file.symlink_to(self.root / "untrusted.mp4")
+            with self.assertRaisesRegex(ValueError, "protected root-owned"):
+                ctl.verify_hosted_media()
+
+    def test_featured_report_cannot_reuse_fallback_or_wrong_receipt(self):
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "featured media failure fallback /", "featured media failure fallback /effects/ascii-waves", "featured fish mobile", "featured fish desktop", "featured fish reduced motion", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
+        data = {"media": ctl.FEATURED_MODE, "featuredMedia": copy.deepcopy(ctl.FEATURED_MEDIA)}
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names], **data}
+        path = self.root / "report.json"
+        with patch.object(ctl, "secure_file", side_effect=lambda p: p):
+            path.write_text(json.dumps(report))
+            ctl.validate_report(path, "browser", self.config, self.auth, data)
+            report["checks"] = [check for check in report["checks"] if check["name"] != "featured fish desktop"]
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "Incomplete"):
+                ctl.validate_report(path, "browser", self.config, self.auth, data)
+            report["featuredMedia"] = {**report["featuredMedia"], "sha256": "0" * 64}
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "bound to featured media"):
+                ctl.validate_report(path, "browser", self.config, self.auth, data)
+
+    def test_restored_unavailable_release_preserves_its_media_contract(self):
+        (self.old / "release.json").write_text(json.dumps({"media": "unavailable"}))
+        (self.old / ".artifact-sha256").write_text("f" * 64)
+        with patch.object(ctl, "smoke") as smoke:
+            ctl.verify_restored(self.config, "production", self.old)
+            self.assertEqual(smoke.call_args.args[2], {"commit": self.old.name, "sha256": "f" * 64, "media": "unavailable", "featuredMedia": None})
 
     def test_finalization_is_not_replayed_after_success(self):
         args = type("Args", (), {"command": "finalize"})()

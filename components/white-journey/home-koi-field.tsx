@@ -6,13 +6,15 @@ import { ProceduralAscii } from "./procedural-ascii";
 import styles from "./home-koi-field.module.css";
 import { FISH_ORIGINAL, parseFeaturedMedia, verifyFeaturedBytes } from "./featured-media";
 
-const LocalVideoField = dynamic(() => import("./local-video-field").then(module => module.LocalVideoField));
+const LocalVideoField = dynamic(() => import("./local-video-field").then(module => module.LocalVideoField), {
+  loading: () => <div className={styles.proceduralStage}><ProceduralAscii compact paused /><p className={styles.reduced} role="status">Preparing the featured character field…</p></div>,
+});
 const receiptValue = process.env.NEXT_PUBLIC_ASCII_FEATURED_MEDIA;
 const featured = parseFeaturedMedia(receiptValue);
 
 export function HomeKoiField() {
   const [source, setSource] = useState<string | null>(null);
-  const [notice, setNotice] = useState(receiptValue ? "Checking featured fish media. Showing procedural waves meanwhile." : "");
+  const [notice, setNotice] = useState(receiptValue ? "Checking featured fish availability. Showing procedural waves meanwhile." : "");
   const objectUrl = useRef<string | null>(null);
   const selected = useRef(false);
   useEffect(() => () => { if (objectUrl.current) URL.revokeObjectURL(objectUrl.current); }, []);
@@ -22,7 +24,7 @@ export function HomeKoiField() {
     void verifyFeaturedBytes(featured, controller.signal).then(() => {
       if (!controller.signal.aborted && !selected.current) { setSource(featured.src); setNotice(""); }
     }).catch((error: unknown) => {
-      if (!controller.signal.aborted) setNotice(`${error instanceof Error ? error.message : "Featured fish verification failed."} Showing procedural waves; choose your own video below.`);
+      if (!controller.signal.aborted && !selected.current) setNotice(`${error instanceof Error ? error.message : "Featured fish verification failed."} Showing procedural waves; choose your own video below.`);
     });
     return () => controller.abort();
   }, []);
@@ -32,10 +34,12 @@ export function HomeKoiField() {
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = URL.createObjectURL(file);
     setSource(objectUrl.current);
+    setNotice("");
   }
   function reset() {
     selected.current = true;
     setSource(null);
+    setNotice("");
     if (objectUrl.current) URL.revokeObjectURL(objectUrl.current);
     objectUrl.current = null;
   }
@@ -45,7 +49,7 @@ export function HomeKoiField() {
       <div className={styles.proceduralStage}><ProceduralAscii /></div>
     </>}
     {source === featured?.src && featured && <div className={styles.receipt} data-ascii-attribution>
-      <p><a href={FISH_ORIGINAL} target="_blank" rel="noreferrer">{featured.title}</a> by {featured.uploader}. <a href={featured.licenseUrl}>Creative Commons Attribution {featured.licenseUrl.split("/").at(-2)}</a>.</p>
+      <p><a href={FISH_ORIGINAL} target="_blank" rel="noreferrer">{featured.title}</a> by {featured.uploader}. {featured.licenseBasis === "direct-permission" ? <>Used with direct permission from the rights holder. Credit: {featured.credit}.</> : <><a href={featured.licenseUrl}>Creative Commons Attribution {featured.licenseUrl.split("/").at(-2)}</a>.</>}</p>
       <p>Modified into a silent cyclic loop; source colors sampled into ASCII characters. No endorsement by the original creator is implied.</p>
     </div>}
     {!source && notice && <p className={styles.reduced} role="status">{!featured ? "Featured fish configuration is incomplete. Showing procedural waves; choose your own video below." : notice}</p>}

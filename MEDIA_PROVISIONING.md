@@ -1,15 +1,22 @@
 # Media provisioning and rights
 
-## ASCII release update — 2026-11-12
+## ASCII direct-permission release — 2026-11-13
 
-The owner has approved calibrated ASCII B, Fine and continuation into Digital
-Wake. The owner states the fish source is Creative Commons. Public hosting
-still requires the exact version and a receipt linking LOOP30 to that source.
-The current source inspection and separate activation/rollback contract are in
-[ASCII Quality 02](docs/releases/ASCII_QUALITY_02.md). Its dedicated
-`NEXT_PUBLIC_ASCII_FEATURED_MEDIA` setting affects only ASCII; do not activate
-the fish-specific Digital Wake media setting as part of this release.
-The historical investigation below is retained as dated evidence.
+The owner confirms obtaining permission directly from the footage rights holder
+for public website hosting and transformed ASCII display of the exact accepted
+LOOP30. Public use is authorized on this basis. No Creative Commons version is
+asserted. Public credit: Animal Exploration Project (@AnimalEP).
+
+A minimal private operator attestation is recorded as
+`owner-direct-permission-2026-11-13-loop30-v2`, tied to the exact SHA-256 and
+12,862,251-byte file. The date records the owner's assertion, not an invented
+date or quotation from the rights holder. No private correspondence is bundled.
+The exact release contract is in [Fish restoration](docs/releases/FISH_DIRECT_PERMISSION_20261113.md).
+
+This setting affects ASCII only. Digital Wake media/sidecars remain separate.
+Video bytes stay outside Git, Next release archives and customer ZIPs. The dated
+historical findings below are superseded for this authorized website scope;
+they are retained as history, not an outstanding CC clearance requirement.
 
 ## Accepted source
 

@@ -18,6 +18,14 @@ Media frames, play/pause, seeks, visibility/intersection, size/settings changes,
 source replacement and context recovery invalidate or recreate it. The wrapper
 samples its non-preserved output inside the draw callback, without a second RAF.
 
+## Current authorization — 2026-11-13
+
+The owner confirms direct rights-holder permission for website streaming and
+ASCII transformation of the exact LOOP30. This supersedes the historical
+hosting/CC gate below. No CC licence version is asserted for this permission.
+See [the bounded fish release](FISH_DIRECT_PERMISSION_20261113.md) for the
+current metadata, integrity, staging and operator activation contract.
+
 ## Featured media is a separate activation
 
 Status: **HOSTING_BLOCKED** for public serving. The exact clip was uploaded
