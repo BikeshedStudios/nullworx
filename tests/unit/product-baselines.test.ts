@@ -9,8 +9,13 @@ import { asciiDefaults } from "../../lib/ascii-playground";
 
 const read = (file: string) => readFileSync(file, "utf8");
 describe("permanent accepted product baselines", () => {
-  it("excludes the unfinished static Signature Hero route and public images", () => {
-    expect(existsSync("app/kits/signature-hero/page.tsx")).toBe(false);
+  it("keeps Signature Hero live and free of static image previews", () => {
+    const page = read("app/kits/signature-hero/page.tsx");
+    const playground = read("components/signature-hero/playground.tsx");
+    expect(page).toContain("SignaturePlayground");
+    expect(page).not.toMatch(/from "next\/image"|<Image\b|signature-hero-01\/.*\.png/);
+    expect(playground).toContain("<SignatureHero");
+    expect(playground).toContain('data-viewport={viewport}');
     expect(existsSync("public/signature-hero-01")).toBe(false);
     expect(read("ops/deploy/check-public-assets.mjs")).not.toContain("signature-hero-01/");
   });

@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
       {
+        source: "/kits/signature-hero",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+      {
         source: "/drops/confirmed",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },

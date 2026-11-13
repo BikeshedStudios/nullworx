@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/lab/", "/media/", "/tools/"],
+        disallow: ["/lab/", "/kits/signature-hero", "/media/", "/tools/"],
       },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),

@@ -1,0 +1,13 @@
+LOCAL OWNER-REVIEW CANDIDATE — NO CUSTOMER LICENSE ASSIGNED
+
+The newly authored Signature Hero composition, presets, review UI and documentation
+in this directory are a private local experiment, outside the public MIT release.
+No public distribution or customer license is granted by this candidate notice.
+Commercial license terms and ownership confirmation require the owner's decision.
+
+This notice does not revoke any permission already granted for public MIT code,
+nor replace third-party licenses. The source manifest identifies each origin.
+Paper Shaders remains Apache-2.0; the bundled fonts remain OFL-1.1.
+The referenced experimental Living Type code had no assigned license at its source
+commit. Its reuse is authorized here for local work by the project owner's request;
+external redistribution needs an explicit rights/license decision.

@@ -57,7 +57,7 @@ describe("sitemap and robots", () => {
     expect(rules).toHaveLength(1);
     expect(rules[0]!.userAgent).toBe("*");
     expect(rules[0]!.allow).toBe("/");
-    expect(rules[0]!.disallow).toEqual(["/lab/", "/media/", "/tools/"]);
+    expect(rules[0]!.disallow).toEqual(["/lab/", "/kits/signature-hero", "/media/", "/tools/"]);
   });
 
   it("keeps the manifest effect count stable while only approved effects are submitted", () => {
