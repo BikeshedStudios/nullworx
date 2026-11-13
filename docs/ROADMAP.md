@@ -18,6 +18,63 @@ Nullworx is a reuse-first procedural effects foundry: combine maintained open-so
 
 P0-A and P0-B may run independent *research* in parallel, but implementation must use isolated branches/proofs and not obstruct the existing G3-A acceptance gate.
 
+## 2026-11-14 — Reuse-first asset and product test session (QUEUED)
+
+**Requested:** 2026-11-13, for hands-on testing on Saturday 2026-11-14. This is an experimental research/testing checklist, **not** authorization to install into production, merge, deploy, publish, purchase assets, or expose premium source. No test results are asserted here.
+
+**Current-truth checkpoint before any code changes:** The older roadmap text below predates the November 12 public main `3f6e636` (Bento Duo 01 product page merged; €39 Gumroad listing published). At the latest check, live production was still on older `6974689`; release PRs #18 and #19 were open drafts, Drops was OFF, and search/customer demand evidence was limited. Re-check `main`, all worktrees, licensing, release status and deployed state instead of treating historical roadmap gates or remembered results as current. The earlier local `nullworx-agent-proof-01` is an **offline prototype and unverified React integration**, not an approved product.
+
+### Goal and decision metric
+
+Find the smallest, rights-cleared existing library/asset combination that makes a distinct **paid, agent-editable visual product** genuinely better than what the current UI Forge, Bento Duo and Paper Shaders stack can already deliver. Distinguish (a) reduced implementation time, (b) noticeably better aesthetics, (c) end-user functionality, and (d) buyer value; GitHub stars, listing prices and a working demo are **not** proof of demand.
+
+**No blanket integration:** Screen **all** candidates, then run bounded isolated technical spikes only when each offers a specific unmet capability. Avoid ten permanent dependencies and ten unrelated prototypes.
+
+### Full candidate inventory: screen every item, spike conditionally
+
+| Candidate | Source | Claimed scope / intended proof | Gate and decision |
+| --- | --- | --- | --- |
+| Paper Shaders | https://github.com/paper-design/shaders | Existing Apache-2.0 shader/material dependency. Reuse for one visual identity. | Baseline; prove new compositions don't require a second graphics engine. |
+| Keystatic | https://github.com/Thinkmill/keystatic | MIT-marked file/Git CMS for editable case studies. | **Priority spike:** create/update one project, verify real persistence, production build and customer workflow. Check deployment/auth/runtime assumptions. |
+| Tailark Blocks | https://github.com/tailark/blocks | MIT-marked conventional marketing blocks. | **Priority spike:** assemble one responsive nonvisual section; compare with existing components; preserve upstream notices. |
+| Animaxxing Skills | https://github.com/johnpolacek/animaxxing-skills | MIT-marked guidance for agent-driven animation/GSAP work. | **Priority A/B:** same animation task with/without skill; verify actual effect, reduced motion, teardown, no invented API. Skills are guidance, not guardrails. |
+| Atelier UI | https://github.com/whatisjery/atelier-ui | Shared WebGL + live DOM alignment architecture. | **Research/spike:** free-source path only; measure benefit versus current Paper/Canvas; **exclude Pro components** from resale without explicit compatible rights. |
+| Motion Primitives | https://github.com/ibelick/motion-primitives | MIT-marked interaction patterns. | Compare one use case with our current Motion components; reject duplicate dependency/visual redundancy. |
+| Pagefind | https://github.com/Pagefind/pagefind | MIT static search indexing. | Only test on a real multi-project content fixture; reject if simple search/filters suffice. |
+| Lenis | https://github.com/darkroomengineering/lenis | MIT scrolling/synchronization. | Test with existing sticky/scroll effects; reject if it harms accessibility, browser behavior or performance. |
+| Poly Haven | https://polyhaven.com/ | CC0-labeled HDRIs/textures/models. | Rights/provenance and asset-budget check; use only for a concrete 3D/visual requirement. |
+| Drei + React Three Fiber | https://github.com/pmndrs/drei and https://github.com/pmndrs/react-three-fiber | MIT-marked 3D foundation/helpers. | **Deferred technical spike:** one object, fallback, mobile GPU and clean unmount; only if 3D remains a commercial candidate. |
+
+**Wildcard comparison:** https://ui.philippekam.dev/ (kam-ui backgrounds) — verify canonical source, each component's exact license and provenance before any reuse. **Exclude from template-source resale unless independently cleared:** React Bits, Canvas UI, and Atelier Pro. GSAP license must be checked for the exact shipped use case; no assumption that the MIT agent skill applies to the GSAP runtime.
+
+### Three buyer-facing product hypotheses (not three builds)
+
+| Candidate | Existing leverage | Smallest customer-visible test | Kill criterion |
+| --- | --- | --- | --- |
+| **A — Cinematic Case Study System** (lead) | Bento Duo editorial/material language + Paper Shaders + Tailark; Keystatic only if justified | One editable case study, brand change, mobile rendering, installable source | Looks generic; editing requires significant developer help; CMS adds more work than value. |
+| **B — Interactive Product Launch System** | Existing approved UI Forge effects + Tailark + Motion, possibly animation skills | One distinct landing page and agent personalization using existing components | No credible differentiation from free templates or visual drift during edits. |
+| **C — Interactive 3D Brand Showcase** (defer) | R3F/Drei + CC0 assets + our materials | Single scene with static fallback and measured GPU cost | Generic rotating object, poor mobile behavior or weak buyer intent. |
+
+### Hands-on sequence and evidence
+
+1. **Inventory / safety:** inspect `git status --short`, `git branch --show-current`, `git worktree list`, exact `main`/release state, user-owned premium paths and current rights; do not reset/clean, leak ZIPs or modify another experiment.
+2. **All-candidate screening:** collect pinned repo commit/version, license text (not just GitHub badge), dependency burden, maintenance recency, claimed browser support, redistribution rules and one real use case. Record `PASS / FAIL / DEFER / UNVERIFIED` for **all ten** plus wildcard.
+3. **Foundation baseline:** run current Nullworx `pnpm verify`, `pnpm test:distribution`, `pnpm test:launch` in a safe isolated checkout; capture exact exits and existing skips. A failed baseline is not a new library regression.
+4. **Priority isolated proofs (separate fixtures/branches):** Paper + Tailark composition; Keystatic single-project edit/persistence; Animaxxing agent A/B on the same bounded animation task. Atelier gets architecture/rights evaluation first, a runnable prototype only if it could replace existing complexity.
+5. **Optional proofs only if gaps are observed:** Motion Primitives, Lenis, Pagefind, kam-ui; do not install just to complete a checklist. Keep R3F/Drei and Poly Haven as the 3D feasibility lane.
+6. **Compare:** same visual brief and target devices; record screenshot/clip, initial engineering effort, integration edits, clean Next.js/Vite consumer behavior when applicable, JS/runtime footprint, reduced-motion fallback, basic accessibility, licensing closure and manual repairs. Do not invent FPS, CI passes or sales.
+7. **Owner visual gate:** decide `KEEP / REVISE / KILL` per asset and choose **one** product hypothesis for possible commercialization. Preserving visual distinction is an explicit gate separate from technical acceptance.
+8. **Commercial gate:** compare real customer tasks against a free/template baseline; verify installation and editing by an external user before changing prices, paid catalog, checkout or deployment.
+
+### Minimum receipts / stop rules
+
+- One inventory and per-candidate license/source ledger, not ten half-built codebases.
+- One comparable baseline, per-spike diff/fixture, build/test exits, screenshots for 390px and desktop, and concise `what → so what → now what` verdicts.
+- For any attempted integration: preserve existing WIP; use a separate worktree; prefer pinned existing packages and reversible diffs; check secrets, asset rights, keyboard/focus, reduced motion, mobile overflow and cleanup.
+- **STOP** if rights forbid source resale, the result is visually generic, a library duplicates the existing stack, independent install fails without bounded repair, or the scope starts becoming a general visual editor.
+- This session may conclude with **DEFER** for most candidates. Screening all assets does not require integrating all assets.
+- No push, merge, deployment, paid publication or irreversible changes without separate explicit owner approval.
+
 ## Business model — Free → Starter → Pro → Ultimate (owner decision, 2026-11-12)
 
 **Decision:** Follow the **free library + paid self-serve tiers** architecture used by React Bits, not its catalog size, claims, or prices. Build once, distribute repeatedly. This is a product strategy, **not authorization to launch checkout or advertise unavailable products**.
