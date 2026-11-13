@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -9,6 +9,11 @@ import { asciiDefaults } from "../../lib/ascii-playground";
 
 const read = (file: string) => readFileSync(file, "utf8");
 describe("permanent accepted product baselines", () => {
+  it("excludes the unfinished static Signature Hero route and public images", () => {
+    expect(existsSync("app/kits/signature-hero/page.tsx")).toBe(false);
+    expect(existsSync("public/signature-hero-01")).toBe(false);
+    expect(read("ops/deploy/check-public-assets.mjs")).not.toContain("signature-hero-01/");
+  });
   it("homepage mounts the automatic media adapter and retains the exact approved receipt", () => {
     expect(read("app/page.tsx")).toContain("<HomeKoiField />");
     expect(read("components/white-journey/home-koi-field.tsx")).toContain('mode = "auto"');

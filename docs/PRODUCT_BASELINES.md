@@ -20,7 +20,7 @@ Media stays privately provisioned. Keep server SHA256 enforcement, protected app
 
 ## Public and paywall boundaries
 
-Keep the existing three-file public registry closure and MIT public effect source, local-video adapter and generated examples. No media, private receipt, premium Bento implementation, ZIP/TGZ, entitlement secret or source map enters Git/public artifacts. Bento Duo previews and existing €39 Gumroad links remain public; premium deliverables stay behind the existing checkout. Signature Hero stays an isolated noindex review route. Digital Wake stays its separate Beta with its existing eligibility restrictions. Preserve Drops gating and the exact approved sitemap manifest/date parity.
+Keep the existing three-file public registry closure and MIT public effect source, local-video adapter and generated examples. No media, private receipt, premium Bento implementation, ZIP/TGZ, entitlement secret or source map enters Git/public artifacts. Bento Duo previews and existing €39 Gumroad links remain public; premium deliverables stay behind the existing checkout. Signature Hero’s unfinished static showcase and all six public preview PNGs are excluded from this release by the owner’s Release Blocker Repair 01 decision. There is no released `/kits/signature-hero` route or image link. Source and reference captures remain preserved at `882f194` in the untouched integration worktree. Any future Signature Hero release must use real interactive components; static images are reference material, not an approved product. Historical review receipts do not override this release-scope decision. Digital Wake stays its separate Beta with its existing eligibility restrictions. Preserve Drops gating and the exact approved sitemap manifest/date parity.
 
 ## Unified checkpoint and branch selection
 
@@ -37,3 +37,7 @@ Procedural waves as normal landing default, Fine 12px as normal landing default,
 ## Blocking checks
 
 `pnpm build` runs product baseline assertions. `pnpm verify` covers contracts and existing units/validators. `pnpm test:product --base-url URL --report NEW_FILE` requires a configured provisioned server, checks actual served hash/Range/HEAD and runs unmocked desktop/mobile fish tests, transport, selectable density, reduced motion, denied autoplay and missing/invalid media. The negative scenarios deliberately intercept failures and cannot count as autoplay evidence. Existing full playground browser and copied-source Next/Vite consumer gates remain required after shared interfaces change. `ops/deploy/smoke-browser.mjs --media ascii-loop30-direct-permission` also enforces the homepage contract during protected staging attestation. No deployment is authorized by a passing local gate.
+
+## Release Blocker Repair 01
+
+Repair branches descend from `882f194d295ca95c7cae7535f456e25cfdbab43a`. Keep the installed controller’s strict two-file public allowlist; do not expand it for the excluded static showcase. Preserve the approved ten-URL sitemap. Procedural ASCII must reject hidden/offscreen/disconnected or cleaned-up draw callbacks, including delayed ResizeObserver entries, while preserving first visible rendering, resume and reduced-motion still frames. The existing hidden frame-count assertion remains blocking and unchanged.

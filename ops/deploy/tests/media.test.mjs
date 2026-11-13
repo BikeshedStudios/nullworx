@@ -9,8 +9,8 @@ test('release public allowlist accepts reviewed bytes and rejects media/sidecars
   const root = await mkdtemp(join(tmpdir(), 'nullworx-public-guard-'));
   try {
     await cp('public', root, { recursive: true });
-    assert.equal((await checkPublicAssets(root)).length, 8);
-    for (const name of ['loop30.mp4', 'fish-data.json', 'mask.png', 'frame.webp']) {
+    assert.equal((await checkPublicAssets(root)).length, 2);
+    for (const name of ['loop30.mp4', 'fish-data.json', 'mask.png', 'frame.webp', 'signature-hero-01.png']) {
       const file = join(root, name);
       await writeFile(file, 'fixture only, no source media');
       await assert.rejects(checkPublicAssets(root), /Unapproved public asset/);

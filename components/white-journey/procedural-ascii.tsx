@@ -19,8 +19,10 @@ export function ProceduralAscii({ compact = false, paused = false, settings = PR
     const node = host.current, field = canvas.current;
     const ctx = field?.getContext("2d");
     if (!node || !field || !ctx) return;
-    let raf = 0, previous = 0, frames = 0;
+    let raf = 0, previous = 0, frames = 0, active = true;
+    const drawable = () => active && visible && !document.hidden && node.isConnected;
     const draw = () => {
+      if (!drawable()) return;
       const width = node.clientWidth, height = node.clientHeight;
       const dpr = Math.min(devicePixelRatio || 1, 1.5);
       if (field.width !== Math.round(width * dpr) || field.height !== Math.round(height * dpr)) {
@@ -46,6 +48,7 @@ export function ProceduralAscii({ compact = false, paused = false, settings = PR
       node.dataset.time = time.current.toFixed(3);
     };
     const tick = (now: number) => {
+      if (!drawable() || !playing) return;
       if (now - previous >= 50) { // At most 20fps, with a bounded clock on resume.
         time.current += previous ? Math.min(now - previous, 100) / 1000 * settings.speed : 0;
         previous = now; draw();
@@ -55,8 +58,8 @@ export function ProceduralAscii({ compact = false, paused = false, settings = PR
     const resize = new ResizeObserver(draw);
     resize.observe(node); draw();
     if (playing) raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); resize.disconnect(); };
-  }, [playing, compact, reduced, settings, resetKey]);
+    return () => { active = false; cancelAnimationFrame(raf); resize.disconnect(); };
+  }, [visible, playing, compact, reduced, settings, resetKey]);
   return <div className={styles.field} ref={host} data-procedural-ascii data-playing={playing} data-reduced={reduced} data-settings={JSON.stringify(settings)}>
     <canvas ref={canvas} role="img" aria-label="Procedural ASCII waves in violet and teal"
       onPointerMove={event => {
