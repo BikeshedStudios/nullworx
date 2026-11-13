@@ -1,11 +1,13 @@
 import { compositor } from "../material-core/compositor";
 import { sourceCells } from "../material-core/coverage-mask";
-import { ACTIVE_MS, clamp, hash, WINDUP_MS, type Raster } from "../material-core/types";
+import { ACTIVE_MS, clamp, hash, WINDUP_MS, type MaterialOptions, type Raster } from "../material-core/types";
 
 /** Newspaper ash: source tiles curl into three depth bands in one rising wind. */
-export function ashfallType(canvas: HTMLCanvasElement, source: Raster) {
+export function ashfallType(canvas: HTMLCanvasElement, source: Raster, options: MaterialOptions) {
   const { width: w, height: h, dpr } = source;
-  const cells = sourceCells(source, w > 600 ? 3.2 : 2.2, (x, y) => {
+  const density = options.density;
+  const force = options.intensity;
+  const cells = sourceCells(source, (w > 600 ? 3.2 : 2.2) / density, (x, y) => {
     const front = 0.82 * (1 - x / w) + 0.12 * y / h
       + 0.042 * Math.sin(y * 0.036) + 0.024 * Math.sin(x * 0.047 + y * 0.018)
       + (hash(Math.floor(x / 7), Math.floor(y / 7)) - 0.5) * 0.024;
@@ -21,8 +23,8 @@ export function ashfallType(canvas: HTMLCanvasElement, source: Raster) {
       const drag = (1 - Math.exp(-1.9 * age)) / 1.9;
       const phase = cell.x * 0.011 + cell.y * 0.014;
       const curl = Math.sin(phase + age * 3.1) - Math.sin(phase);
-      const px = cell.x + (50 + cell.seed * 70) * drag * z + age * 39 * z + curl * age * 10;
-      const py = cell.y - (22 + cell.seed * 42) * drag * z - 47 * age * age * z + curl * age * 5;
+      const px = cell.x + ((50 + cell.seed * 70) * drag * z + age * 39 * z + curl * age * 10) * force;
+      const py = cell.y - ((22 + cell.seed * 42) * drag * z + 47 * age * age * z - curl * age * 5) * force;
       const alpha = cell.alpha * Math.pow(1 - age / life, 1.35);
       const perspective = 1 + age * (z - 0.8) * 0.23;
       const fold = 0.3 + 0.7 * Math.abs(Math.cos(age * (3 + cell.seed * 4) + cell.seed));

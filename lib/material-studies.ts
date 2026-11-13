@@ -19,11 +19,21 @@ export const MATERIAL_SOURCE_FILES = [
   "material-core/coverage-mask.ts", "material-core/compositor.ts", "material-core/use-material.ts",
 ] as const;
 
-export function materialUsage(kind: MaterialKind) {
+export type MaterialCustomization = {
+  lines: readonly [string, string];
+  color: string;
+  intensity: number;
+  density: number;
+};
+
+export function materialUsage(kind: MaterialKind, customization?: Partial<MaterialCustomization>) {
   const study = MATERIAL_STUDIES.find(study => study.id === kind)!;
-  const props = kind === "ashfall" ? 'lines={["Nothing", "stays."]} color="#72509d"'
-    : kind === "seam" ? 'color="#7752a3"'
-      : `src="${MATERIAL_PRESETS.sediment.src}" alt="Fractured dark mineral on warm limestone"`;
+  const lines = customization?.lines ?? MATERIAL_PRESETS.ashfall.lines;
+  const intensity = Math.min(1.6, Math.max(0.4, customization?.intensity ?? 1));
+  const density = Math.min(1.4, Math.max(0.6, customization?.density ?? 1));
+  const props = kind === "ashfall" ? `lines={${JSON.stringify(lines)}} color="${customization?.color ?? MATERIAL_PRESETS.ashfall.color}" intensity={${intensity.toFixed(2)}} density={${density.toFixed(2)}}`
+    : kind === "seam" ? `color="${customization?.color ?? MATERIAL_PRESETS.seam.color}" intensity={${intensity.toFixed(2)}} density={${density.toFixed(2)}}`
+      : `src="${MATERIAL_PRESETS.sediment.src}" alt="Fractured dark mineral on warm limestone" intensity={${intensity.toFixed(2)}} density={${density.toFixed(2)}}`;
   return `"use client";
 import { ${study.component} } from "@/components/material-effects/material-components";
 

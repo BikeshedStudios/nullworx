@@ -3,7 +3,7 @@
 import { useEffect, useEffectEvent, type RefObject } from "react";
 import { rasterSource } from "./source-raster";
 import { TriggerClock } from "./trigger-clock";
-import { ACTIVE_MS, clamp, WINDUP_MS, type Comparison, type FrameReceipt, type MaterialKind, type MaterialRenderer, type MaterialSource } from "./types";
+import { ACTIVE_MS, clamp, WINDUP_MS, type Comparison, type FrameReceipt, type MaterialKind, type MaterialOptions, type MaterialRenderer, type MaterialSource } from "./types";
 
 export type MaterialStatus = { phase: string; elapsedMs: number; paused: boolean; reason: string; coverage: number; particles: number };
 export type MaterialDebug = {
@@ -20,7 +20,7 @@ declare global {
 
 export function useMaterial(hostRef: RefObject<HTMLDivElement | null>, canvasRef: RefObject<HTMLCanvasElement | null>,
   controllerRef: RefObject<MaterialDebug | null>, kind: MaterialKind, source: MaterialSource, mode: Comparison,
-  onStatus: (status: MaterialStatus) => void) {
+  options: MaterialOptions, onStatus: (status: MaterialStatus) => void) {
   const notify = useEffectEvent(onStatus);
   useEffect(() => {
     const host = hostRef.current!, canvas = canvasRef.current!;
@@ -105,7 +105,7 @@ export function useMaterial(hostRef: RefObject<HTMLDivElement | null>, canvasRef
             : kind === "seam" ? (await import("../material-effects/seam-erosion")).seamErosion
               : (await import("../material-effects/sediment-reveal")).sedimentReveal;
           if (disposed || token !== generation) { raster.canvas.width = raster.canvas.height = 1; return; }
-          renderer = make(canvas, raster); resources.renderers++;
+          renderer = make(canvas, raster, options); resources.renderers++;
         } else {
           canvas.width = raster.canvas.width; canvas.height = raster.canvas.height;
           canvas.getContext("2d")!.drawImage(raster.canvas, 0, 0);
@@ -190,5 +190,5 @@ export function useMaterial(hostRef: RefObject<HTMLDivElement | null>, canvasRef
       if (window.__materialWaveA === api) delete window.__materialWaveA;
       if (controllerRef.current === api) controllerRef.current = null;
     };
-  }, [hostRef, canvasRef, controllerRef, kind, source, mode]);
+  }, [hostRef, canvasRef, controllerRef, kind, source, mode, options]);
 }

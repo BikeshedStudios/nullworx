@@ -68,3 +68,38 @@ test("unapproved experiment effects stay outside canonical routes", async ({ req
     expect((await request.get(`/effects/${slug}`)).status()).toBe(404);
   }
 });
+
+test("material customizer changes the live source and generated usage", async ({ page }) => {
+  await page.goto("/effects/ashfall-type");
+  await page.waitForFunction(() => document.querySelector<HTMLElement>("[data-material-surface]")?.dataset.ready === "true");
+  await page.evaluate(() => window.__materialWaveA!.seek(1700));
+  const before = await page.locator("[data-material-surface] canvas").evaluate(canvas => (canvas as HTMLCanvasElement).toDataURL());
+  await page.getByTestId("line-one").fill("Ash");
+  await page.getByTestId("line-two").fill("drift");
+  await page.getByTestId("line-one").blur();
+  await page.waitForFunction(() => document.querySelector<HTMLElement>("[data-material-surface]")?.dataset.ready === "true");
+  await page.evaluate(() => window.__materialWaveA!.seek(1700));
+  const after = await page.locator("[data-material-surface] canvas").evaluate(canvas => (canvas as HTMLCanvasElement).toDataURL());
+  expect(after).not.toBe(before);
+  await page.getByTestId("intensity").evaluate((element) => {
+    const input = element as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    setter?.call(input, "1.3");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await page.getByTestId("density").evaluate((element) => {
+    const input = element as HTMLInputElement;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    setter?.call(input, "0.8");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+  await page.getByRole("tab", { name: "Usage", exact: true }).click();
+  await expect(page.locator("#source-panel code")).toContainText('"Ash"');
+  await expect(page.locator("#source-panel code")).toContainText("intensity={1.30}");
+  await expect(page.locator("#source-panel code")).toContainText("density={0.80}");
+  await page.getByRole("button", { name: "Reset look" }).click();
+  await expect(page.getByTestId("line-one")).toHaveValue("Nothing");
+  await expect(page.getByTestId("intensity")).toHaveValue("1");
+});

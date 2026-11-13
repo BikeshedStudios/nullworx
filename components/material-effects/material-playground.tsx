@@ -1,9 +1,10 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AshfallType, SeamErosion, SedimentReveal } from "./material-components";
 import { SourceCode } from "@/components/white-journey/source-code";
+import { MATERIAL_PRESETS } from "./presets";
 import { MATERIAL_STUDIES, materialUsage } from "@/lib/material-studies";
 import { TOTAL_MS, type Comparison, type MaterialKind } from "@/components/material-core/types";
 import type { MaterialDebug, MaterialStatus } from "@/components/material-core/use-material";
@@ -22,6 +23,20 @@ export function MaterialPlayground({ initialEffect, sources }: { initialEffect: 
   const controller = useRef<MaterialDebug | null>(null);
   const study = studies.find(item => item.id === selected)!;
   const active = ["WINDUP", "ACTIVE", "SETTLING"].includes(status.phase);
+  const [lineOne, setLineOne] = useState<string>(MATERIAL_PRESETS.ashfall.lines[0]);
+  const [lineTwo, setLineTwo] = useState<string>(MATERIAL_PRESETS.ashfall.lines[1]);
+  const [color, setColor] = useState<string>(selected === "seam" ? MATERIAL_PRESETS.seam.color : MATERIAL_PRESETS.ashfall.color);
+  const [intensity, setIntensity] = useState(1);
+  const [density, setDensity] = useState(1);
+  const lines = useMemo(() => [lineOne, lineTwo] as const, [lineOne, lineTwo]);
+  const customization = { lines, color, intensity, density };
+  function resetLook() {
+    setLineOne(MATERIAL_PRESETS.ashfall.lines[0]);
+    setLineTwo(MATERIAL_PRESETS.ashfall.lines[1]);
+    setColor(selected === "seam" ? MATERIAL_PRESETS.seam.color : MATERIAL_PRESETS.ashfall.color);
+    setIntensity(1);
+    setDensity(1);
+  }
   return <main id="main" tabIndex={-1} className={styles.page}>
     <header className={styles.intro}>
       <div className={styles.eyebrow}><span /> UI FORGE / MATERIAL EFFECTS <b>SOURCE INCLUDED</b></div>
@@ -40,7 +55,19 @@ export function MaterialPlayground({ initialEffect, sources }: { initialEffect: 
     <section className={styles.lane} data-scroll-lane aria-label="Scroll activation lane">
       <div className={styles.sticky}>
         <div className={styles.stageTop}><span>{study.name.toUpperCase()} <b>/ {mode === "css" ? study.control : mode === "original" ? "Original surface" : "Material study"}</b></span><span className={styles.phase} data-testid="phase">{status.phase}</span></div>
-        {selected === "ashfall" ? <AshfallType key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} /> : selected === "seam" ? <SeamErosion key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} /> : <SedimentReveal key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} />}
+        <div className={styles.customize} aria-label={`Customize ${study.name}`}>
+          <span className={styles.customizeLabel}>CUSTOMIZE / LIVE</span>
+          {selected === "ashfall" && <>
+            <label>Line 1<input value={lineOne} maxLength={24} onChange={event => setLineOne(event.target.value)} data-testid="line-one"/></label>
+            <label>Line 2<input value={lineTwo} maxLength={24} onChange={event => setLineTwo(event.target.value)} data-testid="line-two"/></label>
+          </>}
+          {selected !== "sediment" && <label>Ink color<span><input type="color" value={color} aria-label="Ink color" onChange={event => setColor(event.target.value)} data-testid="color"/><code>{color}</code></span></label>}
+          {selected === "sediment" && <p className={styles.fixedSource}>The mineral raster is the approved source. Motion and grain density stay adjustable.</p>}
+          <label>Intensity <output>{intensity.toFixed(2)}</output><input type="range" min="0.4" max="1.6" step="0.05" value={intensity} onChange={event => setIntensity(Number(event.target.value))} data-testid="intensity"/></label>
+          <label>Grain density <output>{density.toFixed(2)}</output><input type="range" min="0.6" max="1.4" step="0.05" value={density} onChange={event => setDensity(Number(event.target.value))} data-testid="density"/></label>
+          <button type="button" className={styles.resetLook} onClick={resetLook}>Reset look</button>
+        </div>
+        {selected === "ashfall" ? <AshfallType key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} lines={lines} color={color} intensity={intensity} density={density} /> : selected === "seam" ? <SeamErosion key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} color={color} intensity={intensity} density={density} /> : <SedimentReveal key={mode} comparison={mode} controllerRef={controller} onStatus={setStatus} intensity={intensity} density={density} />}
         <div className={styles.controls}>
           <button type="button" data-testid="play" disabled={mode === "original" || status.phase === "COMPLETE" || Boolean(status.reason)}
             onClick={() => active && !status.paused ? controller.current?.pause() : controller.current?.play()}>
@@ -58,8 +85,8 @@ export function MaterialPlayground({ initialEffect, sources }: { initialEffect: 
       <div><span className={styles.eyebrow}>FIELD NOTES / 0{studies.indexOf(study) + 1}</span><h2>{study.name}</h2><p>{study.description}</p></div>
       <div className={styles.readout}><span>LIVE MATERIAL</span><p><strong>{Math.round(status.coverage * 100)}%</strong> source remains</p><p><strong>{status.particles.toLocaleString()}</strong> detached fragments</p><small>Accessible DOM. Reduced motion. Source included.</small></div>
     </section>
-    <p className={styles.usageNote}>Copy the listed source files into the two component folders. Text uses the included Instrument Serif and Space Mono font setup. Sediment uses the licensed local raster at <code>/material-wave-a/mineral-study.webp</code>. Scroll starts one complete motion; the inspector pauses at an exact time.</p>
-    <SourceCode sources={sources} usage={materialUsage(selected)} directory="components" />
+    <p className={styles.usageNote}>Copy the listed source files into the two component folders. Text uses the included Instrument Serif and Space Mono font setup. Sediment uses the licensed local raster at <code>/material-wave-a/mineral-study.webp</code>. The generated usage carries the current lines, color, intensity and grain density. Scroll starts one complete motion; the inspector pauses at an exact time.</p>
+    <SourceCode sources={sources} usage={materialUsage(selected, customization)} directory="components" />
     <footer className={styles.footer}><span>UI FORGE / FINITE MATERIALS</span><Link href="/effects">Back to effects ↗</Link></footer>
   </main>;
 }

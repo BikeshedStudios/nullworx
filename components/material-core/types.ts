@@ -1,4 +1,11 @@
 export type MaterialKind = "ashfall" | "seam" | "sediment";
+export type MaterialOptions = { intensity: number; density: number };
+export const DEFAULT_MATERIAL_OPTIONS: MaterialOptions = { intensity: 1, density: 1 };
+export function normalizeMaterialOptions(input?: Partial<MaterialOptions>): MaterialOptions {
+  const intensity = Number.isFinite(input?.intensity) ? Math.min(1.6, Math.max(0.4, input!.intensity!)) : 1;
+  const density = Number.isFinite(input?.density) ? Math.min(1.4, Math.max(0.6, input!.density!)) : 1;
+  return { intensity, density };
+}
 export type MaterialPhase = "IDLE" | "WINDUP" | "ACTIVE" | "SETTLING" | "COMPLETE";
 export type Comparison = "original" | "css" | "candidate";
 

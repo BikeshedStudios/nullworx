@@ -1,17 +1,17 @@
 "use client";
 
 import { useRef, type RefObject } from "react";
-import type { Comparison, MaterialKind, MaterialSource } from "../material-core/types";
+import type { Comparison, MaterialKind, MaterialOptions, MaterialSource } from "../material-core/types";
 import { useMaterial, type MaterialDebug, type MaterialStatus } from "../material-core/use-material";
 import styles from "./material-surface.module.css";
 
-export function MaterialSurface({ kind, source, mode, controller, onStatus }: {
-  kind: MaterialKind; source: MaterialSource; mode: Comparison;
+export function MaterialSurface({ kind, source, mode, options, controller, onStatus }: {
+  kind: MaterialKind; source: MaterialSource; mode: Comparison; options: MaterialOptions;
   controller: RefObject<MaterialDebug | null>; onStatus: (status: MaterialStatus) => void;
 }) {
   const host = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  useMaterial(host, canvas, controller, kind, source, mode, onStatus);
+  useMaterial(host, canvas, controller, kind, source, mode, options, onStatus);
   return (
     <div ref={host} className={`${styles.surface} ${styles[kind]}`} data-material-surface={kind} data-mode={mode} data-ready="false">
       {source.kind === "text" && <>
