@@ -67,6 +67,7 @@ export function effectStructuredData(slug: string): JsonLd | null {
   const effect = getDiscoveryEffect(slug);
   if (!effect || effect.indexStatus !== "index") return null;
   const url = absoluteUrl(effect.canonicalPath);
+  const frontier = slug === "refractive-type" || slug === "impossible-material";
   const image = effect.media.status === "included" ? absoluteUrl("/material-wave-a/mineral-study.webp") : undefined;
 
   return {
@@ -80,8 +81,9 @@ export function effectStructuredData(slug: string): JsonLd | null {
         url,
         codeRepository: SOURCE_REPOSITORY,
         publisher: { "@id": ORGANIZATION_ID },
-        programmingLanguage: "TypeScript",
-        runtimePlatform: "Web browser",
+        programmingLanguage: frontier ? ["TypeScript", "GLSL"] : "TypeScript",
+        runtimePlatform: frontier ? "Web browser: WebGL2 full effect or Canvas2D live companion" : "Web browser",
+        ...(frontier ? { creditText: effect.content.rightsNote } : {}),
         license: MIT_LICENSE_URL,
         isPartOf: { "@id": COLLECTION_ID },
         ...(image ? { image } : {}),

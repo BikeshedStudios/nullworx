@@ -52,7 +52,7 @@ for (const width of [360, 390, 430, 1440]) test.describe(`${width}px`, () => {
     await page.waitForTimeout(180); expect(await hero.getAttribute("data-time")).toBe(offscreen);
     await page.goto("/effects");
     await expect(page).toHaveTitle("UI Forge effect gallery — nullworx.space");
-    await expect(page.locator("article")).toHaveCount(7);
+    await expect(page.locator("article")).toHaveCount(9);
     await expect(page.locator('a[href*="digital-wake"],a[href^="/lab/"]')).toHaveCount(0);
     for (const id of ["magnetic", "glyph", "prism", "ascii", "ashfall", "seam", "sediment"]) {
       const preview = page.locator(`[data-live-preview="${id}"]`);

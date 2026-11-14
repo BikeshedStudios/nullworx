@@ -114,8 +114,8 @@ function audit(fish: FishData, motion: FinMotion, wake: FinWake) {
   return count;
 }
 describe("canonical Digital Wake", () => {
-  it("keeps eight unique navigable effects and validated accepted presets", () => {
-    expect(new Set(EFFECTS.map((e) => e.slug)).size).toBe(8);
+  it("keeps ten unique navigable effects and validated accepted presets", () => {
+    expect(new Set(EFFECTS.map((e) => e.slug)).size).toBe(10);
     for (const preset of Object.values(PRESETS))
       expect(validate(JSON.parse(JSON.stringify(preset)))).toEqual(preset);
     expect(PRESETS.SUBTLE.bodyEmission).toBe(0);

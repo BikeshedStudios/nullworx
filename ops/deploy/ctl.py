@@ -327,6 +327,15 @@ def validate_report(path, suite, config, auth, data, edge=False):
     # Require the entire current suite, not just a caller-supplied passed flag.
     legacy = auth["commit"] == "697468992c453c9ca9ed93862f35b3089dc67acb"
     pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]]
+    # Additive Visual Frontier gates. Retain exact historical rollback profiles.
+    frontier = auth["commit"] not in {
+        "697468992c453c9ca9ed93862f35b3089dc67acb",
+        "3f6e6360f0686106886f0bb3f6d2d7303d11ea36",
+        "54f7716335468bf171e374278b11bdf946f7a651",
+        "7db32651b8226b21851dd3480db9dd688e50b267",
+    }
+    if frontier:
+        pages += ["/effects/refractive-type", "/effects/impossible-material"]
     if not legacy:
         pages += ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
     names = {c["name"] for c in report["checks"]}
@@ -334,6 +343,8 @@ def validate_report(path, suite, config, auth, data, edge=False):
         expected = {"mobile " + path for path in pages} | {"navigation home to gallery to effect"}
         if not legacy:
             expected |= {"published Bento Duo checkout", "support destinations", "disabled Drops"}
+        if frontier:
+            expected |= {"visual frontier " + variant for variant in ["A1", "A2", "C1", "C2", "complete source"]}
         expected.add("missing media /effects/sediment-reveal")
         if mode == FEATURED_MODE:
             expected |= {"featured media failure fallback " + path for path in ["/", "/effects/ascii-waves"]}

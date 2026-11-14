@@ -1,0 +1,10 @@
+{
+  "harfbuzz": {
+    "sha256": "90c0bd6c34d54ac8730366f4ed7f7ce870e4b6b9260cbe92e728ffa6c4694c0a",
+    "bytes": 366811
+  },
+  "font": {
+    "sha256": "145016049aa47932e2d116f70151edc5a53df894cb367514c52ea2d11289bee7",
+    "bytes": 16416
+  }
+}

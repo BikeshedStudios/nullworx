@@ -16,12 +16,12 @@ describe("discovery manifest", () => {
     const manifestSlugs = DISCOVERY_MANIFEST.effects.map((effect) => effect.slug);
     const registrySlugs = EFFECTS.map((effect) => effect.slug);
     expect(manifestSlugs).toEqual(registrySlugs);
-    expect(manifestSlugs).toHaveLength(8);
+    expect(manifestSlugs).toHaveLength(10);
   });
 
   it("keeps indexability fail-closed and limited to approved effects", () => {
     const indexable = getIndexableEffects();
-    expect(indexable).toHaveLength(7);
+    expect(indexable).toHaveLength(9);
     expect(indexable.map((effect) => effect.slug)).not.toContain("digital-wake");
     expect(indexable.every((effect) => effect.releaseState === "approved")).toBe(true);
     expect(getIndexablePages().map((page) => page.path)).toEqual(["/", "/effects", "/kits/bento-duo"]);
@@ -34,7 +34,7 @@ describe("discovery manifest", () => {
     expect(wake?.media.status).toBe("blocked");
     expect(wake?.media.hostingRights).toBe("unverified");
     expect(isEffectIndexable("digital-wake")).toBe(false);
-    expect(DISCOVERY_MANIFEST.effects).toHaveLength(8);
+    expect(DISCOVERY_MANIFEST.effects).toHaveLength(10);
   });
 
   it("treats ASCII media as fallback-only, never as cleared hosting", () => {

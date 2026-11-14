@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { smoke, metadata, publicPaths, indexablePaths, galleryEffects, canonicalOrigin, featuredMode, featuredMedia } from "../smoke-http.mjs";
+import { smoke, metadata, publicPaths, indexablePaths, galleryEffects, canonicalOrigin, featuredMode, featuredMedia, pathsForRelease } from "../smoke-http.mjs";
 
 test("metadata parser accepts arbitrary attribute order", () => {
   assert.deepEqual(metadata('<link href="https://nullworx.space/" rel="canonical"><meta content="index, follow" name="robots">'), {
@@ -52,7 +52,7 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
     const baseUrl = `http://127.0.0.1:${server.address().port}`;
     const passing = await smoke({ baseUrl });
     assert.equal(passing.passed, true, JSON.stringify(passing.checks));
-    assert.equal(passing.checks.length, 20);
+    assert.equal(passing.checks.length, 22);
     const badMedia = await smoke({ baseUrl, media: featuredMode });
     assert.equal(badMedia.media, featuredMode);
     assert.deepEqual(badMedia.featuredMedia, featuredMedia);
@@ -91,4 +91,12 @@ test("HTTP suite fails closed for missing SEO, noindex public pages and bad cano
     assert.equal(failed.checks.find(c => c.name === "page /").passed, false);
     await assert.rejects(smoke({ baseUrl, profile: "edge" }), /exact canonical/);
   } finally { await new Promise(resolve => server.close(resolve)); }
+});
+
+test("only exact inventoried rollback releases retain the previous route scope", () => {
+  const old = pathsForRelease("3f6e6360f0686106886f0bb3f6d2d7303d11ea36", indexablePaths);
+  assert.equal(old.length, 10);
+  assert.ok(!old.includes("/effects/refractive-type"));
+  assert.equal(pathsForRelease("f".repeat(40), indexablePaths).length, 12);
+  assert.equal(pathsForRelease("", indexablePaths).length, 12);
 });

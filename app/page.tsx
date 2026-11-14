@@ -27,10 +27,15 @@ export default function HomePage() {
       <HomeKoiField />
       <div className={styles.fieldFoot}><span>Original code → characters → a little unexpected life.</span><span>Move your pointer. Pause and play.</span></div>
     </section>
+    <section id="visual-frontier" className={`${styles.wrap} ${styles.effects}`} aria-labelledby="frontier-heading">
+      <div className={styles.sectionTop}><span>FEATURED / VISUAL FRONTIER 01</span><Link href="/effects">THE EFFECTS COLLECTION ↗</Link></div>
+      <div className={styles.sectionIntro}><h2 id="frontier-heading">Light bends.<br /><em>Matter surprises.</em></h2><p>Refractive Type and Impossible Material. Four approved directions, live previews and working controls. Open a playground to activate the full WebGL study.</p></div>
+      <EffectCards collection="frontier" />
+    </section>
     <section id="effects" className={`${styles.wrap} ${styles.effects}`} aria-labelledby="effects-heading">
       <div className={styles.sectionTop}><span>01 / THE COLLECTION</span><Link href="/effects">EXPLORE ALL EFFECTS ↗</Link></div>
       <div className={styles.sectionIntro}><h2 id="effects-heading">Small details.<br /><em>Lasting impressions.</em></h2><p>Type that transforms. Color that drifts. An interaction that pulls you closer. Pick a study and find your own expression.</p></div>
-      <EffectCards />
+      <EffectCards collection="original" />
     </section>
     <section id="bento-duo" className={`${styles.wrap} ${styles.premiumTeaser}`} aria-labelledby="bento-home-title">
       <div className={styles.premiumMeta}><span>NEW / UI FORGE PAID KIT 001</span><span>TWO KITS · ONE COLLECTION</span></div>

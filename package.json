@@ -31,7 +31,9 @@
     "test:launch": "bash tests/launch/check.sh",
     "test:contracts": "vitest run tests/unit/product-baselines.test.ts",
     "prebuild": "pnpm test:contracts",
-    "test:product": "node scripts/verify-product-baselines.mjs"
+    "test:product": "node scripts/verify-product-baselines.mjs",
+    "test:distribution:frontier": "node tests/distribution/visual-frontier-consumers.mjs",
+    "test:visual-frontier": "node scripts/verify-visual-frontier.mjs"
   },
   "dependencies": {
     "@fontsource-variable/space-grotesk": "5.3.0",
@@ -43,6 +45,8 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "server-only": "0.0.1",
+    "three": "0.187.0",
+    "three-text": "0.6.5",
     "zod": "4.6.7"
   },
   "devDependencies": {
@@ -52,6 +56,7 @@
     "@types/node": "24.10.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "@types/three": "0.187.0",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.3",
     "fflate": "0.8.3",

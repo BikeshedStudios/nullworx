@@ -47,7 +47,7 @@ Requires React and CSS Modules. The registry installs the component, stylesheet 
 
 ## Effects and media
 
-The public gallery contains Magnetic Focus, Glyph Morph, Prism Text, ASCII Waves, Ashfall Type, Seam Erosion and Sediment Reveal. Magnetic Focus is the only independently verified registry item. The other effects remain gallery/source studies. Digital Wake remains an experimental beta outside the public gallery; its source is retained for local review.
+The public gallery contains Magnetic Focus, Glyph Morph, Prism Text, ASCII Waves, Ashfall Type, Seam Erosion, Sediment Reveal, Refractive Type and Impossible Material. Magnetic Focus is the only independently verified registry item. The other effects remain gallery/source studies. Digital Wake remains an experimental beta outside the public gallery; its source is retained for local review.
 
 The homepage and ASCII preview use original procedural waves. You can select your own video in the browser; selected files are not uploaded. Restricted footage, masks, motion sidecars and extracted frames are excluded. Video redistribution rights remain unverified, and a clean clone requires no private media to build or display the procedural previews.
 
@@ -68,3 +68,20 @@ pnpm test:distribution:site
 `test:distribution` installs only from the pinned public GitHub commit, with no local-source fallback. Restricted-media tests explicitly skip in a clean clone. [Release evidence](docs/releases/PUBLIC_DISTRIBUTION_01.md) separates technical readiness from search indexing and lists the final publication steps.
 
 Use [EFFECT_REGISTRY.md](EFFECT_REGISTRY.md) and [ADDING_AN_EFFECT.md](ADDING_AN_EFFECT.md) when contributing.
+
+## Visual Frontier
+
+Refractive Type (Spectral mass / Split signal) and Impossible Material
+(Quicksilver / Folded mineral) are owner-approved public effects. Homepage and
+gallery cards mount live Canvas2D companions; **Full preview** explicitly loads
+the actual approved renderer in the bounded card. The playground provides both
+variants, original controls, pause/replay/reset and the complete copyable source.
+One shared GPU lease serializes full renderer creation/disposal across cards.
+
+See [installation](docs/visual-frontier/INSTALL.md),
+[source and asset rights](docs/visual-frontier/SOURCE_RIGHTS.md) and
+[publication contracts](docs/visual-frontier/PROMOTION_01.md). The public sitemap
+contains twelve canonical URLs. The private experiment and rejected study remain
+outside production. `pnpm test:distribution:frontier` verifies actual clipboard
+source in fresh Next/Vite fixtures; `pnpm test:visual-frontier` records browser and
+performance evidence (set its receipt/base URL environment variables).

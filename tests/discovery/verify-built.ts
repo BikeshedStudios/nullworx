@@ -152,7 +152,7 @@ check(canonicalOf(notFound) === "", "404: no invented canonical");
 const sitemap = readArtifact("sitemap.xml.body");
 const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]!);
 const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((match) => match[1]!);
-check(locs.length === 10, "sitemap: exactly 10 approved URLs");
+check(locs.length === 12, "sitemap: exactly 12 approved URLs, including both Visual Frontier effects");
 check(JSON.stringify(locs) === JSON.stringify(expectedUrls), "sitemap: exact parity with approved manifest URLs");
 const expectedDates = [
   ...getIndexablePages().map((page) => page.lastModified),

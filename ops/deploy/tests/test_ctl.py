@@ -165,9 +165,9 @@ class ControllerTests(unittest.TestCase):
                 ctl.validate_report(path, "browser", self.config, self.auth, {})
 
     def test_browser_report_requires_current_routes_and_actual_fallback_names(self):
-        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal", "refractive-type", "impossible-material"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
         names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
-        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names]}
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names + ["visual frontier " + variant for variant in ["A1", "A2", "C1", "C2", "complete source"]]]}
         path = self.root / "report.json"
         with patch.object(ctl, "secure_file", side_effect=lambda p: p):
             path.write_text(json.dumps(report))
@@ -176,6 +176,23 @@ class ControllerTests(unittest.TestCase):
             path.write_text(json.dumps(report))
             with self.assertRaisesRegex(ValueError, "Incomplete"):
                 ctl.validate_report(path, "browser", self.config, self.auth, {})
+
+    def test_frontier_variant_gates_are_required_and_old_rollback_scope_is_exact(self):
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "procedural ASCII fallback /", "procedural ASCII fallback /effects/ascii-waves", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
+        old_auth = {**self.auth, "commit": "3f6e6360f0686106886f0bb3f6d2d7303d11ea36"}
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": old_auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names]}
+        path = self.root / "report.json"
+        with patch.object(ctl, "secure_file", side_effect=lambda p: p):
+            path.write_text(json.dumps(report))
+            ctl.validate_report(path, "browser", self.config, old_auth, {})
+            report["commit"] = self.auth["commit"]
+            new_names = names + ["mobile /effects/refractive-type", "mobile /effects/impossible-material"] + ["visual frontier " + variant for variant in ["A1", "A2", "C1", "C2", "complete source"]]
+            for missing in ["visual frontier A1", "visual frontier A2", "visual frontier C1", "visual frontier C2", "visual frontier complete source"]:
+                report["checks"] = [{"name": name, "passed": True} for name in new_names if name != missing]
+                path.write_text(json.dumps(report))
+                with self.assertRaisesRegex(ValueError, "Incomplete"):
+                    ctl.validate_report(path, "browser", self.config, self.auth, {})
 
     def test_failed_edge_verification_restores_previous_state(self):
         ctl.link_to("production", self.new)
@@ -226,10 +243,10 @@ class ControllerTests(unittest.TestCase):
                 ctl.verify_hosted_media()
 
     def test_featured_report_cannot_reuse_fallback_or_wrong_receipt(self):
-        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
+        pages = ["/", "/effects"] + ["/effects/" + slug for slug in ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal", "refractive-type", "impossible-material"]] + ["/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"]
         names = ["mobile " + page for page in pages] + ["navigation home to gallery to effect", "published Bento Duo checkout", "support destinations", "disabled Drops", "featured media failure fallback /", "featured media failure fallback /effects/ascii-waves", "featured fish mobile", "featured fish desktop", "featured fish reduced motion", "missing media /effects/sediment-reveal", "missing media /effects/digital-wake"]
         data = {"media": ctl.FEATURED_MODE, "featuredMedia": copy.deepcopy(ctl.FEATURED_MEDIA)}
-        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names], **data}
+        report = {"schema": 1, "suite": "browser", "passed": True, "commit": self.auth["commit"], "digest": self.auth["sha256"], "baseUrl": "http://127.0.0.1:4002", "checkedAt": dt.datetime.now(dt.timezone.utc).isoformat(), "checks": [{"name": name, "passed": True} for name in names + ["visual frontier " + variant for variant in ["A1", "A2", "C1", "C2", "complete source"]]], **data}
         path = self.root / "report.json"
         with patch.object(ctl, "secure_file", side_effect=lambda p: p):
             path.write_text(json.dumps(report))

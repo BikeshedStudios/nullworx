@@ -10,13 +10,24 @@ export const featuredMode = "ascii-loop30-direct-permission";
 export const featuredMedia = JSON.parse(readFileSync(new URL("./ascii-featured-media.json", import.meta.url), "utf8"));
 export const featuredSize = 12862251;
 export const canonicalOrigin = "https://nullworx.space";
-export const effects = ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal"];
+export const effects = ["magnetic-focus", "glyph-morph", "prism-text", "ascii-waves", "digital-wake", "ashfall-type", "seam-erosion", "sediment-reveal", "refractive-type", "impossible-material"];
 export const publicPaths = ["/", "/effects", ...effects.map(slug => `/effects/${slug}`), "/kits/bento-duo", "/drops", "/about", "/privacy", "/licenses"];
 export const indexablePaths = ["/", "/effects", ...effects.filter(slug => slug !== "digital-wake").map(slug => `/effects/${slug}`), "/kits/bento-duo"];
 export const galleryEffects = effects.filter(slug => slug !== "digital-wake");
 // Retain strict verification of the inventoried rollback release. New releases
 // must satisfy the current commerce/routes contract; no caller-selected bypass.
 export const legacyRelease = "697468992c453c9ca9ed93862f35b3089dc67acb";
+// Exact inventoried older releases only; this is not a caller-selected bypass.
+export const preFrontierReleases = new Set([
+  legacyRelease,
+  "3f6e6360f0686106886f0bb3f6d2d7303d11ea36",
+  "54f7716335468bf171e374278b11bdf946f7a651",
+  "7db32651b8226b21851dd3480db9dd688e50b267",
+]);
+const isFrontierPath = path => /\/effects\/(?:refractive-type|impossible-material)$/.test(path);
+export function pathsForRelease(commit, paths) {
+  return preFrontierReleases.has(commit) ? paths.filter(path => !isFrontierPath(path)) : paths;
+}
 const decode = text => text.replaceAll("&amp;", "&").replaceAll("&quot;", '"');
 function attributes(tag) {
   return Object.fromEntries([...tag.matchAll(/([\w-]+)\s*=\s*["']([^"']*)["']/g)].map(m => [m[1].toLowerCase(), decode(m[2])]));
@@ -40,8 +51,10 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
   invariant(profile !== "origin" || (base.protocol === "http:" && base.hostname === "127.0.0.1"), "Origin checks require an explicit loopback HTTP endpoint (SSH tunnel allowed)");
   const checks = [];
   const legacy = commit === legacyRelease;
-  const pages = legacy ? publicPaths.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : publicPaths;
-  const submittedPaths = legacy ? indexablePaths.filter(path => path !== "/kits/bento-duo") : indexablePaths;
+  const scopedPages = pathsForRelease(commit, publicPaths);
+  const pages = legacy ? scopedPages.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : scopedPages;
+  const scopedIndex = pathsForRelease(commit, indexablePaths);
+  const submittedPaths = legacy ? scopedIndex.filter(path => path !== "/kits/bento-duo") : scopedIndex;
   const request = path => fetch(new URL(path, base), { redirect: "manual", signal: AbortSignal.timeout(15000), headers: { "User-Agent": "Nullworx-production-smoke/1" } });
   async function check(name, fn) {
     try { await fn(); checks.push({ name, passed: true }); }
@@ -82,7 +95,7 @@ export async function smoke({ baseUrl, profile = "origin", commit = "", digest =
       }
     }
     invariant(/<h1\b/i.test(html), "Missing H1");
-    if (path === "/effects") for (const slug of galleryEffects) invariant(html.includes(`/effects/${slug}`), `Gallery lacks ${slug}`);
+    if (path === "/effects") for (const slug of galleryEffects.filter(slug => pathsForRelease(commit, [`/effects/${slug}`]).length)) invariant(html.includes(`/effects/${slug}`), `Gallery lacks ${slug}`);
     if (path === "/kits/bento-duo") {
       invariant(html.includes("Orbit Bento 02") && html.includes("Foil Reactor"), "Both approved kits required");
       invariant(html.includes('href="https://bikeshedstudios.gumroad.com/l/dordxw"'), "Verified checkout missing");

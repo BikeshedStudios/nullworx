@@ -12,7 +12,7 @@ describe("sitemap and robots", () => {
       ...getIndexableEffects().map((effect) => effect.canonicalPath),
     ].map((path) => (path === "/" ? "https://nullworx.space" : `https://nullworx.space${path}`));
 
-    expect(entries).toHaveLength(10);
+    expect(entries).toHaveLength(12);
     expect(entries.map((entry) => entry.url)).toEqual(expected);
     expect(new Set(entries.map((entry) => entry.url)).size).toBe(entries.length);
     expect(entries.every((entry) => entry.url === "https://nullworx.space" || entry.url.startsWith("https://nullworx.space/"))).toBe(true);
@@ -47,7 +47,7 @@ describe("sitemap and robots", () => {
       ...getIndexableEffects().map((effect) => effect.lastModified),
     ].map((date) => date + "T00:00:00.000Z");
     expect(dateStrings).toEqual(expectedDates);
-    expect(new Set(dateStrings).size).toBe(2);
+    expect(new Set(dateStrings).size).toBe(3);
   });
 
   it("emits a crawl policy with the canonical sitemap and private utility exclusions", () => {
@@ -61,7 +61,7 @@ describe("sitemap and robots", () => {
   });
 
   it("keeps the manifest effect count stable while only approved effects are submitted", () => {
-    expect(DISCOVERY_MANIFEST.effects).toHaveLength(8);
-    expect(sitemap()).toHaveLength(3 + 7);
+    expect(DISCOVERY_MANIFEST.effects).toHaveLength(10);
+    expect(sitemap()).toHaveLength(3 + 9);
   });
 });

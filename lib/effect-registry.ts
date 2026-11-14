@@ -1,5 +1,6 @@
 import { FORGE_STUDIES } from "./forge-studies";
 import { MATERIAL_STUDIES } from "./material-studies";
+import { FRONTIER_STUDIES } from "./visual-frontier";
 export const EFFECTS = [
   ...FORGE_STUDIES.map((effect) => ({
     ...effect,
@@ -31,6 +32,7 @@ export const EFFECTS = [
     status: "Preview",
     technology: "REACT + CANVAS2D",
   })),
+  ...FRONTIER_STUDIES,
 ] as const;
 export function findEffect(slug: string) {
   return EFFECTS.find((effect) => effect.slug === slug);

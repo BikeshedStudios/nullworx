@@ -2,7 +2,7 @@
 import { chromium, expect } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { publicPaths, canonicalOrigin, legacyRelease, featuredMode, featuredMedia } from "./smoke-http.mjs";
+import { publicPaths, canonicalOrigin, legacyRelease, featuredMode, featuredMedia, preFrontierReleases, pathsForRelease } from "./smoke-http.mjs";
 
 const { values } = parseArgs({ options: {
   "base-url": { type: "string" }, report: { type: "string" },
@@ -14,7 +14,8 @@ const featured = values.media === featuredMode;
 if (base.origin !== canonicalOrigin && !(base.protocol === "http:" && base.hostname === "127.0.0.1")) throw new Error("Use the canonical domain or an explicit loopback tunnel");
 const checks = [];
 const legacy = values.commit === legacyRelease;
-const pages = legacy ? publicPaths.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : publicPaths;
+const scopedPages = pathsForRelease(values.commit, publicPaths);
+const pages = legacy ? scopedPages.filter(path => path === "/" || path === "/effects" || path.startsWith("/effects/")) : scopedPages;
 // Only intercept public /media URLs and video files, never Next's /_next/static/media/*.woff2 fonts.
 const isVideoResource = url => url.pathname.startsWith("/media/") || /\.(?:mp4|webm)$/i.test(url.pathname);
 const browser = await chromium.launch({ headless: true, args: ["--enable-unsafe-swiftshader", "--use-gl=angle", "--use-angle=swiftshader", "--disable-dev-shm-usage"] });
@@ -44,6 +45,43 @@ try {
     await expect(page.locator('meta[name="viewport"]')).toHaveAttribute("content", /width=device-width/);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "Mobile horizontal overflow").toBe(true);
   });
+  if (!preFrontierReleases.has(values.commit)) {
+    for (const [slug, label, controls] of [["refractive-type", "A", ["Dispersion", "Deformation"]], ["impossible-material", "C", ["Tension", "Iridescence"]]]) {
+      for (const variant of [0, 1]) await check(`visual frontier ${label}${variant + 1}`, async page => {
+        await page.goto(`/effects/${slug}`);
+        if (variant) await page.getByRole("button", { name: new RegExp(`^${label}2 /`) }).click();
+        await page.getByRole("button", { name: "Activate full WebGL effect", exact: true }).click();
+        const surface = page.locator(`[data-frontier="${slug}"]`);
+        await surface.scrollIntoViewIfNeeded();
+        await expect(surface).toHaveAttribute("data-status", "ready");
+        await expect(surface).toHaveAttribute("data-mode", "full");
+        await expect(surface).toHaveAttribute("data-variant", String(variant));
+        await expect(surface.locator("canvas")).toHaveCount(1);
+        const host = surface.locator('[role="img"]');
+        await expect(host).toHaveAttribute("data-running", "false");
+        const picture = () => surface.locator("canvas").evaluate(canvas => canvas.toDataURL());
+        for (const control of controls) {
+          const before = await picture();
+          const input = page.getByRole("slider", { name: control, exact: true });
+          await input.focus(); await input.press("Home");
+          await surface.scrollIntoViewIfNeeded();
+          await expect.poll(picture).not.toBe(before);
+        }
+        const before = await picture();
+        await host.focus(); await host.press("ArrowRight");
+        await expect.poll(picture).not.toBe(before);
+        await page.getByRole("button", { name: "Reset", exact: true }).click();
+        for (const [i, control] of controls.entries()) await expect(page.getByRole("slider", { name: control, exact: true })).toHaveValue(slug === "refractive-type" && i === 1 ? "0.45" : slug === "impossible-material" && i === 1 ? "0.55" : "0.5");
+      });
+    }
+    await check("visual frontier complete source", async page => {
+      const response = await page.request.get("/api/effects/visual-frontier/source");
+      expect(response.ok()).toBe(true);
+      const { sources } = await response.json();
+      for (const file of ["frontier.tsx", "frontier.module.css", "runtime.ts", "gpu-session.ts", "renderers/refractive.ts", "renderers/quicksilver.compiled.json", "renderers/mineral.ts", "renderers/font-data.ts", "renderers/harfbuzz-data.ts", "THIRD_PARTY_NOTICES.md"]) expect(sources[file]?.length).toBeGreaterThan(100);
+      expect(Object.keys(sources).join(" ")).not.toMatch(/pigment|brush|pixi/i);
+    });
+  }
   await check("navigation home to gallery to effect", async page => {
     await page.goto("/");
     await page.getByLabel("Open navigation", { exact: true }).click();

@@ -61,6 +61,8 @@ export function EffectDocumentation({ slug }: { slug: string }) {
             <Link href="/effects">
               Compare the collection <span aria-hidden="true">↗</span>
             </Link>
+            {["glyph-morph", "prism-text", "ashfall-type"].includes(slug) && <p><Link href="/effects/refractive-type">Explore Refractive Type: Spectral mass &amp; Split signal ↗</Link></p>}
+            {["sediment-reveal", "seam-erosion", "prism-text"].includes(slug) && <p><Link href="/effects/impossible-material">Explore Impossible Material: Quicksilver &amp; Folded mineral ↗</Link></p>}
           </div>
         </div>
       </div>

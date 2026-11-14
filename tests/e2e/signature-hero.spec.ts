@@ -91,6 +91,8 @@ test("static Signature Hero images and public assets remain excluded", async ({ 
   }
   const sitemap = await request.get("/sitemap.xml");
   const body = await sitemap.text();
-  expect((body.match(/<loc>/g) ?? [])).toHaveLength(10);
+  expect((body.match(/<loc>/g) ?? [])).toHaveLength(12);
+  expect(body).toContain("/effects/refractive-type");
+  expect(body).toContain("/effects/impossible-material");
   expect(body).not.toContain("signature-hero");
 });

@@ -62,3 +62,27 @@ Blocking checks for this work:
 - `tests/unit/design-dna.test.ts` is the fixture/schema/serialization/adaptor gate.
 - `tests/e2e/signature-hero.spec.ts`, `tests/e2e/bento-live.spec.ts`, `tests/e2e/design-dna.spec.ts` and `tests/e2e/material-routes.spec.ts` exercise real browser behavior.
 - `pnpm verify` and `pnpm build` remain required. Protected staging is blocked on authenticated sudo; local checks cannot attest the VPS.
+
+## Visual Frontier Promotion 01 — owner decision 2026-11-14
+
+The owner authorizes A / Refractive Type and C / Impossible Material for main,
+normal non-force push and protected publication. B / Living Pigment is rejected;
+its untracked lab and evidence remain in the original experiment worktree. This
+supersedes the historical ten-URL count solely by adding the two approved public
+pages: `/effects/refractive-type` and `/effects/impossible-material`. The public
+sitemap is now twelve URLs. Signature Hero, Design DNA and Digital Wake keep
+their existing restrictions. The fish and all earlier accepted defaults remain.
+
+Keep A1/A2 and C1/C2, original controls/defaults, source closure and notices.
+Full rendering is explicit opt-in; gallery/home cards are labelled live Canvas2D
+companions. One full GPU lease serializes initialization and asynchronous cleanup.
+A's original optical formulas use a same-context Three target. C retains the
+110-step SDF and four physical ribbon layers. No screenshot or external media
+supplies these previews. See `docs/visual-frontier/` for rights and installation.
+
+Blocking checks: `tests/unit/visual-frontier.test.ts`,
+`tests/e2e/visual-frontier.spec.ts`, `pnpm test:distribution:frontier` and
+`pnpm test:visual-frontier`. Protected smoke/report gates additionally require all
+four full variants and complete source. Exact inventoried earlier commits retain
+their historical rollback route profile; new commits require the expanded scope.
+Archive/member/media/approval/attestation protections and Caddy are unchanged.

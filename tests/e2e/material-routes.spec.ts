@@ -12,7 +12,7 @@ test("registry cards open the approved routes with complete source and working c
   await page.context().grantPermissions(["clipboard-read", "clipboard-write"]);
   for (const [slug, title, component] of routes) {
     await page.goto("/effects");
-    await expect(page.locator("article h3 a")).toHaveCount(7);
+    await expect(page.locator("article h3 a")).toHaveCount(9);
     await page.locator(`article h3 a[href="/effects/${slug}"]`).click();
     await expect(page.getByRole("heading", { level: 1 })).toContainText(title);
     await expect(page).toHaveTitle(new RegExp(title));

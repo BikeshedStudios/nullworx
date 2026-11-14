@@ -53,6 +53,20 @@ pnpm test:launch
 pnpm test:distribution
 pnpm test:distribution:site
 node tests/distribution/ascii-playground-consumers.mjs
+# Verify the exact copied A/C source in fresh consumers through this build's HTTP endpoint.
+pnpm start --port 3373 > "$RELEASE_OUTPUT/frontier-source-server.log" 2>&1 &
+frontier_source_pid=$!
+trap 'kill "$frontier_source_pid" 2>/dev/null || true' EXIT
+node --input-type=module <<'FRONTIER_READY'
+for (let n = 0; ; n++) {
+  if (await fetch('http://127.0.0.1:3373/api/effects/visual-frontier/source').then(r => r.ok).catch(() => false)) break;
+  if (n > 100) throw new Error('Exact-source server did not start');
+  await new Promise(resolve => setTimeout(resolve, 200));
+}
+FRONTIER_READY
+FRONTIER_BASE_URL=http://127.0.0.1:3373 FRONTIER_CONSUMER_RECEIPTS="$RELEASE_OUTPUT/frontier-consumers" pnpm test:distribution:frontier
+kill "$frontier_source_pid"; wait "$frontier_source_pid" 2>/dev/null || true
+trap - EXIT
 node ops/deploy/check-public-assets.mjs
 if [[ $RELEASE_MEDIA == ascii-loop30-direct-permission ]]; then
   # Only this committed receipt may configure the final build; arbitrary owner

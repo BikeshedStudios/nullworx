@@ -11,6 +11,7 @@ import { getMaterialStudySources } from "@/lib/material-study-source";
 import { MaterialPlayground } from "@/components/material-effects/material-playground";
 import { getDiscoveryEffect } from "@/lib/discovery/manifest";
 import { effectMetadata } from "@/lib/discovery/metadata";
+import { FrontierPlayground } from "@/components/white-journey/frontier-playground";
 
 export const dynamicParams = false;
 
@@ -30,6 +31,7 @@ export default async function EffectPage({ params }: { params: Promise<{ slug: s
   if (slug === "digital-wake") return <DigitalWakePreview />;
 
   const playground = await (async () => {
+    if (slug === "refractive-type" || slug === "impossible-material") return <FrontierPlayground kind={slug} />;
     if (slug === "ascii-waves") return <AsciiStudy />;
     const material = MATERIAL_STUDIES.find((effect) => effect.slug === slug);
     if (material) {

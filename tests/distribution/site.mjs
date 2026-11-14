@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { createServer } from 'node:net';
 import { chromium, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
@@ -10,10 +11,13 @@ const output = await mkdtemp(join(tmpdir(), 'nullworx-site-'));
 console.log(`Site receipts: ${output}`);
 const port = Number(process.env.DISTRIBUTION_SITE_PORT ?? 3460);
 const url = `http://127.0.0.1:${port}`;
-const child = spawn('pnpm', ['start', '--port', String(port)], { detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
+// Own the actual server PID. A package-manager proxy can forward process-group
+// termination into the calling gate, reporting SIGTERM after passing assertions.
+await new Promise((ok, fail) => { const probe = createServer(); probe.once('error', fail); probe.listen(port, '127.0.0.1', () => probe.close(ok)); });
+const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', String(port)], { stdio: ['ignore', 'pipe', 'pipe'] });
 let log = '', browser;
 child.stdout.on('data', data => { log += data; }); child.stderr.on('data', data => { log += data; });
-const effects = ['magnetic-focus', 'glyph-morph', 'prism-text', 'ascii-waves', 'digital-wake', 'ashfall-type', 'seam-erosion', 'sediment-reveal'];
+const effects = ['magnetic-focus', 'glyph-morph', 'prism-text', 'ascii-waves', 'digital-wake', 'ashfall-type', 'seam-erosion', 'sediment-reveal', 'refractive-type', 'impossible-material'];
 const results = { routes: [], accessibility: [], expectedMissingMedia: [], unexpected: [] };
 try {
   for (let i = 0; i < 150; i++) {
@@ -87,5 +91,9 @@ finally {
   await writeFile(join(output, 'results.json'), JSON.stringify(results, null, 2) + '\n');
   await writeFile(join(output, 'server.log'), log);
   await browser?.close();
-  try { process.kill(-child.pid, 'SIGTERM'); } catch { /* Already stopped. */ }
+  if (child.exitCode === null && child.signalCode === null) {
+    child.kill('SIGTERM');
+    await Promise.race([new Promise(ok => child.once('exit', ok)), new Promise(ok => setTimeout(ok, 1000))]);
+    if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+  }
 }

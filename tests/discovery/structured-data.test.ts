@@ -26,9 +26,9 @@ describe("structured data", () => {
     expect(data["@type"]).toBe("CollectionPage");
     const list = data.mainEntity as Record<string, unknown>;
     expect(list["@type"]).toBe("ItemList");
-    expect(list.numberOfItems).toBe(7);
+    expect(list.numberOfItems).toBe(9);
     const items = list.itemListElement as Array<Record<string, unknown>>;
-    expect(items).toHaveLength(7);
+    expect(items).toHaveLength(9);
     expect(data.name).toBe("UI Forge");
     expect(items.some(item => String(item.url).includes("digital-wake"))).toBe(false);
     expect(items.every((item) => String(item.url).startsWith("https://nullworx.space/effects/"))).toBe(true);

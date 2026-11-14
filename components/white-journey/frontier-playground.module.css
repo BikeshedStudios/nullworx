@@ -1,0 +1,19 @@
+.intro { padding-block: 38px 28px; }
+.intro h1 { font: 550 clamp(48px,7vw,94px)/1 var(--font-sans); letter-spacing: -.07em; margin-block: 26px 18px; }
+.intro p { max-width: 65ch; color: var(--secondary); line-height: 1.65; }
+.stage { height: clamp(360px,60vh,680px); }
+.controls { border: 1px solid var(--border); padding: 22px; margin-bottom: 25px; }
+.variants, .transport { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.variants button, .transport button, .source button { min-height: 44px; border: 1px solid var(--border); padding: 10px 16px; font: 12px var(--font-mono); }
+.variants button[aria-pressed="true"], .activate { background: var(--purple-deep); color: #fff; }
+.sliders { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-block: 24px; }
+.sliders label { display: grid; gap: 10px; font-size: 14px; }
+.sliders label > span { display: flex; justify-content: space-between; }
+.sliders input { width: 100%; accent-color: var(--purple-deep); min-height: 28px; }
+.transport span { font-size: 12px; color: var(--secondary); }
+.source { margin-block: 32px 48px; line-height: 1.7; }
+.source h2 { font: 500 32px var(--font-sans); letter-spacing: -.04em; }
+.source p { max-width: 78ch; margin-block: 14px; }
+.source code { overflow-wrap: anywhere; font: 12px/1.7 var(--font-mono); }
+.related { display: flex; flex-wrap: wrap; gap: 18px; margin-block: 30px 50px; font-size: 14px; }
+@media(max-width:600px) { .controls { padding: 16px; } .sliders { gap: 18px; } .variants button { flex: 1; padding-inline: 10px; font-size: 10px; } .transport { gap: 9px; } .transport span { flex-basis: 100%; } }

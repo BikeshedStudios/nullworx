@@ -89,6 +89,7 @@ export default function BentoDuoProductPage() {
                 <div className={styles.frameBar}><span>LIVE COMPONENT / RESPONSIVE</span><span>INTERACTIVE, NOT A CAPTURE</span></div>
                 {kit.slug === "orbit" ? <OrbitLive /> : <FoilLive />}
               </div>
+              {kit.slug === "foil" && <p><Link href="/effects/impossible-material">Explore the free Impossible Material playground: live chrome &amp; folded mineral ↗</Link></p>}
             </article>
           ))}
         </div>

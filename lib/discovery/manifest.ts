@@ -1,4 +1,5 @@
 import { SITE_NAME, SITE_COLLECTION_NAME, SITE_DESCRIPTION, SOURCE_REPOSITORY, siteOrigin } from "@/lib/site";
+import { FRONTIER_DISCOVERY } from "./visual-frontier";
 import { DiscoveryManifestSchema, type DiscoveryEffect, type DiscoveryManifest } from "./schema";
 
 /**
@@ -41,7 +42,7 @@ const rawManifest = {
         install: "README.md",
         media: null,
       },
-      lastModified: "2026-11-09",
+      lastModified: "2026-11-14",
     },
     {
       kind: "gallery",
@@ -57,7 +58,7 @@ const rawManifest = {
         ],
         title: "UI Forge effect gallery — nullworx.space",
         description:
-          "Explore seven approved UI Forge React effects by Bikeshed Studios at nullworx.space: magnetic buttons, morphing type, procedural ASCII and material studies.",
+          "Explore nine approved UI Forge React effects: magnetic buttons, morphing type, ASCII and material studies, plus Refractive Type and Impossible Material.",
       },
       indexStatus: "index",
       evidence: {
@@ -66,7 +67,7 @@ const rawManifest = {
         install: "README.md",
         media: null,
       },
-      lastModified: "2026-11-09",
+      lastModified: "2026-11-14",
     },
     {
       kind: "product",
@@ -489,6 +490,7 @@ const rawManifest = {
       },
       lastModified: "2026-11-09",
     },
+    ...FRONTIER_DISCOVERY,
   ],
 } satisfies DiscoveryManifest;
 

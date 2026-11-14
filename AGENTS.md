@@ -23,3 +23,13 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Material effects keep the approved renderer defaults. `intensity` and `density` are additive, clamped options; default `1/1` must preserve the accepted behavior. Do not loosen the hash-pinned clock/coverage/compositor/raster/surface files.
 - New routes (`/kits/signature-hero`, `/lab/design-dna`) are `noindex, nofollow`; the sitemap stays at the approved ten URLs. Do not add them to `lib/discovery/manifest.ts` without a separate release decision.
 - Release/staging tooling is in the Megasprint evidence packet. The server remains blocked on interactive sudo; do not claim a private staging attestation from local tests.
+
+## Visual Frontier Promotion 01
+
+Owner-approved A/C publication adds `refractive-type` and `impossible-material`
+and deliberately expands the sitemap to twelve URLs. Read
+`docs/visual-frontier/PROMOTION_01.md` and `SOURCE_RIGHTS.md`. Preserve all four
+variants, original controls/defaults and complete consumer source. B stays in the
+untouched historical lab, outside production. Keep one full GPU lease, live cheap
+card companions, and existing fish/media/commerce boundaries. Strict release scope
+now requires A1/A2/C1/C2 and source checks. No failed gate may be bypassed.

@@ -28,7 +28,7 @@ describe("owner-approved material integration", () => {
   }
  });
  it("adds exactly the three approved routes and complete copyable source closures", () => {
-  expect(EFFECTS).toHaveLength(8);
+  expect(EFFECTS).toHaveLength(10);
   for (const study of MATERIAL_STUDIES) {
    expect(EFFECTS.some(effect => effect.slug === study.slug)).toBe(true);
    expect(materialUsage(study.id)).toContain(`<${study.component}`);
