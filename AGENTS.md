@@ -2,6 +2,17 @@
 
 Before changing homepage, media, effects, distribution or release gates, read `docs/PRODUCT_BASELINES.md` and the referenced source/release receipts. Preserve all accepted feature sets. Add a blocking regression test for every accepted behavior; never replace an accepted default from an older experiment. Verify actual provisioned LOOP30 bytes for fish deployment gates; fixtures and procedural fallback cannot attest fish autoplay. Preserve dirty worktrees/indexes and immutable evidence. New product branches start from the latest accepted unified checkpoint.
 
+## Shared coding-agent discipline (all Nullworx implementation tasks)
+
+Applies to Codex, Claude, Cursor, Copilot, Gemini and other agents **when they read this repository's instructions**. These are condensed, original project rules based on the independent [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) project, which was inspired by Andrej Karpathy's observations; Karpathy did **not** author the rules file. Preserve the more specific product contracts above.
+
+1. **Think before coding.** Read relevant files and accepted baselines. State material assumptions, contradictory requirements, risks and simpler alternatives. Ask only if a missing fact blocks correctness, rights, safety or an irreversible operation; otherwise choose a conservative assumption and proceed.
+2. **Keep it simple.** Solve the explicit problem with the smallest maintainable change. Do not introduce speculative features, one-off abstractions, extra frameworks, configuration surfaces or broad refactors.
+3. **Make surgical changes.** Touch only requested files and directly necessary tests/integration. Preserve unrelated source, formatting, comments, user WIP and established APIs. Mention unrelated defects rather than fixing them unasked. Compare changed paths against the starting tree; do not revert someone else's pre-existing edits to satisfy scope.
+4. **Verify the actual goal.** Define observable acceptance checks, run relevant tests/build/browser probes and iterate within the authorized scope until the result passes or a genuine blocker is documented. Never claim unrun checks as PASS; record FAIL, SKIP and NOT_RUN explicitly.
+
+For substantial work report **PLAN → CHANGESET → VERIFY → VERDICT** with the exact baseline, diff, executed commands, outcomes and rollback risks. Follow owner approval gates for push, merge, deploy, delete, publish, paid actions or source/license changes. The goal is less unnecessary code and fewer silent assumptions, **not more planning or repetitive questions**.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
