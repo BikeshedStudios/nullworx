@@ -13,6 +13,12 @@ Applies to Codex, Claude, Cursor, Copilot, Gemini and other agents **when they r
 
 For substantial work report **PLAN → CHANGESET → VERIFY → VERDICT** with the exact baseline, diff, executed commands, outcomes and rollback risks. Follow owner approval gates for push, merge, deploy, delete, publish, paid actions or source/license changes. The goal is less unnecessary code and fewer silent assumptions, **not more planning or repetitive questions**.
 
+## Modern browser guidance (web tasks only)
+
+For web UI, HTML, CSS, client-side JavaScript, accessibility, motion, browser API and performance tasks, use the installed [GoogleChrome Modern Web Guidance](https://github.com/GoogleChrome/modern-web-guidance) skill when available: search for the concrete capability, retrieve the relevant guide, check project browser/Baseline support and fallbacks, then implement the smallest needed change and verify in a real browser. **Do not silently adopt new APIs solely because they are fashionable.** Accepted product contracts, existing WIP and actual runtime checks take priority. Do not invoke the web skill for backend/infra, unrelated tooling or native/game-engine work. If unavailable, state that and use pinned project docs/standards; do not auto-install/update packages during unrelated tasks.
+
+The skill is intended to be installed **globally on the developer's machine** so it applies across local repositories; this repo-specific note is not proof that it is installed globally or in remote GitHub environments. GoogleChrome Modern Web Guidance v1.0 was verified as the upstream package; updates require deliberate review.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
