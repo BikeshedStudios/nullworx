@@ -92,7 +92,7 @@
 
 ### 3.1 Deliverable: independent, finished website
 
-Ship a self-hostable **Next.js/React/TypeScript** project, initially static-exportable if the verified route/features matrix permits. Check actual Next docs and build behavior; do not assume §output: "export"§ supports runtime server functions or dynamic routes without §generateStaticParams§.
+Ship a self-hostable **Next.js/React/TypeScript** project, initially static-exportable if the verified route/features matrix permits. Check actual Next docs and build behavior; do not assume `output: "export"` supports runtime server functions or dynamic routes without `generateStaticParams`.
 
 **Mandatory v1:**
 1. **Project Index / Home:** distinct visual composition, real navigation, clear project hierarchy, contact path and meaningful sample media/copy.
@@ -100,7 +100,7 @@ Ship a self-hostable **Next.js/React/TypeScript** project, initially static-expo
 3. **Content:** typed JSON or TypeScript records of site/project data (choose ONE canonical content source) with accessible alt text, stable metadata and valid slugs.
 4. **Theme:** a single compact source for approved color/type/spacing parameters; avoid parallel recipe/token/variant schemas.
 5. **Visual fallback:** good composition before shaders, accessible static state and reduced motion, no forced GPU runtime.
-6. **Agent instructions:** repository-root §AGENTS.md§ (shared rules), plus a **customer-kit-specific concise guide (target ≤60 lines)** only when useful; tests and exact edit paths.
+6. **Agent instructions:** repository-root `AGENTS.md` (shared rules), plus a **customer-kit-specific concise guide (target ≤60 lines)** only when useful; tests and exact edit paths.
 7. **Proof of portability:** clean installation of the **exact shipped archive**; no required Nullworx account/API key/telemetry, clear source rights and pinned environment.
 8. **Validation:** standard package scripts for content/schema, TS build and browser smoke checks; no custom public CLI contract unless a real buyer failure requires it.
 
@@ -130,7 +130,7 @@ Ship a self-hostable **Next.js/React/TypeScript** project, initially static-expo
 | US-05 | Owner uses broken/missing media | Helpful fallback preserves aspect ratio and usable page |
 | US-06 | User prefers reduced motion | No unnecessary animation/forced motion; content remains accessible |
 | US-07 | Agent personalizes a site | Same task passes clean consumer checks and leaves audited source diffs |
-| US-08 | Agent makes invalid recipe edit | Validator rejects with stable path/code and never silently applies broken state |
+| US-08 | Owner supplies invalid project content | Typed content validation/build rejects invalid or missing required fields with actionable diagnostics |
 | US-09 | Buyer installs from ZIP | Cold install and production build pass in locked supported Node/dependency setup |
 | US-10 | Buyer can inspect rights | Source/assets/provenance and license terms are complete and comprehensible |
 | US-11 | Site works without JavaScript-enhanced effects | Content, navigation and contact remain accessible under fallback conditions |
@@ -194,11 +194,11 @@ For Kit 01, curate roughly 12–18 applicable rules, not a mandatory 200-rule pr
 
 - Canonical local content + one compact typed theme file; no new recipe/schema registry in v1.
 - A short customer-facing agent guide names allowed edit locations, build/verify commands, preservation rules and when to ask.
-- Project-wide canonical §AGENTS.md§ follows four Karpathy-inspired principles: think before changing, minimize implementation, surgical diffs and verifiable outcomes. These complement, never override, permanent product contracts.
+- Project-wide canonical `AGENTS.md` follows four Karpathy-inspired principles: think before changing, minimize implementation, surgical diffs and verifiable outcomes. These complement, never override, permanent product contracts.
 - Buyer may modify arbitrary source code, but custom edits do not inherit guarantees about supported variants. The editing guide must say this plainly.
-- One §pnpm check§ (or an existing semantically equivalent script, confirmed locally) runs the smallest meaningful validation: content schema/typecheck/build plus available browser checks. Keep separate commands where dependency setup makes a single script impractical.
-- No new published CLI, §--json§ protocol, §ERR_*§ taxonomy, remote runtime, account, registry, MCP, or language-model dependency.
-- Existing §lib/design-dna/§ stays untouched by v1 unless a separate narrowly approved maintenance task addresses proven defects.
+- One `pnpm check` (or an existing semantically equivalent script, confirmed locally) runs the smallest meaningful validation: content schema/typecheck/build plus available browser checks. Keep separate commands where dependency setup makes a single script impractical.
+- No new published CLI, `--json` protocol, `ERR_*` taxonomy, remote runtime, account, registry, MCP, or language-model dependency.
+- Existing `lib/design-dna/` stays untouched by v1 unless a separate narrowly approved maintenance task addresses proven defects.
 
 ### 5.2 When to revisit Design DNA
 
@@ -305,8 +305,5 @@ Only reconsider extra schema, preview adapters or machine-readable manifest if c
 
 The owner supplied Claude's hostile review on 2026-11-15 and selected Cinematic Case Study. Claude's review concluded **SMALL EXPERIMENT**, recommending static design + buyer probe before building DNA and shrinking agent tests. **Known limits:** reviewer saw pasted PRD and a truncated implementation plan; several component licenses, actual eval code and browser spec were not opened; none of these are test results. The reviewer's arbitrary three-deposits-from-twenty bar and speculative sample-power estimate are **not adopted as hard gates**.
 
-§IMPLEMENTATION_PLAN.md§ version 2.0 is the execution handoff. No product code changes, paid presales, external distribution, merge or deploy are authorized by this revision.
+`IMPLEMENTATION_PLAN.md` version 2.0 is the execution handoff. No product code changes, paid presales, external distribution, merge or deploy are authorized by this revision.
 
-# 11. Implementation handoff
-
-Proceed to `IMPLEMENTATION_PLAN.md` only after owner reviews the hostile Claude critique. Implementation plan must independently reverify the local repository and use smallest reversible changes. This PRD intentionally contains no permission to release or merge.
