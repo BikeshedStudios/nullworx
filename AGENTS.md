@@ -19,6 +19,14 @@ For web UI, HTML, CSS, client-side JavaScript, accessibility, motion, browser AP
 
 The skill is intended to be installed **globally on the developer's machine** so it applies across local repositories; this repo-specific note is not proof that it is installed globally or in remote GitHub environments. GoogleChrome Modern Web Guidance v1.0 was verified as the upstream package; updates require deliberate review.
 
+## Motion reference: Transitions.dev (frontend only)
+
+For frontend interaction/motion tasks (menus, modals, popovers, cards, text or icon state changes, loading states, page transitions), consult [Transitions.dev](https://transitions.dev/) and its [free motion recipes](https://transitions.dev/library.html) alongside Modern Web Guidance before inventing a custom animation. If installed, use the `transitions-dev` skill for specific patterns and `transitions-polish` for existing motion; retrieve only the relevant recipe. **Do not add animation simply because a recipe exists.** Preserve owner-approved design, existing component APIs and transitions, and prefer existing CSS/native APIs over extra libraries or a new runtime. Verify keyboard/pointer behavior, reduced motion, browser support, mobile performance and no visual drift.
+
+**Commercial distribution gate:** Transitions.dev's [repository license](https://github.com/Jakubantalik/transitions.dev/blob/main/LICENSE) allows use in projects but imposes extra conditions on redistributing transitions inside templates, themes, starter kits and UI kits: a qualifying paid plan and inclusion of only transitions actually used with the required comments. Do not copy these snippets into a sold Nullworx kit or repackage the library without checking the current exact terms and owner authorization. Inspiration/reference does not authorize code redistribution. Do not install/update packages, enable Pro APIs or run auto-fix/PR agents without a scoped task and explicit approval.
+
+This repo note applies only when an agent reads this branch. For the same optional reference across **all local frontend projects**, install the upstream skills globally through the agent skills installer; GitHub repos and cloud coding environments do not inherit a local global installation automatically.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
