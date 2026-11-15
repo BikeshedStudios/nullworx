@@ -1,28 +1,32 @@
 # NULLWORX — Agent-Native Kit 01
 ## Product Requirements Document (PRD)
 
-**Status:** PROPOSED / ADVERSARIAL REVIEW PENDING — NOT APPROVED FOR IMPLEMENTATION OR RELEASE  
-**Document revision:** 1.0 — 2026-11-15  
+**Status:** OWNER-SELECTED VERTICAL / REVISED AFTER HOSTILE REVIEW — NO IMPLEMENTATION OR RELEASE AUTHORIZATION  
+**Document revision:** 2.0 — 2026-11-15  
 **Product owner:** Bikeshed Studios / Nullworx  
 **Repository:** https://github.com/BikeshedStudios/nullworx  
 **Companion:** `docs/product/agent-native-kit-01/IMPLEMENTATION_PLAN.md`  
-**Review prompt:** `docs/product/agent-native-kit-01/CLAUDE_RED_TEAM_PROMPT.md`  
+**Review prompt:** `docs/product/agent-native-kit-01/CLAUDE_RED_TEAM_PROMPT.md` (hostile review completed as owner-supplied text on 2026-11-15; reviewer did not fetch both complete planning documents)  
 **Docs-only branch base:** `main` at `f753eba9f3d5f4e7578636b29aa43707e948cf98` (remote snapshot, 2026-11-15)  
 **Important:** Actual implementation baseline must be selected afresh from the owner's approved local integration/worktrees after an explicit authorization. Remote `main` is NOT presumed to be the currently approved local worktree.
 
 ---
 
-## 0. Executive decision
+## 0. Executive decision and owner direction
 
-**Decision hypothesis:** Build **one complete, visually exceptional, self-hostable React/Next.js case-study website kit** with a narrow agent-editing contract and reproducible installation/behavior tests. Do not build a universal design system, an AI service, a proprietary runtime, a CMS, a new shader engine, or an MCP server.
+**OWNER DECISION (2026-11-15):** Choose **A — Cinematic Case Study Kit** for the first experiment, not Interactive Product Launch or a universal agent-native design platform.
 
-The paid-product advantage is **finished design + easier safe personalization + portable source**, not the mere presence of AI instructions, individual MIT components, or design rules.
+**Revised investment verdict:** SMALL EXPERIMENT. Build the smallest visually exceptional, standalone, static-first website specimen using existing cleared assets; test design competitiveness and buyer signals before creating additional agent infrastructure. This is an approved **product direction and documentation revision**, not approval to edit application code, publish a package, or collect money.
 
-**Investment verdict:** SMALL EXPERIMENT. No premium publication or broader product expansion until visual, technical, buyer, and rights gates pass.
+**The v1 product:** one finished project index + a reusable case-study detail page, typed local project content, one compact theme/tokens source, short root agent instructions, a customer-installable package and browser verification. Shader effects are optional enhancements; the composition must be distinctive without them.
 
-**Most important falsification:** Compare (A) kit only, (B) kit + short agent skill, and (C) kit + skill + Design DNA. If C cannot meaningfully outperform B on unseen personalization tasks, simplify or retire the extra DNA layer. Compare the finished Nullworx kit separately against a credible free shadcn-based case-study implementation.
+**Explicitly not v1:** a new site-wide Design DNA schema/registry, recipe.json, rules.json, custom CLI API, JSON error-code ecosystem, MCP server, multi-agent harness or fully reusable design platform. Preserve the existing three-component Design DNA **as an independent internal lab**; its known parity issues are separately tracked maintenance, not prerequisites for testing this product direction.
 
----
+**New decision sequence:** (G0) rights & local authority → (G1) static-strong visual specimen & blind free-template comparison → (G2) buyer/problem/price signal using a truthful demo → (G3) minimal self-hostable kit + agent smoke/independent install → (G4) optional DNA hypothesis only if observed defects justify it → (G5) owner-approved commercial release.
+
+**First falsification:** Do real target buyers consider the finished, non-shader design significantly more useful than strong free alternatives? Do they show concrete intent to pay? The advanced agent-uplift experiment is **not** the first decision gate.
+
+**Review disposition:** Adopt Claude's sequencing, scope and evaluation critiques; reject an automatic "3 deposits from 20 or kill" threshold as unsupported and avoid taking paid preorders before buyer terms, licenses and consumer obligations are settled. Neither Claude nor this document establishes demand or technical test passes.
 
 ## 1. Product truth, authority, and known evidence
 
@@ -44,8 +48,8 @@ The paid-product advantage is **finished design + easier safe personalization + 
 
 ### 1.3 Commercial and licensing caveats
 
-- `components/bento-duo/orbit/` and `components/bento-duo/foil/` exist on public GitHub and contain MIT `LICENSE` files. Existing public MIT permissions must be respected; paid offering must add genuine value beyond exclusive access to these sources.
-- `components/signature-hero/LICENSE.txt` states internal owner-review/no customer license and flags unresolved inherited Living Type licensing. Do NOT redistribute Signature Hero or incorporate it in the paid candidate until each relevant source file and asset is independently cleared. Presence in the public repository does not establish commercial rights.
+- `components/bento-duo/orbit/` and `components/bento-duo/foil/` exist on public GitHub and their exact `LICENSE` files have been read and confirmed MIT (2026-11-15). Existing public MIT permissions persist; paid offering must add real incremental layout/content/asset/packaging value, not claim exclusive access to these sources.
+- `components/signature-hero/LICENSE.txt` states internal owner-review/no customer license and flags unresolved inherited Living Type licensing. Do NOT redistribute Signature Hero or incorporate it in a paid candidate until each source/asset is cleared. The file is already exposed on public GitHub: investigate provenance and exposure without deleting/relabeling/revoking any existing permission as a side effect. Public availability is not proof of redistribution rights.
 - `docs/PRODUCT_BASELINES.md` contains historical assertions about premium source not being public which conflict with current public Bento code; reconcile with exact file paths and hashes. No secrets, original permission receipts or premium ZIP artifacts should be put into the public repository.
 - Existing €39 Bento Duo Gumroad product is a separate offer; zero observed sales and extremely low view counts are **not** adequate evidence that this new offer will or will not sell.
 - Verify all third-party assets (fonts, textures, images, audio, UI blocks) by file and version. Do not infer redistribution rights from a homepage badge.
@@ -88,30 +92,32 @@ The paid-product advantage is **finished design + easier safe personalization + 
 
 ### 3.1 Deliverable: independent, finished website
 
-Ship a complete, source-available-to-buyer **Next.js + React + TypeScript** project with:
+Ship a self-hostable **Next.js/React/TypeScript** project, initially static-exportable if the verified route/features matrix permits. Check actual Next docs and build behavior; do not assume §output: "export"§ supports runtime server functions or dynamic routes without §generateStaticParams§.
 
-1. **Project Index / Home**: intentional visual hero, semantic navigation, credible project index, project metadata, clear primary interaction and contact route.
-2. **Case Study Detail**: slug-based project page with problem, process, work, results, media, captions and next/previous or related navigation.
-3. **Content system**: typed or schema-validated local project data, text/image placeholders with real dimensions, accessible alt-text and stable metadata.
-4. **Personalization system**: bounded global brand information, typography/palette choices and approved section variants; no need to rewrite components for normal personalization.
-5. **Material and motion**: reuse selected owned/cleared Nullworx effects, sparingly, with static, reduced-motion and low-power fallbacks.
-6. **Full code ownership**: no mandatory Nullworx account, API key, telemetry, license server, runtime AI service or proprietary build step.
-7. **Docs**: installation, what-to-edit, licensing/provenance manifest, supported versions, screenshots and troubleshooting.
-8. **Agent contract**: short skill, compact authoring instructions and a versioned recipe; generated or referenced from canonical metadata where practical.
-9. **Verification**: local one-command validation plus independent install/build/behavior tests.
+**Mandatory v1:**
+1. **Project Index / Home:** distinct visual composition, real navigation, clear project hierarchy, contact path and meaningful sample media/copy.
+2. **Case Study Detail:** generated route(s) from finite local content slugs, with problem/process/work/results/media and back/related navigation.
+3. **Content:** typed JSON or TypeScript records of site/project data (choose ONE canonical content source) with accessible alt text, stable metadata and valid slugs.
+4. **Theme:** a single compact source for approved color/type/spacing parameters; avoid parallel recipe/token/variant schemas.
+5. **Visual fallback:** good composition before shaders, accessible static state and reduced motion, no forced GPU runtime.
+6. **Agent instructions:** repository-root §AGENTS.md§ (shared rules), plus a **customer-kit-specific concise guide (target ≤60 lines)** only when useful; tests and exact edit paths.
+7. **Proof of portability:** clean installation of the **exact shipped archive**; no required Nullworx account/API key/telemetry, clear source rights and pinned environment.
+8. **Validation:** standard package scripts for content/schema, TS build and browser smoke checks; no custom public CLI contract unless a real buyer failure requires it.
 
-**Do not market as a drag-and-drop editor.** Editors are source code and bounded content/recipe files.
+**Possible after evidence:** optional agent skill, extensible variation schema, generated DESIGN.md or Design DNA; these are not v1 delivery promises.
+
+**Do not market as:** a drag-and-drop builder, hosted AI product, or universal agent-native design system.
 
 ### 3.2 Primary customer journey
 
-- **Discover**: view live real-component demo and truthful screenshots; content and license inventory visible.
-- **Evaluate**: see desktop/mobile and at least two independently applied brand transformations; understand the exact file/package contents and supported environment.
-- **Acquire**: use existing payment/delivery mechanism if and only if commercial gate is approved.
-- **Install**: unpack, install pinned dependencies, run and build without Nullworx services.
-- **Personalize**: replace project content/branding using human edit OR coding agent.
-- **Verify**: one command reports actionable validation failures; browser test assures basic behavior.
-- **Deploy independently**: customer-controlled host, no supported-host lock-in.
-- **Maintain**: clear compatibility and update policy, no promise of indefinite free changes.
+- **See & compare:** a truthful interactive/static demonstration with desktop and mobile captures, content, license disclosure and clear boundaries.
+- **Qualify:** buyer identifies an actual case-study/portfolio need; sees a proposed public price and exact contents; provides opt-in feedback or a specific purchase-intent signal.
+- **Test demand:** around 20 relevant personal outreaches is a useful *initial exploration*, not a statistical benchmark. Count qualified responses, buyer objections, follow-up requests and later real purchases; zero deposits is not an automatic product KILL without examining audience and offer.
+- **Acquire only when legal/rights ready:** approved checkout and buyer terms, including applicable digital-content consumer law, withdrawal/information handling, taxes and delivery.
+- **Install:** unzip, install pinned dependencies and build with no Nullworx service.
+- **Personalize:** replace local content and design parameters directly or via a standard coding agent following a concise guide.
+- **Verify and deploy:** customer runs standard checks and deploys to a supported static host or ordinary Next environment as documented; do not imply unrestricted static-export support.
+- **Maintain:** scoped version/compatibility promise; no perpetual support assumptions.
 
 ### 3.3 User stories and acceptance criteria
 
@@ -180,103 +186,78 @@ For Kit 01, curate roughly 12–18 applicable rules, not a mandatory 200-rule pr
 
 ---
 
-## 5. Agent-native contract (customer-facing)
+## 5. V1 agent compatibility — minimal instead of a new platform
 
-### 5.1 Principles
+### 5.1 Implementation rule
 
-1. **Kit works without an agent**. AI instructions are optional, not a runtime.
-2. **Data, not executable prompts**. Recipe fields cannot contain arbitrary imports, code, HTML, CSS, package names or scripts.
-3. **Explicit registry and version**. Only owned/approved components and compatible versions are allowed.
-4. **Single canonical source**. Component schema, allowed props, variants and dependencies come from maintained machine-readable structures; generate documentation where practical.
-5. **Small, task-specific context**. Skill selects layout, type, motion or a11y guidance relevant to task; no universal giant prompt.
-6. **Three freedom levels**:
-   - L1 content and bounded brand: supported by schema;
-   - L2 composition/variant: approved set, validated;
-   - L3 arbitrary source modification: buyer may do it, but exits validated-contract guarantees.
-7. **Fail closed at contract boundary**. Invalid recipe yields error path, stable code, diagnosis and no partial apply. Full filesystem agents can still change source: detect with diffs/tests rather than falsely claiming the schema prevents it.
-8. **No hidden remote calls**. Offline/local validator by default, no dependency on Nullworx servers.
+**A beautiful finished website is the product; agent compatibility is a practical editing convenience.** The owner selected a case-study site rather than creating an abstract framework.
 
-### 5.2 Minimal v1 interface
+- Canonical local content + one compact typed theme file; no new recipe/schema registry in v1.
+- A short customer-facing agent guide names allowed edit locations, build/verify commands, preservation rules and when to ask.
+- Project-wide canonical §AGENTS.md§ follows four Karpathy-inspired principles: think before changing, minimize implementation, surgical diffs and verifiable outcomes. These complement, never override, permanent product contracts.
+- Buyer may modify arbitrary source code, but custom edits do not inherit guarantees about supported variants. The editing guide must say this plainly.
+- One §pnpm check§ (or an existing semantically equivalent script, confirmed locally) runs the smallest meaningful validation: content schema/typecheck/build plus available browser checks. Keep separate commands where dependency setup makes a single script impractical.
+- No new published CLI, §--json§ protocol, §ERR_*§ taxonomy, remote runtime, account, registry, MCP, or language-model dependency.
+- Existing §lib/design-dna/§ stays untouched by v1 unless a separate narrowly approved maintenance task addresses proven defects.
 
-- A local `pnpm kit:validate` command: parse/validate recipe, content references, component identities/versions, install closure and selected semantic constraints; stable machine-readable JSON option is desirable only if cheap.
-- A bounded `AGENTS.md`/`SKILL.md` explaining supported files, editing workflow, guardrails, tests and when to report inability.
-- A documented set of known recipes and a manifest tying their expected results to real React components.
-- Not in v1: agent chat UI, design canvas, hosted conversion service, a publicly hosted premium registry, or general-purpose MCP.
-- `DESIGN.md` export and an `inspect --json` command are **follow-on hypotheses**, unless a reproducible customer task requires them in the first trial.
+### 5.2 When to revisit Design DNA
 
----
+Only reconsider extra schema, preview adapters or machine-readable manifest if clean-user installation/agent tasks reveal **repeatable, costly failures** that simpler TypeScript/content validation and short instructions cannot prevent. Compare a bounded fix to the added maintenance/API surface. Do not create a hypothetical A/B/C benchmark to justify a feature nobody needed.
 
-## 6. Evaluation strategy and success measures
+**Reference:** original Karpathy-inspired independent agent guideline repository: https://github.com/multica-ai/andrej-karpathy-skills — not authored by Karpathy.
 
-### 6.1 Separate three questions
+## 6. Evidence and evaluation — right order, different questions
 
-1. **Aesthetics**: is the base kit exceptionally good and distinctive even with effects disabled?
-2. **Agent uplift**: does a recipe actually outperform a conventional skill on equal tasks?
-3. **Commerce**: will a real target buyer invest money to use the kit?
+### 6.1 Visual value FIRST (G1)
 
-One does not prove another.
+- Produce static/no-effects versions of Project Index and Case Study at 390px and desktop; verify 320/768 and text extremes.
+- Owner applies KEEP/REVISE/KILL before anything called a finished product.
+- Blindly compare against **three competent free templates/starters** with the same subject matter and representative content, not poor strawman baselines.
+- Use relevant outside reviewers when possible; record raw preferences, reasons, comparisons and sample size. Small-N is directional, not proof of premium quality.
 
-### 6.2 Agent A/B/C experiment (same kit)
+### 6.2 Demand probe SECOND (G2)
 
-- **A:** kit, normal task prompt; no special skill.
-- **B:** kit, concise task-specific agent skill.
-- **C:** kit, same skill plus Design DNA + validator.
-- Freeze model, tools, time/credit cap, start tree, fixtures and evaluation before runs. Fresh isolated agent per task. Randomize condition order; save all attempts including failures, logs, patches, tokens and costs.
-- Pilot: 2 unseen tasks × 3 arms × 1 repetition = 6 runs, preceded by **free grader self-tests**.
-- If self-test and pilot pass, expansion: 6 unseen tasks × 3 arms × 2 repetitions = 36 runs. Multiple models only if a signal justifies extra cost.
-- Actual tasks: project content replacement, brand adaptation, constrained palette, responsive long text, case-study addition, reduced-motion/motion variant. Prefer project-specific task realism and adversarial variants.
-- Compare B vs C as main question. A vs B is secondary. Control total prompt/context exposure as far as practical and report measured tokens.
-- Grader: TypeScript + production build + real browser behavior + content fidelity + WCAG diagnostics + bounded layout/visual tests. Screenshots reviewed blind; no universal "looks premium" LLM score accepted as proof.
-- **D:** separate comparable build using shadcn/free baseline to judge the product offer. This comparison changes the kit itself and must not be conflated with A/B/C's causal test.
+- Present the real prototype with honest package contents and an explicit proposed price to **about 20 qualified prospective buyers**. Do not present 20 as sufficient for statistical confidence.
+- Record qualified reach, role, expressed actual use case, reasons to pay/not pay, follow-up actions and *real* purchase commitments when legally/payment-operationally ready.
+- A paid refundable preorder is **optional**, not a prerequisite or pre-cleared compliance technique. Never collect money before owner approves terms, legal obligations and deliverable scope.
+- **Interpretation:** no qualified buyer interest after credible presentation → pause/reframe; interest without willingness to pay → revise offer or channel; meaningful paid commitments → consider productization. Do not automatically kill on a single arbitrary deposit count.
 
-### 6.3 Grader correctness
+### 6.3 Minimal agent/consumer smoke THIRD (G3)
 
-- Positive reference must pass all probes.
-- Negative references (missing module, unsupported prop, no-op control, broken navigation, invalid recipe, low contrast / clip where applicable) must reliably fail their intended checks.
-- Agent must not read answer keys, reference solutions or other runs. Use proper isolated folders or containers; transcript audits alone are incomplete security boundaries.
-- Use no pre-built expected-components hints in agent task prompts. Keep expected components private to grader.
-- Browser probes interact via accessible roles, keyboard/pointer and computed visible state, not implementation-specific class names whenever feasible.
-- Cite external methodology: https://github.com/meta/astryx/tree/main/internal/vibe-tests/eval
+- Package the smallest customer-facing kit (local content, one theme file, short agent guide).
+- Cold-install the *exact package* and test build, navigation, 320/390/768/1440 layouts, long headings, media failures, keyboard focus and reduced motion.
+- Fresh agents: three realistic tasks × up to two distinct models × one run each under an owner-approved budget. Tasks include content/branding change, adding a hard case study, and an explicitly **out-of-lane** request that should be flagged/handled safely.
+- Report task-level outcome, changed paths, time/tokens if available and manual repairs, **without statistical uplift claims**.
+- Verify positive and negative controls before agent runs; do not expose grader/reference files. A consistent fail indicates a product usability problem, not an automatic need for Design DNA.
+- If complex failures persist, propose **one** additional guarded editing rule and test it against a baseline. A/B/C or 36-run extension is a separately approved future experiment, not v1.
 
-### 6.4 Proposed numeric gates (decision thresholds, not observed facts)
+### 6.4 No fabricated performance or statistical gates
 
-- 100% independent clean installation/build checks across the explicitly supported v1 environment(s).
-- 100% prescribed critical customer paths pass reference behavior probes.
-- No known blocking accessibility defects, uncaught browser errors or unacceptable mobile clipping.
-- 0 unresolved distribution-rights blockers; 0 unauthorized premium/secrets exposure.
-- C should reduce **manual repair effort by at least ~30% vs B** at non-inferior task completion/visual quality to justify maintaining extra DNA complexity. With small sample sizes this is a *pragmatic threshold*, not statistical confidence; use effect size plus failure-case review.
-- Blind visual reviewer must not consistently prefer generic free baseline over the paid-kit output for the intended audience.
-- Early user test: target 5 relevant independent users, track who installs unaided, time to finish, support requests, attempted real-work use and willingness to take a concrete purchase action. Do not treat verbal praise as paid demand.
-- No invented revenue forecast, conversion percentage, benchmarks, release date or price.
+**Hard gates** are evidence-based: clean supported-environment install/build, actual user workflows, no known blocking a11y defects, no uncontrolled source leak or unresolved shipped-file rights. No unsupported promise of 100% browser or WCAG coverage.
 
----
+**Quality heuristics** are measured and reviewed: owner visual gate, external blind ranking, mobile behavior, install support burden and buyer response. Do not set fictional FPS, conversion, token savings or 30% repair-advantage thresholds without enough data.
 
-## 7. Release gates and decision tree
+**External reference:** Meta Astryx's browser behavior eval uses fresh independent agents, negative controls, per-task browser probes and known limitations: https://github.com/meta/astryx/tree/main/internal/vibe-tests/eval. We borrow its safeguards, not its entire benchmark infrastructure.
 
-**G0 — Repository and rights**: accepted local worktree/base pinned; no dirty WIP overwritten; all candidate sources/assets rights-mapped; public MIT vs premium boundary reconciled.
+## 7. Revised order, approvals and kill/continue gates
 
-**G1 — Existing contract reliability**: known Design DNA defects resolved or explicitly disabled; export and preview agree; consumer builds and tests run.
+**G0 — Authority & source rights**: Current local accepted checkpoint pinned; public/private source boundary reconciled; no unreleased WIP overwritten; all assets in specimen covered. Exclude unresolved Signature Hero from paid scope. **FAIL blocks customer distribution**.
 
-**G2 — Visually finished product**: real index and case-study pages; accepted owner visual review; mobile/keyboard/reduced-motion pass with original/cleared assets.
+**G1 — Static-strong visual specimen**: Project Index and Case Study are finished at static/default-low-cost presentation; owner visually approves; outside comparison with strong free alternatives is recorded. Rework or stop if generic.
 
-**G3 — Agent usability**: independent agent can personalize project content and theme through supported editing path; validator and browser probes catch regression; no hidden dependencies.
+**G2 — Early buyer-value signal**: Real demo, price proposition and qualified outreach. Record buyer reasons and concrete next steps. Weak signal → reconsider buyer/offer before investing in agent tooling.
 
-**G4 — Agent uplift proof**: B vs C tested; if no meaningful improvement, drop complicated DNA parts and ship kit + short skill.
+**G3 — Independent installation & small agent smoke**: Original ZIP extraction/Next static-export capability verified; typed content and plain agent guide let independent users/agents change the kit; production build and role-based browser probes pass. Stop if user needs extensive manual rescue.
 
-**G5 — Commercial validation**: target users attempt installation, there is meaningful evidence of intent to pay, deliverables/license/terms clear; explicit owner approval before checkout, publication, pricing or production release.
+**G4 — Optional Design DNA / skill uplift**: Only if G3 surfaces repeated contract failures that a short guide cannot solve. Propose a narrowly scoped test and budget before new schema work.
 
-**Outcome choices:**
-- BUILD / PRODUCTIZE only if G0–G5 support it.
-- KEEP SIMPLE KIT if design is good but C fails vs B.
-- PIVOT BUYER / OFFER if technical utility is proven but buyers do not value it.
-- KILL if visual identity is generic or independent install fails beyond bounded repair.
-- DEFER optional feature if benefits cannot be distinguished from existing stack.
+**G5 — Commercial publication**: Real buyer package, file rights, accurate product copy, digital-sale terms, taxes, buyer support expectations and owner approval. No automatic checkout/deploy/push/merge.
 
----
+**Outcomes:** SMALL EXPERIMENT continues while G0–G2 are sound; SELL SIMPLE KIT if G3 succeeds without DNA; REVISE OFFER if useful but no credible payment signal; DEFER if qualified reach is too low; KILL current vertical if both visual differentiation and qualified buyer value remain absent after bounded revisions. Avoid treating low-N as a statistical proof.
 
 ## 8. Out of scope and rejected distractions
 
-- No universal Figma replacement, CMS editor, drag-and-drop layout builder, new rendering framework, blockchain, cloud sync or account model.
+- No universal Figma replacement, CMS editor, drag-and-drop layout builder, new rendering framework, blockchain, cloud sync, account model or new site-wide Design DNA engine in v1.
 - No generalized AI agent orchestration, proprietary model, subscription service or automated design generation SaaS.
 - No ten product tiers, catalogue expansion or pricing change without validation.
 - No new WebGL framework, scroll library or dependency just to demonstrate technical ambition.
@@ -286,33 +267,22 @@ One does not prove another.
 
 ---
 
-## 9. Risks, triggers, owner decisions
+## 9. Critical risks and decisions after Claude's hostile review
 
-| Risk | Trigger | Mitigation | Decision |
+| Priority | Threat | Cheap falsifier / mitigation | Disposition |
 | --- | --- | --- | --- |
-| Visually generic | Blind reviewers see ordinary AI template | Redesign static composition | Kill aesthetic direction if repeated |
-| Unreal differentiator | B≈C or C worse | Remove unnecessary recipe/CLI complexity | Keep kit + skill |
-| Framework compatibility | Fails clean Next install | Pin/fix one supported environment | No release |
-| Asset/license conflict | Missing owner/right provenance | Replace asset, remove feature, or obtain rights | Block release |
-| Source exposure | Premium source copied into public main/ZIP not gated | Audit Git tree and build artifacts | Block release |
-| Performance | Mobile lag or excessive GPU use | Static fallback, reduce effects | Feature reject |
-| Agent security | Agent uses arbitrary recipe payload or reads answer keys | Schema, isolation and tamper-evident receipts | Block benchmark |
-| Context bloat | Skill consumes tokens without benefit | Split by task; compare simple baseline | Simplify |
-| Weak distribution | No qualified visits or user attempts | Test demo and channel before more code | Pause expansion |
-| Support burden | Repeated installation issues | Small support matrix and better docs | Re-scope |
-| Poor legal claims | Public MIT asserted premium-exclusive | Honest inventory and offer positioning | Block publication |
-| Evaluation bias | Nullworx-only test passes, external loses | Blind grading, strong free competitor | Reassess |
+| P0 | Buyer doesn't need/pay for portfolio templates | Demo + real proposed price + qualified outreach, record objections | Before agent infrastructure |
+| P0 | Generic AI editorial aesthetics | Static screenshots + blind compare against strong free layouts | Rework or kill direction |
+| P0 | Public MIT/paid offer mismatch | File-level source rights and honest incremental paid value | No exclusive MIT claim |
+| P0 | Signature Hero rights and exposed internal notices | Separate provenance/legal review, exclude pending clearance | Block shipped file |
+| P0 | Stale local baseline, conflicting historical docs | Inspect actual worktrees and current accepted receipts | No code edit until pinned |
+| P1 | Next static export restrictions | Cold build with representative finite project slugs and output inspection | Change hosting/export claim if unsupported |
+| P1 | Agent can't use kit with short guide | Three-task smoke + diff/browser checks | Improve docs/content before DSL |
+| P1 | Theme/content model already complicated | One source per concern, no duplicate recipe surfaces | Remove abstraction |
+| P2 | Unmeasured performance/mobile/a11y | Static baseline, browser and physical-device checks | Disable expensive effect |
+| P2 | Source-derived creative heuristics wrongly treated as law | Own wording, rights-aware attribution and manual review | No rule dogma |
 
-**Owner decisions required after independent Claude review**:
-1. Is Case Study the right first buyer-facing vertical vs Product Launch?
-2. Does a complete kit justify payment absent proven extra Design DNA uplift?
-3. What explicit budget cap and model(s) for A/B/C experiments?
-4. Which licensed original assets may be in paid ZIP and which must be replaced?
-5. What is the current approved integration checkpoint and protected local WIP?
-
-These are **decision gates**. They need not block documents or small read-only research.
-
----
+**Only outstanding owner execution gates:** (1) approve a specific isolated implementation checkpoint/worktree after local inspection, (2) approve candidate original asset rights and realistic external demo content, (3) approve price/reach strategy before any payment collection. The **first vertical is already chosen**: Cinematic Case Study.
 
 ## 10. Source and research links
 
@@ -331,6 +301,12 @@ These are **decision gates**. They need not block documents or small read-only r
 
 ---
 
-## 11. Implementation handoff
+## 11. Implementation handoff and hostile-review record
+
+The owner supplied Claude's hostile review on 2026-11-15 and selected Cinematic Case Study. Claude's review concluded **SMALL EXPERIMENT**, recommending static design + buyer probe before building DNA and shrinking agent tests. **Known limits:** reviewer saw pasted PRD and a truncated implementation plan; several component licenses, actual eval code and browser spec were not opened; none of these are test results. The reviewer's arbitrary three-deposits-from-twenty bar and speculative sample-power estimate are **not adopted as hard gates**.
+
+§IMPLEMENTATION_PLAN.md§ version 2.0 is the execution handoff. No product code changes, paid presales, external distribution, merge or deploy are authorized by this revision.
+
+# 11. Implementation handoff
 
 Proceed to `IMPLEMENTATION_PLAN.md` only after owner reviews the hostile Claude critique. Implementation plan must independently reverify the local repository and use smallest reversible changes. This PRD intentionally contains no permission to release or merge.
