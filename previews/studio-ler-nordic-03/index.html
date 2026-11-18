@@ -88,7 +88,7 @@ body{font-size:16px}
 .details-purchase>span{font-size:21px}
 .details-purchase button{font-size:13px;min-height:58px}
 /* Progressive reveal: static markup stays visible unless JS activates it. */
-@media (prefers-reduced-motion: no-preference){html.motion-ready [data-reveal]{opacity:.86;transform:translateY(12px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.7,.2,1)}html.motion-ready [data-reveal].revealed{opacity:1;transform:none}}
+@media (prefers-reduced-motion: no-preference){html.motion-ready [data-reveal]{transform:translateY(12px);transition:transform .8s cubic-bezier(.2,.7,.2,1)}html.motion-ready [data-reveal].revealed{transform:none}}
 @media(max-width:1020px){.material-story-copy{padding:50px 35px}.material-story-copy h2{font-size:clamp(61px,7vw,100px)}.material-story,.material-story-photo{min-height:600px}}
 @media(max-width:760px){
   .site-header{height:70px}.announcement{height:34px;font-size:10px}.brand strong{font-size:17px}.brand span{font-size:8px}.hero{min-height:0}
